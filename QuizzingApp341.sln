@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizzingApp341", "QuizzingApp341.csproj", "{853D70FC-FCA3-4CCA-A667-60271F74A824}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{853D70FC-FCA3-4CCA-A667-60271F74A824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{853D70FC-FCA3-4CCA-A667-60271F74A824}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{853D70FC-FCA3-4CCA-A667-60271F74A824}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{853D70FC-FCA3-4CCA-A667-60271F74A824}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{853D70FC-FCA3-4CCA-A667-60271F74A824}.Release|Any CPU.Build.0 = Release|Any CPU
+		{853D70FC-FCA3-4CCA-A667-60271F74A824}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0899DE48-0BED-4CEB-9F1C-69C08088BC07}
+	EndGlobalSection
+EndGlobal
