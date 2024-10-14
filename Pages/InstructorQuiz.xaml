@@ -1,0 +1,24 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuizzingApp341.Pages.InstructorQuiz"
+             Padding="7">
+
+    <ScrollView>
+        <StackLayout Padding="10" Spacing = "20">
+            <Label Text="How many CS students does it take to screw in a lightbulb?" 
+                   FontSize="24"
+                   HorizontalOptions="Center"/>
+                   
+            <!-- RadioButton Group for Multiple Choice -->
+            <StackLayout>
+                <RadioButton Content="Paris" GroupName="question1" />
+                <RadioButton Content="London" GroupName="question1" />
+                <RadioButton Content="Berlin" GroupName="question1" />
+                <RadioButton Content="Madrid" GroupName="question1" />
+            </StackLayout>
+
+            <!-- Button to submit answer -->
+            <Button Text="Next Question" Clicked="NextQuestionClicked" BackgroundColor="#11017a" />
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
