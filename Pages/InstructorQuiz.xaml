@@ -7,7 +7,8 @@
         <StackLayout Padding="10" Spacing = "20">
             <Label Text="How many CS students does it take to screw in a lightbulb?" 
                    FontSize="24"
-                   HorizontalOptions="Center"/>
+                   HorizontalOptions="Center"
+                   TextColor = "#11017a"/>
                    
             <!-- RadioButton Group for Multiple Choice -->
             <StackLayout>
