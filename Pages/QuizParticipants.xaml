@@ -1,0 +1,57 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuizzingApp341.Pages.QuizParticipants"
+             Padding="7">
+
+
+    <StackLayout Padding="10"
+                 Spacing="20">
+        <Label Text="Participants"
+               FontSize="24"
+               HorizontalOptions="Center"
+               TextColor="#11017a"/>
+
+        <ListView x:Name="ParticipantsListView"
+                  ItemsSource="{Binding Participants}"
+                  VerticalOptions="FillAndExpand"
+                  HorizontalOptions="FillAndExpand"
+                  RowHeight="70"
+                  SeparatorColor="#11017a">
+
+            <ListView.Header>
+                <StackLayout Orientation="Horizontal"
+                        Padding="10"
+                        HorizontalOptions="Center">
+                    <Label Text="Quiz 1"
+                           HorizontalOptions="StartAndExpand"
+                           FontAttributes="Bold"/>
+                    <Label Text="Date: 10/14/2024"
+                           HorizontalOptions="End"/>
+                </StackLayout>
+            </ListView.Header>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Padding="10">
+                            <Label Text="{Binding User}"
+                                   FontAttributes="Bold"
+                                   FontSize="18"/>
+                            <Label Text="{Binding Score, StringFormat='Score: {0}'}"
+                                   FontSize="14"
+                                   TextColor="Gray"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <ListView.Footer>
+                <StackLayout Padding="10">
+                    <Label
+                        Text="{Binding Participants.Count, StringFormat = 'Total: {0} Participants'}"/>
+                </StackLayout>
+            </ListView.Footer>
+        </ListView>
+    </StackLayout>
+
+</ContentPage>
