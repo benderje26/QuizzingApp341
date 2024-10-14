@@ -1,5 +1,6 @@
 namespace QuizzingApp341.Pages;
 using QuizzingApp341.Models;
+// This screen initializes and displays the list of participants of a quiz
 public partial class QuizParticipants : ContentPage
 {
     public List<Participant> Participants {get; set;}
@@ -21,6 +22,7 @@ public partial class QuizParticipants : ContentPage
     }
 }
 
+// Represents a participant of a quiz with a User name and a score
 public class Participant {
     public string User {get; set;}
     public int Score {get; set;}

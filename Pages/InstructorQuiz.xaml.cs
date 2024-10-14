@@ -1,5 +1,5 @@
 namespace QuizzingApp341.Pages;
-
+// This class displays the screen for the instructor/user who activated the quiz
 public partial class InstructorQuiz : ContentPage
 {
     public InstructorQuiz()

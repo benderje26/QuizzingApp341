@@ -1,5 +1,6 @@
 namespace QuizzingApp341.Pages;
 using QuizzingApp341.Models;
+// This class initializes and displays the Quiz history.
 public partial class QuizHistory : ContentPage
 {
     public List<Quiz> Quizzes {get; set;}
