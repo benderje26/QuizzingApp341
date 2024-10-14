@@ -5,11 +5,18 @@
 
 
     <StackLayout Padding="10"
-                 Spacing="20">
-        <Label Text="Participants"
+                 Spacing="10">
+        <Label Text="Quiz 1"
                FontSize="24"
                HorizontalOptions="Center"
                TextColor="#11017a"/>
+        
+        <StackLayout Orientation="Vertical"
+                        Padding="10"
+                        BackgroundColor ="#E6E6E6">
+                    <Label Text="Date: 10/14/2024"
+                           VerticalOptions="End"/>
+                </StackLayout>
 
         <ListView x:Name="ParticipantsListView"
                   ItemsSource="{Binding Participants}"
@@ -19,14 +26,13 @@
                   SeparatorColor="#11017a">
 
             <ListView.Header>
-                <StackLayout Orientation="Horizontal"
+                <StackLayout Orientation="Vertical"
                         Padding="10"
                         HorizontalOptions="Center">
-                    <Label Text="Quiz 1"
-                           HorizontalOptions="StartAndExpand"
-                           FontAttributes="Bold"/>
-                    <Label Text="Date: 10/14/2024"
-                           HorizontalOptions="End"/>
+                    <Label Text="Participants:"
+                           VerticalOptions="Start"
+                           FontAttributes="Bold"
+                           FontSize="18"/>
                 </StackLayout>
             </ListView.Header>
 
