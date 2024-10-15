@@ -80,7 +80,6 @@ Statistics screen -->
                 BackgroundColor="#11017a"
                 Grid.Row="1"
                 HorizontalOptions="FillAndExpand"
-                VerticalOptions="End"
-                HeightRequest="50"/>
+                VerticalOptions="End"/>
     </Grid>
 </ContentPage>
