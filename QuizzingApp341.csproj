@@ -63,7 +63,28 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Pages\QuestionStats.xaml.cs">
+	    <DependentUpon>QuestionStats.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\FillBlank.xaml.cs">
+	    <DependentUpon>FillBlank.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\MultipleChoice.xaml.cs">
+	    <DependentUpon>MultipleChoice.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Pages\QuestionStats.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\HomeScreen.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\FillBlank.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\MultipleChoice.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\Login.xaml">

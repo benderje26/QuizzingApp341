@@ -8,7 +8,7 @@
     Title="QuizzingApp341">
 
     <ShellContent
-        ContentTemplate="{DataTemplate local:Statistics}"
+        ContentTemplate="{DataTemplate local:QuestionStats}"
         Route="Login"
         Shell.NavBarIsVisible="False"/>
 
