@@ -4,23 +4,32 @@
              x:Class="QuizzingApp341.Pages.InstructorQuiz"
              Padding="7">
 
-    <ScrollView>
-        <StackLayout Padding="10" Spacing = "20">
-            <Label Text="How many CS students does it take to screw in a lightbulb?" 
-                   FontSize="24"
-                   HorizontalOptions="Center"
-                   TextColor = "#11017a"/>
-                   
-            <!-- RadioButton Group for Multiple Choice -->
-            <StackLayout>
-                <RadioButton Content="Paris" GroupName="question1" />
-                <RadioButton Content="London" GroupName="question1" />
-                <RadioButton Content="Berlin" GroupName="question1" />
-                <RadioButton Content="Madrid" GroupName="question1" />
-            </StackLayout>
+    <!-- Define a Grid with two rows -->
+    <Grid RowDefinitions="*, Auto">
+        <!-- Scrollable content goes in the first row -->
+        <ScrollView x:Name="scrollView" Grid.Row="0">
+            <StackLayout x:Name="question" Padding="10" Spacing="20">
+                <Label Text="How many CS students does it take to screw in a lightbulb?" 
+                       FontSize="24"
+                       HorizontalOptions="Center"
+                       TextColor="#11017a" />
 
-            <!-- Button to submit answer -->
-            <Button Text="Next Question" Clicked="NextQuestionClicked" BackgroundColor="#11017a" />
-        </StackLayout>
-    </ScrollView>
+                <!-- RadioButton Group for Multiple Choice -->
+                <StackLayout>
+                    <RadioButton Content="1" GroupName="question1" />
+                    <RadioButton Content="20" GroupName="question1" />
+                    <RadioButton Content="15" GroupName="question1" />
+                    <RadioButton Content="25" GroupName="question1" />
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Button placed at the bottom in the second row -->
+        <Button Text="Next Question" 
+                Clicked="NextQuestionClicked"
+                BackgroundColor="#11017a" 
+                Grid.Row="1"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="End"/>
+    </Grid>
 </ContentPage>
