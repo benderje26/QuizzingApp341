@@ -3,17 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Pages.Login"
              Padding="7">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="3*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <Grid RowDefinitions="2*,Auto,3*" ColumnDefinitions="*,3*,*">
         <VerticalStackLayout Grid.Row="1" Grid.Column="1">
             <Entry
                 x:Name="usernameInput"
@@ -25,7 +15,6 @@
             <Button
                 x:Name="loginButton"
                 Text="Log In"
-                MaximumWidthRequest="150"
                 Margin="0,30,0,0"/>
         </VerticalStackLayout>
         <Button
