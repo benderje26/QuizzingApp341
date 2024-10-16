@@ -86,41 +86,6 @@
                     </Grid>
                 </StackLayout>
             </StackLayout>
-
-            <!-- CollectionView to display favorite quizzes dynamically 
-            <CollectionView x:Name="QuizzesCollectionView" 
-                            ItemsSource="{Binding CreateQuiz}"
-                            IsVisible="{Binding HasQuizzes}"
-                            VerticalOptions="FillAndExpand">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:Quizzes">
-                        <SwipeView>
-                            <SwipeView.RightItems>
-                                <SwipeItems>
-                                    <SwipeItem Text="Delete"
-                                                BackgroundColor="Red"
-                                                Command="{Binding Source={x:Reference QuizzesCollectionView}, Path=BindingContext.DeleteQuizCommand}" />
-                                </SwipeItems>
-                            </SwipeView.RightItems>
-                            <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                                <Label Text="{Binding Title}" FontSize="18" VerticalOptions="Center" />
-                                <Button Text="study"
-                                        FontSize="18"
-                                        BackgroundColor="DarkBlue"
-                                        TextColor="White"
-                                        CornerRadius="5"
-                                        HorizontalOptions="End"
-                                        Clicked="StudyButtonClickedCreateQuiz" />
-                            </Grid>
-                        </SwipeView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            
-            -->
-            
-            
-            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
