@@ -5,76 +5,81 @@ Statistics screen -->
              x:Class="QuizzingApp341.Pages.Statistics"
              Padding="7">
 
-    <ScrollView>
-        <StackLayout Padding="10"
-                     Spacing="10">
-            <Label Text="Statistics"
-                   FontSize="24"
-                   TextColor="#11017a"
-                   HorizontalOptions="Center"/>
+    <!-- Define a Grid with two rows -->
+    <Grid RowDefinitions="*, Auto">
+        <!-- Scrollable content in the first row -->
+        <ScrollView Grid.Row="0">
+            <StackLayout Padding="10"
+                         Spacing="10">
+                <Label Text="Statistics"
+                       FontSize="24"
+                       TextColor="#11017a"
+                       HorizontalOptions="Center"/>
 
-            <StackLayout Orientation="Vertical">
-                <Label Text="Quiz 1"
-                       FontSize="15"/>
-                <Label Text="Date: 10/24/2024"
-                       FontSize="12"/>
+                <StackLayout Orientation="Vertical">
+                    <Label Text="Quiz 1"
+                           FontSize="15"/>
+                    <Label Text="Date: 10/24/2024"
+                           FontSize="12"/>
+                </StackLayout>
+
+                <!-- Box plot chart -->
+                <StackLayout Padding="10">
+                    <Image Source="https://thirdspacelearning.com/wp-content/uploads/2023/07/Box-Plot-image-40-US.png"
+                           HorizontalOptions="Center"
+                           VerticalOptions="CenterAndExpand"
+                           WidthRequest="300"
+                           Margin="0,0,0,0"/>
+                </StackLayout>
+
+                <!-- Stats section -->
+                <StackLayout BackgroundColor="#E6E6E6"
+                             Padding="10">
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Mean: "
+                               FontAttributes="Bold"/>
+                        <Label Text="75"/>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Median: "
+                               FontAttributes="Bold"/>
+                        <Label Text="83"/>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="High: "
+                               FontAttributes="Bold"/>
+                        <Label Text="89"/>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Low: "
+                               FontAttributes="Bold"/>
+                        <Label Text="55"/>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Lower Quartile: "
+                               FontAttributes="Bold"/>
+                        <Label Text="60"/>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Upper Quartile: "
+                               FontAttributes="Bold"/>
+                        <Label Text="89"/>
+                    </StackLayout>
+                </StackLayout>
             </StackLayout>
+        </ScrollView>
 
-            <!-- Box plot chart -->
-           <StackLayout Padding="10">
-                <Image Source="https://thirdspacelearning.com/wp-content/uploads/2023/07/Box-Plot-image-40-US.png"
-               HorizontalOptions="Center"
-               VerticalOptions="CenterAndExpand"
-               WidthRequest="300"
-               Margin="0,0,0,0"/>
-           </StackLayout>
-
-
-            <StackLayout BackgroundColor="#E6E6E6"
-                         Padding="10">
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Mean: "
-                           FontAttributes="Bold"/>
-                    <Label Text="75"/>
-                </StackLayout>
-
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Median: "
-                           FontAttributes="Bold"/>
-                    <Label Text="83"/>
-                </StackLayout>
-
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="High: "
-                           FontAttributes="Bold"/>
-                    <Label Text="89"/>
-                </StackLayout>
-
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Low: "
-                           FontAttributes="Bold"/>
-                    <Label Text="55"/>
-                </StackLayout>
-
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Lower Quartile: "
-                           FontAttributes="Bold"/>
-                    <Label Text="60"/>
-                </StackLayout>
-
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Upper Quartile: "
-                           FontAttributes="Bold"/>
-                    <Label Text="89"/>
-                </StackLayout>
-            </StackLayout>
-
-            <!-- Button to view all participants -->
-            <Button Text="View All Participants"
-                    Clicked="ViewAllParticipantsClicked"
-                    BackgroundColor="#11017a"
-                    />
-        </StackLayout>
-    </ScrollView>
+        <!-- Button to view all participants in the second row -->
+        <Button Text="View All Participants"
+                Clicked="ViewAllParticipantsClicked"
+                BackgroundColor="#11017a"
+                Grid.Row="1"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="End"/>
+    </Grid>
 </ContentPage>
-
