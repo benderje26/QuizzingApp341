@@ -1,121 +1,126 @@
-
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="QuizzingApp341.Pages.CreateQuiz"
+             xmlns:model="clr-namespace:QuizzingApp341.Models" 
+    x:Class="QuizzingApp341.Pages.CreateQuiz"
              Padding="7"
              Title="CreateQuiz">
 
-
-<ContentPage.Toolbar>
-        <Toolbar>
-            <Grid ColumnDefinitions="*, Auto">
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <Label Text="My Quizzes" 
                        FontSize="24" 
                        VerticalOptions="Center" 
                        HorizontalOptions="Start" />
                 <Button Text="+" 
                         FontSize="18" 
-                        BackgroundColor="white" 
+                        BackgroundColor="White" 
                         TextColor="DarkBlue" 
                         CornerRadius="5" 
+                        Grid.Column="1" 
                         HorizontalOptions="End" 
-                        Clicked="OnAddQuizClicked" />
-            </Grid>
-        </Toolbar>
-    </ContentPage.Toolbar>
-
-
-<StackLayout Padding="20" VerticalOptions="Center">
-
-<!-- Quiz List (hardcode)-->
-        <StackLayout Padding="0,10">
-            <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                <Label Text="Quiz Title 1" FontSize="18" VerticalOptions="Center" />
-                <Button Text="study"
-                        FontSize="18"
-                        BackgroundColor="DarkBlue"
-                        TextColor="White"
-                        CornerRadius="5"
-                        HorizontalOptions="End"
-                        Clicked="StudyButtonClickedCreateQuiz" />
+                        Clicked="OnAddButtonClicked" />
             </Grid>
 
-            <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                <Label Text="Quiz Title 2" FontSize="18" VerticalOptions="Center" />
-                <Button Text="study"
-                        FontSize="18"
-                        BackgroundColor="DarkBlue"
-                        TextColor="White"
-                        CornerRadius="5"
-                        HorizontalOptions="End"
-                        Clicked="StudyButtonClickedCreateQuiz" />
-            </Grid>
-
-            <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                <Label Text="Quiz Title 3" FontSize="18" VerticalOptions="Center" />
-                <Button Text="study"
-                        FontSize="18"
-                        BackgroundColor="DarkBlue"
-                        TextColor="White"
-                        CornerRadius="5"
-                        HorizontalOptions="End"
-                        Clicked="StudyButtonClickedCreateQuiz" />
-            </Grid>
-
-            <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                <Label Text="Quiz Title 4" FontSize="18" VerticalOptions="Center" />
-                <Button Text="study"
-                        FontSize="18"
-                        BackgroundColor="DarkBlue"
-                        TextColor="White"
-                        CornerRadius="5"
-                        HorizontalOptions="End"
-                        Clicked="StudyButtonClickedCreateQuiz" />
-            </Grid>
-
-            <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                <Label Text="Quiz Title 5" FontSize="18" VerticalOptions="Center" />
-                <Button Text="study"
-                        FontSize="18"
-                        BackgroundColor="DarkBlue"
-                        TextColor="White"
-                        CornerRadius="5"
-                        HorizontalOptions="End"
-                        Clicked="StudyButtonClickedCreateQuiz" />
-            </Grid>
-        </StackLayout>
-
-    </StackLayout>
-
-     <!-- CollectionView to display favorite quizzes dynamically 
-    <CollectionView x:Name="QuizzesCollectionView" 
-                        ItemsSource="{Binding CreateQuiz}"
-                        IsVisible="{Binding HasQuizzes}"
-                        VerticalOptions="FillAndExpand">
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="model:Quizzes">>
-            <SwipeView>
-            <SwipView.RightItems>
-            <SipeItems>
-            <SwipeItem Text ="Delete"
-                       BackgroundColor= "red"/>
-                       </SwipItem>
-                       </SwipeView.RightItems>
-                <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                    <Label Text="{Binding Title}" FontSize="18" VerticalOptions="Center" /> 
-                    <Button Text="study"
+            <StackLayout Padding="20" VerticalOptions="Center">
+                <!-- Quiz List (hardcoded) -->
+                <StackLayout Padding="0,10">
+                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
+                        <Label Text="Quiz Title 1" FontSize="18" VerticalOptions="Center" />
+                        <Button Text="study"
                                 FontSize="18"
                                 BackgroundColor="DarkBlue"
                                 TextColor="White"
                                 CornerRadius="5"
                                 HorizontalOptions="End"
                                 Clicked="StudyButtonClickedCreateQuiz" />
-                </Grid>
-                </SwipeView>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
-            -->
+                    </Grid>
 
+                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
+                        <Label Text="Quiz Title 2" FontSize="18" VerticalOptions="Center" />
+                        <Button Text="study"
+                                FontSize="18"
+                                BackgroundColor="DarkBlue"
+                                TextColor="White"
+                                CornerRadius="5"
+                                HorizontalOptions="End"
+                                Clicked="StudyButtonClickedCreateQuiz" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
+                        <Label Text="Quiz Title 3" FontSize="18" VerticalOptions="Center" />
+                        <Button Text="study"
+                                FontSize="18"
+                                BackgroundColor="DarkBlue"
+                                TextColor="White"
+                                CornerRadius="5"
+                                HorizontalOptions="End"
+                                Clicked="StudyButtonClickedCreateQuiz" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
+                        <Label Text="Quiz Title 4" FontSize="18" VerticalOptions="Center" />
+                        <Button Text="study"
+                                FontSize="18"
+                                BackgroundColor="DarkBlue"
+                                TextColor="White"
+                                CornerRadius="5"
+                                HorizontalOptions="End"
+                                Clicked="StudyButtonClickedCreateQuiz" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
+                        <Label Text="Quiz Title 5" FontSize="18" VerticalOptions="Center" />
+                        <Button Text="study"
+                                FontSize="18"
+                                BackgroundColor="DarkBlue"
+                                TextColor="White"
+                                CornerRadius="5"
+                                HorizontalOptions="End"
+                                Clicked="StudyButtonClickedCreateQuiz" />
+                    </Grid>
+                </StackLayout>
+            </StackLayout>
+
+            <!-- CollectionView to display favorite quizzes dynamically 
+            <CollectionView x:Name="QuizzesCollectionView" 
+                            ItemsSource="{Binding CreateQuiz}"
+                            IsVisible="{Binding HasQuizzes}"
+                            VerticalOptions="FillAndExpand">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Quizzes">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete"
+                                                BackgroundColor="Red"
+                                                Command="{Binding Source={x:Reference QuizzesCollectionView}, Path=BindingContext.DeleteQuizCommand}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
+                                <Label Text="{Binding Title}" FontSize="18" VerticalOptions="Center" />
+                                <Button Text="study"
+                                        FontSize="18"
+                                        BackgroundColor="DarkBlue"
+                                        TextColor="White"
+                                        CornerRadius="5"
+                                        HorizontalOptions="End"
+                                        Clicked="StudyButtonClickedCreateQuiz" />
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            
+            -->
+            
+            
+            
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>
