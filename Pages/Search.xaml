@@ -10,6 +10,7 @@
                    x:Name="quizSearchBar"
                    SearchCommand="{Binding SearchCommand}"
                    HorizontalOptions="FillAndExpand"
+                  
                    />
 
         <CollectionView ItemsSource="{Binding Quizzes}">
