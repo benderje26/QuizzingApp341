@@ -9,6 +9,6 @@ public partial class HomeScreen : ContentPage
     private void OnSearchClicked(object sender, EventArgs e)
     {
         // Navigate to SearchResultsPage
-        Navigation.PushAsync(new SearchResultsPage());
+        Navigation.PushAsync(new Search());
     }
 }
