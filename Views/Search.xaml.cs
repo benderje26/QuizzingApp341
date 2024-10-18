@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using Microsoft.Maui.Controls;
 
-namespace QuizzingApp341.Pages;
+namespace QuizzingApp341.Views;
 
 public partial class Search : ContentPage
 {

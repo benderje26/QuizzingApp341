@@ -1,4 +1,4 @@
-namespace QuizzingApp341.Pages;
+namespace QuizzingApp341.Views;
 // This class initializes and displays the statistics screen
 public partial class Statistics : ContentPage
 {

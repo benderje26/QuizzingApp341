@@ -1,4 +1,4 @@
-namespace QuizzingApp341.Pages;
+namespace QuizzingApp341.Views;
 
 public partial class HomeScreen : ContentPage
 {

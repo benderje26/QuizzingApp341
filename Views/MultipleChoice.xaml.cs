@@ -1,6 +1,6 @@
 using Microsoft.Maui.Controls.PlatformConfiguration;
 
-namespace QuizzingApp341.Pages;
+namespace QuizzingApp341.Views;
 
 /*
  * Name: Peter Skogman
