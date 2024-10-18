@@ -1,4 +1,4 @@
-namespace QuizzingApp341.Pages;
+namespace QuizzingApp341.Views;
 using QuizzingApp341.Models;
 // This class initializes and displays the Quiz history.
 public partial class QuizHistory : ContentPage

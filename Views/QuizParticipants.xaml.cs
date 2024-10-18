@@ -1,4 +1,4 @@
-namespace QuizzingApp341.Pages;
+namespace QuizzingApp341.Views;
 using QuizzingApp341.Models;
 // This screen initializes and displays the list of participants of a quiz
 public partial class QuizParticipants : ContentPage

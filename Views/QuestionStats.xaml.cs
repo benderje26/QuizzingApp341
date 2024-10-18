@@ -1,13 +1,13 @@
 using Microsoft.Maui.Controls.PlatformConfiguration;
 
-namespace QuizzingApp341.Pages;
+namespace QuizzingApp341.Views;
 
 /*
  * Name: Peter Skogman
  */
-public partial class FillBlank : ContentPage
+public partial class QuestionStats : ContentPage
 {
-	public FillBlank()
+	public QuestionStats()
 	{
 		InitializeComponent();
 	}
