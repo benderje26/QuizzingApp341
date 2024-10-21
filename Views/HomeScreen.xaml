@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuizzingApp341.Views.HomeScreen"
+             Title="HomeScreen">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ImageButton Clicked = "OnSearchClicked"  Source="search.png"
+               WidthRequest="30"
+               HeightRequest="30"
+               HorizontalOptions="End"
+               VerticalOptions="Start"
+               Margin="0,10,10,0"/>
+            
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+
+            <Label 
+            Text="Scan Quiz QR Code"
+            HorizontalOptions="Center"
+            FontSize="Large"
+            Margin="0,20,0,0"/>
+
+            <Image Source="camera_icon.png" 
+               WidthRequest="100"
+               HeightRequest="100"
+               HorizontalOptions="Center"
+               VerticalOptions="Center" />
+
+            <Label 
+            Text="OR"
+            HorizontalOptions="Center"
+            FontSize="Medium"
+            Margin="0,10,0,10"/>
+
+            <Entry 
+            Placeholder="Enter Quiz ID"
+            WidthRequest="250"
+            HorizontalOptions="Center" />
+
+            <Button 
+            Text="Start" 
+            WidthRequest="100"
+            HorizontalOptions="Center"
+            Margin="0,10,0,0"/>
+
+            <Button 
+            Text="Login"
+            WidthRequest="100"
+            HorizontalOptions="Center"
+            Margin="0,10,0,0"
+            BackgroundColor="Transparent"
+            TextColor="Black"/>
+
+            <Button 
+            Text="Create Account"
+            WidthRequest="100"
+            HorizontalOptions="Center"
+            Margin="0,10,0,0"
+            BackgroundColor="Transparent"
+            TextColor="Black"/>
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
