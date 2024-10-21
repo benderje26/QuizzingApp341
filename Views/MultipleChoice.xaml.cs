@@ -10,5 +10,6 @@ public partial class MultipleChoice : ContentPage
 	public MultipleChoice()
 	{
 		InitializeComponent();
-	}
+        BindingContext = MauiProgram.BusinessLogic;
+    }
 }
