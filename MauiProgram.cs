@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Windows;
 
 namespace QuizzingApp341 {
     public static class MauiProgram {
@@ -13,7 +12,7 @@ namespace QuizzingApp341 {
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
