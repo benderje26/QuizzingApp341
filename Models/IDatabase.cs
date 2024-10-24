@@ -1,5 +1,4 @@
 ﻿namespace QuizzingApp341.Models;
 
-interface IDatabase
-{
+interface IDatabase {
 }

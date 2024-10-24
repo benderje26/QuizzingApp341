@@ -1,12 +1,9 @@
 namespace QuizzingApp341.Views;
-using QuizzingApp341.Models;
 // This screen initializes and displays the list of participants of a quiz
-public partial class QuizParticipants : ContentPage
-{
-    public List<Participant> Participants {get; set;}
+public partial class QuizParticipants : ContentPage {
+    public List<Participant> Participants { get; set; }
 
-    public QuizParticipants()
-    {
+    public QuizParticipants() {
         InitializeComponent();
 
         Participants = new List<Participant>
@@ -24,8 +21,8 @@ public partial class QuizParticipants : ContentPage
 
 // Represents a participant of a quiz with a User name and a score
 public class Participant {
-    public string User {get; set;}
-    public int Score {get; set;}
+    public string User { get; set; }
+    public int Score { get; set; }
     public Participant(string user, int score) {
         this.User = user;
         this.Score = score;
