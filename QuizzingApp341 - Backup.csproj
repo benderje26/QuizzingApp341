@@ -60,37 +60,45 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Supabase" Version="1.1.1" />
+		<PackageReference Include="supabase-csharp" Version="0.16.2" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\QuestionStats.xaml.cs">
+	  <Compile Update="Views\QuestionStats.xaml.cs">
 	    <DependentUpon>QuestionStats.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\FillBlank.xaml.cs">
+	  <Compile Update="Views\FillBlank.xaml.cs">
 	    <DependentUpon>FillBlank.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\MultipleChoice.xaml.cs">
+	  <Compile Update="Views\MultipleChoice.xaml.cs">
 	    <DependentUpon>MultipleChoice.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Pages\QuestionStats.xaml">
+	  <MauiXaml Update="Views\CreateAccount.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\HomeScreen.xaml">
+	  <MauiXaml Update="Views\QuestionStats.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\FillBlank.xaml">
+	  <MauiXaml Update="Views\HomeScreen.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\MultipleChoice.xaml">
+	  <MauiXaml Update="Views\FillBlank.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\Login.xaml">
+	  <MauiXaml Update="Views\MultipleChoice.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\Search.xaml">
+	  <MauiXaml Update="Views\Login.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Search.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ResetPassword.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\TestQuiz.xaml">
