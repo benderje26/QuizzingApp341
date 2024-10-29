@@ -48,6 +48,13 @@
                  HorizontalOptions="Center"
                  FontSize="24"
                  Margin="0,20,0,0"/>
+            <Button 
+                Text="Next Question"
+                x:Name="nextButton"
+                MaximumWidthRequest="200" 
+                FontSize="24" 
+                Margin="0,30,0,0"
+                Clicked="OnNextQuestionClicked"/>
 
         </VerticalStackLayout>
         

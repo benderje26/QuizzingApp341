@@ -11,4 +11,10 @@ public partial class QuestionStats : ContentPage
 	{
 		InitializeComponent();
 	}
+
+    private void OnNextQuestionClicked(object sender, EventArgs e)
+    {
+        // Navigate to Create account
+        Navigation.PushAsync(new FillBlank());
+    }
 }

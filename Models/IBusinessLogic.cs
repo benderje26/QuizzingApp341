@@ -9,5 +9,7 @@ namespace QuizzingApp341.Models;
 
 public interface IBusinessLogic
 {
-    ObservableCollection<Question> GetAllQuestions();
+    ObservableCollection<MultipleChoiceQuestion> GetAllMultipleChoiceQuestions();
+
+    ObservableCollection<FillBlankQuestion> GetAllFillBlankQuestions();
 }
