@@ -1,5 +1,3 @@
-using Microsoft.Maui.Controls.PlatformConfiguration;
-
 namespace QuizzingApp341.Views;
 
 /*
