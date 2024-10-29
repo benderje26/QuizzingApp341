@@ -2,8 +2,12 @@
 Statistics screen -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="QuizzingApp341.Views.Statistics"
+             x:Class="QuizzingApp341.Views.StatisticsScreen"
+             xmlns:drawable="clr-namespace:QuizzingApp341.Views"
              Padding="7">
+             <ContentPage.Resources>
+                <drawable:Canvas x:Key="MyDrawable" />
+            </ContentPage.Resources>
 
     <!-- Define a Grid with two rows -->
     <Grid RowDefinitions="*, Auto">
@@ -24,13 +28,12 @@ Statistics screen -->
                 </StackLayout>
 
                 <!-- Box plot chart -->
-                <StackLayout Padding="10">
-                    <Image Source="https://thirdspacelearning.com/wp-content/uploads/2023/07/Box-Plot-image-40-US.png"
-                           HorizontalOptions="Center"
-                           VerticalOptions="CenterAndExpand"
-                           WidthRequest="300"
-                           Margin="0,0,0,0"/>
-                </StackLayout>
+                <GraphicsView 
+                x:Name="Canvas"                 
+                HorizontalOptions="Fill"
+                Drawable="{StaticResource MyDrawable}" 
+                HeightRequest="100"       
+                Grid.Row="1"/>
 
                 <!-- Stats section -->
                 <StackLayout BackgroundColor="#E6E6E6"
