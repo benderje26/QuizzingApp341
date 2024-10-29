@@ -16,6 +16,7 @@ public partial class StatisticsScreen : ContentPage {
     // Event handler for button click
     private void ViewAllParticipantsClicked(object sender, EventArgs e) {
         // Get the participants and show the participants screen
+        Navigation.PushAsync(new QuizParticipants());
     }
 }
 

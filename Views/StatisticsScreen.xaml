@@ -4,7 +4,8 @@ Statistics screen -->
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.StatisticsScreen"
              xmlns:drawable="clr-namespace:QuizzingApp341.Views"
-             Padding="7">
+             Padding="7"
+             Title="Statistics">
              <ContentPage.Resources>
                 <drawable:Canvas x:Key="MyDrawable" />
             </ContentPage.Resources>
@@ -15,10 +16,6 @@ Statistics screen -->
         <ScrollView Grid.Row="0">
             <StackLayout Padding="10"
                          Spacing="10">
-                <Label Text="Statistics"
-                       FontSize="24"
-                       TextColor="#11017a"
-                       HorizontalOptions="Center"/>
 
                 <StackLayout Orientation="Vertical">
                     <Label Text="Quiz 1"

@@ -17,4 +17,13 @@ public partial class QuizHistory : ContentPage {
 
         BindingContext = this;
     }
+
+    async void OnQuizTapped(object sender, EventArgs e) {
+        if (sender is StackLayout stackLayout &&
+            stackLayout.GestureRecognizers[0] is TapGestureRecognizer tapGesture &&
+            tapGesture.CommandParameter is Quiz tappedQuiz) {
+            // Navigate or perform any action with tappedQuiz
+            await Navigation.PushAsync(new StatisticsScreen());
+        }
+    }
 }

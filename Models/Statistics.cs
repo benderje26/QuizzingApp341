@@ -18,21 +18,21 @@ public class Statistics {
         // If there is an even number of scores
         if (scores.Count % 2 == 0) {
             // Get the average of the two middle elements
-            return ((scores[scores.Count/2 - 1]) + (scores[scores.Count/2]))/2;
+            return ((scores[scores.Count / 2 - 1]) + (scores[scores.Count / 2])) / 2;
 
         } else { // If there is an odd number of scores
             // return the center element
-            return scores[scores.Count/2];
+            return scores[scores.Count / 2];
         }
     }
 
     public double getLowerQuartile() {
         scores.Sort(); // Sort
-        return scores[scores.Count/4]; // Get the first quarter element
+        return scores[scores.Count / 4]; // Get the first quarter element
     }
 
     public double getUpperQuartile() {
         scores.Sort(); // Sort
-        return scores[scores.Count * 3/4]; // Get the third quarter element
+        return scores[scores.Count * 3 / 4]; // Get the third quarter element
     }
 }
