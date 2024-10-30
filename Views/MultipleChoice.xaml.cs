@@ -7,14 +7,17 @@ namespace QuizzingApp341.Views;
  */
 public partial class MultipleChoice : ContentPage
 {
+    public bool FinalQuestion { get; set; } 
 	public MultipleChoice()
 	{
 		InitializeComponent();
         BindingContext = MauiProgram.BusinessLogic;
     }
 
-    private void OnNextClicked(object sender, EventArgs e)
-    {
+    /*
+     * Next button clicked so move to the next question in the quiz 
+     */
+    private void OnNextClicked(object sender, EventArgs e) {
         bool success = MauiProgram.BusinessLogic.IncrementCurrentQuestion();
         if (success) {
             bool multipleChoice = MauiProgram.BusinessLogic.IsCurrentQuestionMultipleChoice();
@@ -26,6 +29,9 @@ public partial class MultipleChoice : ContentPage
         }
     }
 
+    /*
+    * Previous button clicked so move to the previous question in the quiz 
+    */
     private void OnPreviousClicked(object sender, EventArgs e) {
         bool success = MauiProgram.BusinessLogic.DecrementCurrentQuestion();
         if (success) {
@@ -36,5 +42,12 @@ public partial class MultipleChoice : ContentPage
                 Navigation.PushModalAsync(new FillBlank());
             }
         }
+    }
+
+    /*
+     * Submit button hit so close the quiz by going to the homescreen
+     */
+    private void OnSubmitClicked(object sender, EventArgs e) {
+        Navigation.PushModalAsync(new HomeScreen());
     }
 }

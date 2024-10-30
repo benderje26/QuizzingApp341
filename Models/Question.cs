@@ -6,6 +6,9 @@ namespace QuizzingApp341.Models {
         public virtual string Text { get; private set; } = questionText;
         public abstract bool IsCorrect();
         public abstract bool HasCorrectAnswer();
+        public bool First { get; set; }
+        public bool Final { get; set; }
+        public bool NotFinal { get; set; }
         public int QuestionNumber { get; private set; } = questionNumber;
 
         public event PropertyChangedEventHandler? PropertyChanged;

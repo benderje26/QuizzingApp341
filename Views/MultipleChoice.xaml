@@ -5,6 +5,7 @@
              x:DataType="model:BusinessLogic" 
              x:Class="QuizzingApp341.Views.MultipleChoice"
              Padding="7">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
@@ -36,8 +37,9 @@
                             <RadioButton Grid.Row="2" Grid.ColumnSpan="3" GroupName="question" Content="{Binding Options[1]}" FontSize="24" Margin="0,10,0,0"/>
                             <RadioButton Grid.Row="3" Grid.ColumnSpan="3" GroupName="question" Content="{Binding Options[2]}" FontSize="24" Margin="0,10,0,0"/>
                             <RadioButton Grid.Row="4" Grid.ColumnSpan="3" GroupName="question" Content="{Binding Options[3]}" FontSize="24" Margin="0,10,0,0"/>
-                            <Button Grid.Row="5" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnPreviousClicked"/>
-                            <Button Grid.Row="5" Grid.Column="2" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnNextClicked"/>
+                            <Button Grid.Row="5" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnPreviousClicked" IsVisible="{Binding First}"/>
+                            <Button Grid.Row="5" Grid.Column="2" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding Final}"/>
+                            <Button Grid.Row="5" Grid.Column="2" x:Name="submit" Text="Submit" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnSubmitClicked" IsVisible="{Binding NotFinal}"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

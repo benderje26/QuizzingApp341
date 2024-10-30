@@ -34,8 +34,9 @@
                         <Grid RowDefinitions="*,*,*" ColumnDefinitions="*,*,*">
                             <Label Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding Text}" HorizontalOptions="Center" FontSize="32" Margin="0,40,0,0"/>
                             <Entry Grid.Row="1" Grid.ColumnSpan="3" Placeholder="Type Answer Here" WidthRequest="250" HorizontalOptions="Center" FontSize="24" Margin="0,30,0,0"/>
-                            <Button Grid.Row="2" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnPreviousClicked"/>
-                            <Button Grid.Row="3" Grid.Column="2" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnNextClicked"/>
+                            <Button Grid.Row="2" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnPreviousClicked" IsVisible="{Binding First}"/>
+                            <Button Grid.Row="2" Grid.Column="2" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding Final}"/>
+                            <Button Grid.Row="5" Grid.Column="2" x:Name="submit" Text="Submit" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnSubmitClicked" IsVisible="{Binding NotFinal}"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
