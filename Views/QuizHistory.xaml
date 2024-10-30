@@ -4,34 +4,43 @@
              x:Class="QuizzingApp341.Views.QuizHistory"
              Padding="7">
 
-    
-        <StackLayout Padding="10" Spacing = "20">
-            <Label Text="Quiz History" 
-                   FontSize="24"
-                   HorizontalOptions="Center"
-                   TextColor = "#11017a"/>
 
-            <!-- List of Quizzes in the history -->
-            <ListView x:Name="QuizzesListView" ItemsSource="{Binding Quizzes}" VerticalOptions="FillAndExpand" 
+    <StackLayout Padding="10"
+            Spacing="20">
+        <Label Text="Quiz History"
+               FontSize="24"
+               HorizontalOptions="Center"
+               TextColor="#11017a"/>
+
+        <!-- List of Quizzes in the history -->
+        <ListView x:Name="QuizzesListView"
+                ItemsSource="{Binding Quizzes}"
+                VerticalOptions="FillAndExpand"
                   HorizontalOptions="FillAndExpand"
                   RowHeight="70"
                   SeparatorColor="#11017a">
-                
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Padding="10">
-                                <Label Text="{Binding Title}" 
-                                       FontAttributes="Bold" 
-                                       FontSize="18" />
-                                <Label Text="{Binding LastActivated, StringFormat='Last Activated: {0:yyyy-MM-dd}'}" 
-                                       FontSize="14" 
-                                       TextColor="Gray" />
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackLayout>
-    
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Padding="10">
+                            <!-- Navigation for each quiz - Navigates to stats on that quiz -->
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Tapped="OnQuizTapped"
+                                    CommandParameter="{Binding .}"/>
+                            </StackLayout.GestureRecognizers>
+                            <Label Text="{Binding Title}"
+                                   FontAttributes="Bold"
+                                   FontSize="18"/>
+                            <Label Text="{Binding LastActivated, StringFormat='Last Activated: {0:yyyy-MM-dd}'}"
+                                   FontSize="14"
+                                   TextColor="Gray"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+
 </ContentPage>
