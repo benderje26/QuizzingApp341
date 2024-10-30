@@ -1,4 +1,5 @@
 ﻿namespace QuizzingApp341.Models;
 
-interface IDatabase {
+public interface IDatabase {
+    public List<Question> LoadQuestions();
 }

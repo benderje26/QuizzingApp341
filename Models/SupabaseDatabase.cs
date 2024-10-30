@@ -1,5 +1,6 @@
 ﻿namespace QuizzingApp341.Models;
 using Supabase;
+
 class SupabaseDatabase : IDatabase {
 
     private const string REST_URL = "https://tcogwlqjinvzckjmnjhp.supabase.co";
@@ -18,5 +19,11 @@ class SupabaseDatabase : IDatabase {
     public async void Initialize() {
         // initialize Supabase
         await Client.InitializeAsync();
+    }
+
+    public List<Question> LoadQuestions() {
+        return [
+            new MultipleChoiceQuestion(0, "How many CS students does it take to screw in a lightbulb?", ["1", "3", "10", "30"], 3),
+            new FillBlankQuestion(1, "What is our professor's name?", ["Dr. Rogers", "Professor Rogers"], false)];
     }
 }

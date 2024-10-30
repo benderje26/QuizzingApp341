@@ -1,21 +1,26 @@
 ﻿using Microsoft.Extensions.Logging;
+using QuizzingApp341.Models;
+using System.Windows;
 
-namespace QuizzingApp341 {
-    public static class MauiProgram {
-        public static MauiApp CreateMauiApp() {
-            var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts => {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+namespace QuizzingApp341;
+public static class MauiProgram 
+{
+    public static IDatabase database = new SupabaseDatabase();
+    public static IBusinessLogic BusinessLogic = new BusinessLogic(database);
+
+    public static MauiApp CreateMauiApp() {
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .ConfigureFonts(fonts => {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            });
 
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
 
-            return builder.Build();
-        }
+        return builder.Build();
     }
 }
