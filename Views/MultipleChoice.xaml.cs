@@ -15,12 +15,26 @@ public partial class MultipleChoice : ContentPage
 
     private void OnNextClicked(object sender, EventArgs e)
     {
-        // Navigate to Create account
-        Navigation.PushAsync(new QuestionStats());
+        bool success = MauiProgram.BusinessLogic.IncrementCurrentQuestion();
+        if (success) {
+            bool multipleChoice = MauiProgram.BusinessLogic.IsCurrentQuestionMultipleChoice();
+            if (multipleChoice) {
+                Navigation.PushModalAsync(new MultipleChoice());
+            } else {
+                Navigation.PushModalAsync(new FillBlank());
+            }
+        }
     }
 
     private void OnPreviousClicked(object sender, EventArgs e) {
-        // Navigate to Create account
-        Navigation.PushAsync(new QuestionStats());
+        bool success = MauiProgram.BusinessLogic.DecrementCurrentQuestion();
+        if (success) {
+            bool multipleChoice = MauiProgram.BusinessLogic.IsCurrentQuestionMultipleChoice();
+            if (multipleChoice) {
+                Navigation.PushModalAsync(new MultipleChoice());
+            } else {
+                Navigation.PushModalAsync(new FillBlank());
+            }
+        }
     }
 }

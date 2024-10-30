@@ -29,7 +29,7 @@
                   Margin="0,10,0,0"/>
             <CollectionView x:Name="CV" ItemsSource="{Binding CurrentQuestion}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:MultipleChoiceQuestion" x:Name="currentQuestion">
+                    <DataTemplate x:DataType="model:MultipleChoiceQuestion" x:Name="adsgahsfyhre">
                         <Grid RowDefinitions="*,*,*,*,*,*" ColumnDefinitions="*,*">
                             <Label Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Text}" HorizontalOptions="Center" FontSize="32" Margin="0,40,0,0"/>
                             <RadioButton Grid.Row="1" Grid.ColumnSpan="2" GroupName="question" Content="{Binding Options[0]}" FontSize="24" Margin="0,10,0,0"/>
@@ -38,7 +38,7 @@
                             <RadioButton Grid.Row="4" Grid.ColumnSpan="2" GroupName="question" Content="{Binding Options[3]}" FontSize="24" Margin="0,10,0,0"/>
                             <Button Grid.Row="5" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="24" Margin="0,30,0,0" Clicked="OnPreviousClicked"/>
                             <Button Grid.Row="5" Grid.Column="1" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="24" Margin="0,30,0,0" Clicked="OnNextClicked"/>
-                         </Grid>
+                        </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

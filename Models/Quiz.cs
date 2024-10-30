@@ -10,23 +10,42 @@ public class Quiz(string title, DateTime? lastActivated, DateTime? dateCreated, 
 
     public Question? CurrentQuestion {
         get {
-            if (currentIndex == null) {
+            if (CurrentIndex == null) {
                 return null;
             }
-            return Questions[currentIndex.Value];
+            return Questions[CurrentIndex.Value];
         }
     }
-    private int? currentIndex = null;
+
+    public int? CurrentIndex {
+        get { return currentIndex; }
+        set {
+            currentIndex = value;
+        }
+    }
+    private int? currentIndex = 0;
 
     public bool HasNextQuestion() {
-        if (currentIndex == null) {
+        if (CurrentIndex == null) {
             return Questions.Count > 0;
         }
-        return currentIndex < Questions.Count - 1;
+        return CurrentIndex < Questions.Count - 1;
     }
 
     public Question NextQuestion() {
-        currentIndex = (currentIndex ?? 0) + 1;
-        return Questions[currentIndex.Value];
+        CurrentIndex = (CurrentIndex ?? 0) + 1;
+        return Questions[CurrentIndex.Value];
+    }
+
+    public bool HasPreviousQuestion() {
+        if (CurrentIndex == null) {
+            return Questions.Count > 0;
+        }
+        return CurrentIndex > 0;
+    }
+
+    public Question PreviousQuestion() {
+        CurrentIndex = (CurrentIndex ?? Questions.Count-1) - 1;
+        return Questions[CurrentIndex.Value];
     }
 }
