@@ -2,15 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.QuizParticipants"
-             Padding="7">
+             Padding="7"
+             Title="Quiz 1">
 
 
     <StackLayout Padding="10"
                  Spacing="10">
-        <Label Text="Quiz 1"
-               FontSize="24"
-               HorizontalOptions="Center"
-               TextColor="#11017a"/>
         
         <StackLayout Orientation="Vertical"
                         Padding="10"
