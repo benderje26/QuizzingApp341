@@ -3,8 +3,7 @@ using QuizzingApp341.Models;
 using System.Windows;
 
 namespace QuizzingApp341;
-public static class MauiProgram 
-{
+public static class MauiProgram {
     public static IBusinessLogic BusinessLogic = new BusinessLogic();
 
     public static MauiApp CreateMauiApp() {
@@ -17,7 +16,7 @@ public static class MauiProgram
             });
 
 #if DEBUG
-            builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
         return builder.Build();

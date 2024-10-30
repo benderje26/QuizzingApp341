@@ -18,15 +18,15 @@
         </Grid.ColumnDefinitions>
         <VerticalStackLayout Grid.Row="1" Grid.Column="1">
             <Label 
-                 Text="Time Remaining:"
-                 HorizontalOptions="Center"
-                 FontSize="24"
-                 Margin="0,10,0,0"/>
+                Text="Time Remaining:"
+                HorizontalOptions="Center"
+                FontSize="24"
+                Margin="0,10,0,0"/>
             <Label 
-                  Text="00:32"
-                  HorizontalOptions="Center"
-                  FontSize="24"
-                  Margin="0,10,0,0"/>
+                Text="00:32"
+                HorizontalOptions="Center"
+                FontSize="24"
+                Margin="0,10,0,0"/>
             <CollectionView x:Name="CV" ItemsSource="{Binding MultipleChoiceQuestions}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:MultipleChoiceQuestion">
@@ -37,7 +37,7 @@
                             <RadioButton Grid.Row="3" GroupName="question" Content="{Binding Options[2]}" FontSize="24" Margin="0,10,0,0"/>
                             <RadioButton Grid.Row="4" GroupName="question" Content="{Binding Options[3]}" FontSize="24" Margin="0,10,0,0"/>
                             <Button Grid.Row="5" x:Name="submitButton" Text="Submit" MaximumWidthRequest="200" FontSize="24" Margin="0,30,0,0" Clicked="OnSubmitClicked"/>
-                         </Grid>
+                        </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
