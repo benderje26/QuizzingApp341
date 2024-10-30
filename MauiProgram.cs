@@ -5,7 +5,8 @@ using System.Windows;
 namespace QuizzingApp341;
 public static class MauiProgram 
 {
-    public static IBusinessLogic BusinessLogic = new BusinessLogic();
+    public static IDatabase database = new SupabaseDatabase();
+    public static IBusinessLogic BusinessLogic = new BusinessLogic(database);
 
     public static MauiApp CreateMauiApp() {
         var builder = MauiApp.CreateBuilder();

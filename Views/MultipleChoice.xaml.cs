@@ -1,3 +1,5 @@
+using QuizzingApp341.Models;
+
 namespace QuizzingApp341.Views;
 
 /*
@@ -11,8 +13,13 @@ public partial class MultipleChoice : ContentPage
         BindingContext = MauiProgram.BusinessLogic;
     }
 
-    private void OnSubmitClicked(object sender, EventArgs e)
+    private void OnNextClicked(object sender, EventArgs e)
     {
+        // Navigate to Create account
+        Navigation.PushAsync(new QuestionStats());
+    }
+
+    private void OnPreviousClicked(object sender, EventArgs e) {
         // Navigate to Create account
         Navigation.PushAsync(new QuestionStats());
     }
