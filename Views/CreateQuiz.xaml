@@ -18,15 +18,16 @@
                        VerticalOptions="Center" 
                        HorizontalOptions="Start" />
                 <Button Text="+" 
-                        FontSize="18" 
+                        FontSize="30" 
                         BackgroundColor="White" 
                         TextColor="DarkBlue" 
                         CornerRadius="5" 
                         Grid.Column="1" 
                         HorizontalOptions="End" 
-                        Clicked="OnAddButtonClicked" />
+                        Clicked="OnCreateNewQuizButtonClicked" />
             </Grid>
 
+           
             <StackLayout Padding="20" VerticalOptions="Center">
                 <!-- Quiz List (hardcoded) -->
                 <StackLayout Padding="0,10">

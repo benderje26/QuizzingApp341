@@ -51,24 +51,6 @@
             Margin="0,10,0,0"
             Clicked="OnStartClicked"/>
 
-            <Button 
-            Text="Login"
-            WidthRequest="100"
-            HorizontalOptions="Center"
-            Margin="0,10,0,0"
-            BackgroundColor="Transparent"
-            TextColor="Black"
-            Clicked="OnLoginClicked"/>
-
-            <Button 
-            Text="Create Account"
-            WidthRequest="100"
-            HorizontalOptions="Center"
-            Margin="0,10,0,0"
-            BackgroundColor="Transparent"
-            TextColor="Black"
-            Clicked="OnCreateClicked"/>
-
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

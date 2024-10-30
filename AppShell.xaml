@@ -21,11 +21,6 @@
                           Route="HomeScreen" />
         </Tab>
 
-        <Tab Title="Instructor" Icon="instructor.png">
-            <ShellContent Title="InstructorQuiz"
-                          ContentTemplate="{DataTemplate local:InstructorQuiz}" 
-                          Route="InstructorQuiz" />
-        </Tab>
 
         <Tab Title="CreateQuiz" Icon="page.png">
             <ShellContent Title="CreateQuiz"
@@ -50,12 +45,8 @@
                           ContentTemplate="{DataTemplate local:Setting}" 
                           Route="Setting" />
         </Tab>
-
-        <Tab Title="Tester" Icon="dotnet_bot.png">
-            <ShellContent Title="Tester"
-                  ContentTemplate="{DataTemplate local:MultipleChoice}" 
-                  Route="QuestionStats" />
-        </Tab>
+        
+       
 
     </TabBar>
 </Shell>
