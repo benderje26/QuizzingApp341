@@ -7,9 +7,55 @@
     Shell.FlyoutBehavior="Disabled"
     Title="QuizzingApp341">
 
+    <!-- Login Screen: Displayed first -->
     <ShellContent
-        ContentTemplate="{DataTemplate local:HomeScreen}"
+        ContentTemplate="{DataTemplate local:Login}"
         Route="Login"
-        Shell.NavBarIsVisible="False"/>
+        Shell.NavBarIsVisible="False" />
 
+    <!-- TabBar to be shown only after login -->
+    <TabBar>
+        <Tab Title="Home" Icon="home.png">
+            <ShellContent Title="Home Screen"
+                          ContentTemplate="{DataTemplate local:HomeScreen}" 
+                          Route="HomeScreen" />
+        </Tab>
+
+        <Tab Title="Instructor" Icon="instructor.png">
+            <ShellContent Title="InstructorQuiz"
+                          ContentTemplate="{DataTemplate local:InstructorQuiz}" 
+                          Route="InstructorQuiz" />
+        </Tab>
+
+        <Tab Title="CreateQuiz" Icon="page.png">
+            <ShellContent Title="CreateQuiz"
+                          ContentTemplate="{DataTemplate local:CreateQuiz}" 
+                          Route="CreateQuiz" />
+        </Tab>
+
+        <Tab Title="FavoriteQuiz" Icon="favorite.png">
+            <ShellContent Title="Favorite Quizzes"
+                          ContentTemplate="{DataTemplate local:FavoriteQuizzes}" 
+                          Route="FavoriteQuizzesPage" />
+        </Tab>
+
+        <Tab Title="History" Icon="history.png">
+            <ShellContent Title="Quiz History"
+                          ContentTemplate="{DataTemplate local:QuizHistory}" 
+                          Route="QuizHistory" />
+        </Tab>
+
+        <Tab Title="Settings" Icon="settings.png">
+            <ShellContent Title="Settings"
+                          ContentTemplate="{DataTemplate local:Setting}" 
+                          Route="Setting" />
+        </Tab>
+
+        <Tab Title="Tester" Icon="dotnet_bot.png">
+            <ShellContent Title="Tester"
+                  ContentTemplate="{DataTemplate local:MultipleChoice}" 
+                  Route="QuestionStats" />
+        </Tab>
+
+    </TabBar>
 </Shell>

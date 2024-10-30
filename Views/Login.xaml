@@ -15,7 +15,8 @@
             <Button
                 x:Name="loginButton"
                 Text="Log In"
-                Margin="0,30,0,0"/>
+                Margin="0,30,0,0"
+                Clicked="OnLoginButtonClicked"/>
         </VerticalStackLayout>
         <Button
             x:Name="createAccountButton"
