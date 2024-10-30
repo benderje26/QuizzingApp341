@@ -29,15 +29,15 @@
                   Margin="0,10,0,0"/>
             <CollectionView x:Name="CV" ItemsSource="{Binding CurrentQuestion}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:MultipleChoiceQuestion" x:Name="adsgahsfyhre">
-                        <Grid RowDefinitions="*,*,*,*,*,*" ColumnDefinitions="*,*">
-                            <Label Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Text}" HorizontalOptions="Center" FontSize="32" Margin="0,40,0,0"/>
-                            <RadioButton Grid.Row="1" Grid.ColumnSpan="2" GroupName="question" Content="{Binding Options[0]}" FontSize="24" Margin="0,10,0,0"/>
-                            <RadioButton Grid.Row="2" Grid.ColumnSpan="2" GroupName="question" Content="{Binding Options[1]}" FontSize="24" Margin="0,10,0,0"/>
-                            <RadioButton Grid.Row="3" Grid.ColumnSpan="2" GroupName="question" Content="{Binding Options[2]}" FontSize="24" Margin="0,10,0,0"/>
-                            <RadioButton Grid.Row="4" Grid.ColumnSpan="2" GroupName="question" Content="{Binding Options[3]}" FontSize="24" Margin="0,10,0,0"/>
-                            <Button Grid.Row="5" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="24" Margin="0,30,0,0" Clicked="OnPreviousClicked"/>
-                            <Button Grid.Row="5" Grid.Column="1" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="24" Margin="0,30,0,0" Clicked="OnNextClicked"/>
+                    <DataTemplate x:DataType="model:MultipleChoiceQuestion" x:Name="multipleChoiceQuestion">
+                        <Grid RowDefinitions="*,*,*,*,*,*" ColumnDefinitions="*,*,*">
+                            <Label Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding Text}" HorizontalOptions="Center" FontSize="32" Margin="0,40,0,0"/>
+                            <RadioButton Grid.Row="1" Grid.ColumnSpan="3" GroupName="question" Content="{Binding Options[0]}" FontSize="24" Margin="0,10,0,0"/>
+                            <RadioButton Grid.Row="2" Grid.ColumnSpan="3" GroupName="question" Content="{Binding Options[1]}" FontSize="24" Margin="0,10,0,0"/>
+                            <RadioButton Grid.Row="3" Grid.ColumnSpan="3" GroupName="question" Content="{Binding Options[2]}" FontSize="24" Margin="0,10,0,0"/>
+                            <RadioButton Grid.Row="4" Grid.ColumnSpan="3" GroupName="question" Content="{Binding Options[3]}" FontSize="24" Margin="0,10,0,0"/>
+                            <Button Grid.Row="5" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnPreviousClicked"/>
+                            <Button Grid.Row="5" Grid.Column="2" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnNextClicked"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
