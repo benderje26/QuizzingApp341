@@ -2,8 +2,39 @@
 confusing, just ask someone else!
 
 C# Standards:
+Our C# standards are designed to promote clean, consistent, and readable code across our project.
 
+Naming Conventions.
 
+Class Names: Use PascalCase for all class names, where each word is capitalized.
+Example: public class HomeScreen { }
+
+Method Names: Use PascalCase for all method names. Methods that return a boolean should start with "Is" or "Has" to indicate a true/false outcome.
+Example: public bool IsCurrentQuestionMultipleChoice() { return true; }
+Variable Names: Use camelCase for local variables and parameters. Avoid single-character variable names.
+Example:
+
+Constants: Use uppercase letters with underscores for constants.
+Example: 
+
+Private Fields: Use camelCase, starting with an underscore.
+Example: 
+
+Properties: Use PascalCase for properties, following the same capitalization rule as classes.
+Example: public string QuestionNumber { get; set; }
+
+Indentation: Use 4 spaces per indentation level. Do not use tabs.
+Spacing:Place one blank line between method definitions.
+
+Curly Braces: Always use curly braces { } for if/else, loops,
+and method definitions,even for single-line statements
+
+Single-Line Comments: Use // for single-line comments,
+explaining the purpose of code if it’s not immediately clear
+
+File Names: Match the file name with the class name 
+it contains for easy navigation.
+Example: HomeScreen.cs should contain the HomeScreen class.
 
 SQL Standards:
 
