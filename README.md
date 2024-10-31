@@ -9,3 +9,5 @@ performing. A fourth function is to be able to favorite quizzes to be able to re
 Sprint 2 Changes
 
 Peter Skogman: I made the question pages for the quiz bind to the current questions of the quiz. Users can navigate between the questions with previous and next buttons, and a submit button at the end to return back to the home screen. 
+
+Zafeer Rahim: I made the homescreen page. The changes were that now the buttons in homescreen has functionality. I also made a default code for quiz(12345) that takes the user to questions page. 
