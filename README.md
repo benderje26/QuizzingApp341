@@ -12,3 +12,5 @@ Sprint 2 Changes
 Peter Skogman: I made the question pages for the quiz bind to the current questions of the quiz. Users can navigate between the questions with previous and next buttons, and a submit button at the end to return back to the home screen. 
 
 Pachia: The box plot for the statistics screen is not an image anymore, it is actually created based on given data 😀 
+
+Jason W: I did the navigation bar. The login screen will be shown when the user first launches the app. After the user correctly logs in, the userHome screen will show up, and the navigation bar will also show up at the bottom.
