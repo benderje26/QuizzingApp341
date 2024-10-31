@@ -7,4 +7,5 @@ in) to scan a QR Code or enter a code to enter the quiz. A third function is sto
 performing. A fourth function is to be able to favorite quizzes to be able to retake them again.​
 
 Sprint 2 Changes
+
 Peter Skogman: I made the question pages for the quiz bind to the current questions of the quiz. Users can navigate between the questions with previous and next buttons, and a submit button at the end to return back to the home screen. 
