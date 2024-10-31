@@ -1,4 +1,4 @@
-﻿namespace QuizzingApp341.Models;
+namespace QuizzingApp341.Models;
 using Supabase;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;

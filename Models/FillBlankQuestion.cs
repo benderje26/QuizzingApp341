@@ -1,4 +1,4 @@
-﻿namespace QuizzingApp341.Models;
+namespace QuizzingApp341.Models;
 
 public class FillBlankQuestion(int questionNumber, string text, List<string>? correntAnswers, bool caseSensitive) : Question(questionNumber, text) {
     public string GivenAnswer {

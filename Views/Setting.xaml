@@ -5,23 +5,24 @@
              x:Class="QuizzingApp341.Views.Setting"
              Padding="7"
              Title="Settings">
-    <StackLayout Padding="20" VerticalOptions="Center">
+    <StackLayout Padding="20" VerticalOptions="FillAndExpand">
 
-
-        <!-- Settings Title -->
+        <!-- Settings Title  -->
         <Label Text="Settings"
                FontSize="24"
                HorizontalOptions="Center"
-               VerticalOptions="CenterAndExpand" />
+               VerticalOptions="Start"
+               Margin="0,0,0,20" />
 
         <!-- Buttons for each setting option -->
+        <!-- I don't think we should do all the functionality below -->
         <Button Text="Account info >" 
                 FontSize="18"
                 BackgroundColor="DarkBlue"
                 TextColor="White"
                 CornerRadius="10"
                 HeightRequest="50"
-                Margin="0,10,0,0" />
+                Margin="0,10" />
 
         <Button Text="History >" 
                 FontSize="18"
@@ -29,7 +30,7 @@
                 TextColor="White"
                 CornerRadius="10"
                 HeightRequest="50"
-                Margin="0,10,0,0" />
+                Margin="0,10" />
 
         <Button Text="Appearance >" 
                 FontSize="18"
@@ -37,7 +38,7 @@
                 TextColor="White"
                 CornerRadius="10"
                 HeightRequest="50"
-                Margin="0,10,0,0" />
+                Margin="0,10" />
 
         <Button Text="Notifications >" 
                 FontSize="18"
@@ -45,9 +46,9 @@
                 TextColor="White"
                 CornerRadius="10"
                 HeightRequest="50"
-                Margin="0,10,0,0" />
+                Margin="0,10" />
 
-        <!-- Delete Account Button -->
+   
         <Button Text="Delete Account"
                 FontSize="18"
                 BackgroundColor="Red"
