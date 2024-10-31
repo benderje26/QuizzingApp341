@@ -7,5 +7,5 @@ in) to scan a QR Code or enter a code to enter the quiz. A third function is sto
 performing. A fourth function is to be able to favorite quizzes to be able to retake them again.​
 
 Sprint 2 changes:
-- The box plot for the statistics screen is not an image anymore, it is actually created based on given data :)
+- The box plot for the statistics screen is not an image anymore, it is actually created based on given data 😀
 - 
