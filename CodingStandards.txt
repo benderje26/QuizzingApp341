@@ -29,3 +29,74 @@ where quiz in (
   select id from quiz
   where creator = 12345
 );
+
+For comments with SQL, comments should only be added where extra clarity is needed, as code should typically
+be straightforward enough to read without comments
+Ex with no comments:
+select * from quiz;
+Ex with comment:
+/* 
+This is a really complicated part so I am using 
+a multiline comment to describe what is happening
+so other people can understand in faster
+*/
+select * from question where question_type_id = 2;    --This is a quick comment so single line
+
+Join statements can be put on the same line that the from statement is also on
+Ex: 
+select *
+from question q
+inner join question_type qt on qt.id and q.question_type_id;
+
+First column of on clause in join should be the table being joined and second what table it is 
+being joined to 
+Ex:
+/*
+qt.id is the first part of the on clause as question type is being joined to question
+*/
+select *
+from question q
+inner join question_type qt on qt.id and q.question_type_id;
+
+All inner joins should happen before left/right joins
+select *
+from questions q
+inner join question_type qt on qt.id and q.question_type_id
+inner join answers a on a.question_type_id and qt.id
+left join other_table o on o.answer_id and a.id;
+
+Aliases should be as short as possible while still differentiating between tables and should attempt to have
+the consistent aliases for the same tables everywhere
+Ex:
+select *
+from question q
+inner join question_type qt on qt.id and q.question_type_id;
+
+When comparing dates, uses between instead of a > and < sign
+Ex. 
+select * 
+from quiz 
+where created_at between '2024-11-11' and '2024-12-12';
+Bad Example (Don't do this):
+select * 
+from quiz 
+where created_at > '2024-11-11' and created_at < '2024-12-12';
+
+Use parentheses in when needed to make the code more readable
+select *
+from quiz q
+where (created_at between '2024-11-11' and '2024-12-12') and (q.question_type_id = 4 or q.question_type_id = 6);
+
+Try and avoid joining/comparing on string data types as performance is much worse than numeric data types
+Good Example:
+select *
+from quiz q
+where q.question_type_id = 4;
+Bad Example:
+select *
+from quiz q
+where q.question_type_name = 'Fill Blank';
+
+Use ISNULL() to make the code safer
+Ex:
+select ISNULL(q.comments, 'No comments') from quiz q;
