@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Supabase.Postgrest.Attributes;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace QuizzingApp341.Models {
