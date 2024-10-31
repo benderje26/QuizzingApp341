@@ -1,0 +1,31 @@
+﻿Welcome to our group's coding standards! It is split up into a few different sections, and if anything is
+confusing, just ask someone else!
+
+C# Standards:
+
+
+
+SQL Standards:
+
+As per Supabase recommendations, we have lowercase table names and lowercase column names. All SQL code will
+be lowercase, as it is postgresql.
+Ex:
+select * from quiz;
+
+There is flexibility on multi-line statements for readability, but whenever you are trying to use a tab, it
+should be 2 spaces.
+Ex:
+select * from question where choices is not null;
+Ex:
+select * from question
+where choices is not null;
+Ex:
+select *
+from question
+  where choices is not null;
+Ex:
+select title from question
+where quiz in (
+  select id from quiz
+  where creator = 12345
+);
