@@ -19,7 +19,7 @@ public partial class QuestionStats : ContentPage
         // Navigate to Create account
         Navigation.PushAsync(new FillBlank());
     }
-
+}
 //    //private bool CheckIfMultipleChoice(string question) {
 //    //    return true;
 //    //}
