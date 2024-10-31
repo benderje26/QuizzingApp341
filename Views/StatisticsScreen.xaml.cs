@@ -33,23 +33,23 @@ public class Canvas : IDrawable {
         canvas.StrokeColor = Colors.DarkBlue;
 
         // Middle line
-        canvas.DrawLine((float)(scoreStats.getMin()/100.0 * dirtyRect.Width), dirtyRect.Height/2, 
-            (float)(scoreStats.getMax()/100.0 * dirtyRect.Width), dirtyRect.Height/2);
+        canvas.DrawLine((float)(scoreStats.getMin() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2,
+            (float)(scoreStats.getMax() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2);
 
         // draw Min
-        canvas.DrawLine((float)(scoreStats.getMin()/100.0 * dirtyRect.Width), dirtyRect.Height/2 - 10, (float)(scoreStats.getMin()/100.0 * dirtyRect.Width), dirtyRect.Height/2 + 10);
+        canvas.DrawLine((float)(scoreStats.getMin() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 10, (float)(scoreStats.getMin() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 + 10);
 
 
         // draw Lower Quartile and upper quartile
         canvas.FillColor = Color.FromRgba("#A5ACE1FF");
-        canvas.FillRoundedRectangle((float)(scoreStats.getLowerQuartile()/100.0 * dirtyRect.Width), dirtyRect.Height/2 - 25, (float)((scoreStats.getUpperQuartile() - scoreStats.getLowerQuartile())/100.0 * dirtyRect.Width), 50, 10);
-        canvas.DrawRoundedRectangle((float)(scoreStats.getLowerQuartile()/100.0 * dirtyRect.Width), dirtyRect.Height/2 - 25, (float)((scoreStats.getUpperQuartile() - scoreStats.getLowerQuartile())/100.0 * dirtyRect.Width), 50, 10);
+        canvas.FillRoundedRectangle((float)(scoreStats.getLowerQuartile() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 25, (float)((scoreStats.getUpperQuartile() - scoreStats.getLowerQuartile()) / 100.0 * dirtyRect.Width), 50, 10);
+        canvas.DrawRoundedRectangle((float)(scoreStats.getLowerQuartile() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 25, (float)((scoreStats.getUpperQuartile() - scoreStats.getLowerQuartile()) / 100.0 * dirtyRect.Width), 50, 10);
 
         // draw Median line
-        canvas.DrawLine((float)(scoreStats.getMedian()/100.0 * dirtyRect.Width), dirtyRect.Height/2 - 25, (float)(scoreStats.getMedian()/100.0 * dirtyRect.Width), dirtyRect.Height/2 + 25);
+        canvas.DrawLine((float)(scoreStats.getMedian() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 25, (float)(scoreStats.getMedian() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 + 25);
 
         // draw Max line
-        canvas.DrawLine((float)(scoreStats.getMax()/100.0 * dirtyRect.Width), dirtyRect.Height/2 - 10, (float)(scoreStats.getMax()/100.0 * dirtyRect.Width), dirtyRect.Height/2 + 10);
+        canvas.DrawLine((float)(scoreStats.getMax() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 10, (float)(scoreStats.getMax() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 + 10);
     }
 }
 

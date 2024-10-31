@@ -9,9 +9,7 @@
         <SearchBar Placeholder="Search Quizzes"
                    x:Name="quizSearchBar"
                    SearchCommand="{Binding SearchCommand}"
-                   HorizontalOptions="FillAndExpand"
-                  
-                   />
+                   HorizontalOptions="FillAndExpand"/>
 
         <CollectionView ItemsSource="{Binding Quizzes}">
             <CollectionView.ItemTemplate>
@@ -27,8 +25,7 @@
                                     BackgroundColor="Navy"
                                     TextColor="White"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.StudyCommand}"
-                                    CommandParameter="{Binding .}"
-                                    />
+                                    CommandParameter="{Binding .}"/>
                         </Grid>
                     </Frame>
                 </DataTemplate>

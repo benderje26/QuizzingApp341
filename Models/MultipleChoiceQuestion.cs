@@ -1,4 +1,4 @@
-﻿namespace QuizzingApp341.Models;
+namespace QuizzingApp341.Models;
 
 public class MultipleChoiceQuestion(int questionNumber, string text, List<string> options, int? correctAnswer) : Question(questionNumber, text) {
     public int? GivenAnswer {

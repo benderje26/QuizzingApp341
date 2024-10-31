@@ -14,3 +14,5 @@ Peter Skogman: I made the question pages for the quiz bind to the current questi
 Pachia: The box plot for the statistics screen is not an image anymore, it is actually created based on given data 😀 
 
 Jason W: I did the navigation bar. The login screen will be shown when the user first launches the app. After the user correctly logs in, the userHome screen will show up, and the navigation bar will also show up at the bottom.
+
+Jeremiah: I worked on the database mainly. Sadly, Supabase is having a bit of trouble and I am unable to get it to load, but hopefully this should be quickly resolved. I also overall did the model for the quiz question types.
