@@ -2,37 +2,41 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:QuizzingApp341.Models" 
-    x:Class="QuizzingApp341.Views.CreateQuiz"
+             x:Class="QuizzingApp341.Views.CreateQuiz"
              Padding="7"
-             Title="Add A New Quiz">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem 
-                     Text="+" 
-                     Order="Primary" 
-                     Priority="0" 
-                     Clicked="OnCreateNewQuizButtonClicked" />
-    </ContentPage.ToolbarItems>
+             Title="Create Quiz">
 
     <ContentPage.Content>
         <StackLayout>
-            <Grid>
+            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="Start" Padding="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+
                 <Label Text="My Quizzes" 
-                       FontSize="24" 
+                       FontSize="40" 
+                       TextColor="Black" 
                        VerticalOptions="Center" 
-                       HorizontalOptions="Start" />
+                       HorizontalOptions="Start" 
+                       Grid.Column="0" />
+
+                <Button Text="+" 
+                        FontSize="40" 
+                        Clicked="OnCreateNewQuizButtonClicked" 
+                        BackgroundColor="Transparent" 
+                        TextColor="Black" 
+                        HorizontalOptions="End" 
+                        Margin="10,0,0,0" 
+                        Grid.Column="1" />
             </Grid>
 
-           
+
             <StackLayout Padding="20" VerticalOptions="Center">
-                <!-- Quiz List (hardcoded) -->
                 <StackLayout Padding="0,10">
-                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                        <Label Text="Quiz Title 1" FontSize="18" VerticalOptions="Center" />
-                        <Button Text="study"
+                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
+                        <Label Text="Quiz Title 1" FontSize="18" />
+                        <Button Text="Study"
                                 FontSize="18"
                                 BackgroundColor="DarkBlue"
                                 TextColor="White"
@@ -41,9 +45,9 @@
                                 Clicked="StudyButtonClickedCreateQuiz" />
                     </Grid>
 
-                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                        <Label Text="Quiz Title 2" FontSize="18" VerticalOptions="Center" />
-                        <Button Text="study"
+                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
+                        <Label Text="Quiz Title 2" FontSize="18" />
+                        <Button Text="Study"
                                 FontSize="18"
                                 BackgroundColor="DarkBlue"
                                 TextColor="White"
@@ -52,9 +56,9 @@
                                 Clicked="StudyButtonClickedCreateQuiz" />
                     </Grid>
 
-                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                        <Label Text="Quiz Title 3" FontSize="18" VerticalOptions="Center" />
-                        <Button Text="study"
+                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
+                        <Label Text="Quiz Title 3" FontSize="18" />
+                        <Button Text="Study"
                                 FontSize="18"
                                 BackgroundColor="DarkBlue"
                                 TextColor="White"
@@ -63,9 +67,9 @@
                                 Clicked="StudyButtonClickedCreateQuiz" />
                     </Grid>
 
-                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                        <Label Text="Quiz Title 4" FontSize="18" VerticalOptions="Center" />
-                        <Button Text="study"
+                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
+                        <Label Text="Quiz Title 4" FontSize="18" />
+                        <Button Text="Study"
                                 FontSize="18"
                                 BackgroundColor="DarkBlue"
                                 TextColor="White"
@@ -74,9 +78,9 @@
                                 Clicked="StudyButtonClickedCreateQuiz" />
                     </Grid>
 
-                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                        <Label Text="Quiz Title 5" FontSize="18" VerticalOptions="Center" />
-                        <Button Text="study"
+                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
+                        <Label Text="Quiz Title 5" FontSize="18" />
+                        <Button Text="Study"
                                 FontSize="18"
                                 BackgroundColor="DarkBlue"
                                 TextColor="White"
