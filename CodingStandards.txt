@@ -42,6 +42,16 @@ File Names: Match the file name with the class name
 it contains for easy navigation.
 Example: HomeScreen.cs should contain the HomeScreen class.
 
+Method Length: Methods should generally be concise and focused on a single responsibility, ideally between 20-40 lines.
+
+Error Handling: Use try-catch blocks judiciously, catching specific exceptions.
+
+Null Checking: Prefer the null-coalescing operator (?) or direct null checks to handle potentially null values.
+Example: int? age = person?.Age;
+
+Namespaces: Organize namespaces to reflect the directory structure, with clear divisions between features on every file
+
+
 SQL Standards:
 
 As per Supabase recommendations, we have lowercase table names and lowercase column names. All SQL code will
