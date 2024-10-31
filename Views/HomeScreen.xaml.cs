@@ -8,16 +8,7 @@ public partial class HomeScreen : ContentPage {
         // Navigate to SearchResultsPage
         Navigation.PushAsync(new Search());
     }
-    private void OnLoginClicked(object sender, EventArgs e)
-    {
-        // Navigate to LoginPage
-        Navigation.PushAsync(new Login());
-    }
-    private void OnCreateClicked(object sender, EventArgs e)
-    {
-        // Navigate to Create account
-        Navigation.PushAsync(new CreateAccount());
-    }
+   
     private async void OnStartClicked(object sender, EventArgs e)
     {
         var quizIdEntry = this.FindByName<Entry>("quizIdEntry");

@@ -15,19 +15,22 @@
             <Button
                 x:Name="loginButton"
                 Text="Log In"
-                Margin="0,30,0,0"/>
+                Margin="0,30,0,0"
+                Clicked="OnLoginButtonClicked"/>
         </VerticalStackLayout>
         <Button
             x:Name="createAccountButton"
             Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
             HorizontalOptions="End"
             VerticalOptions="Start"
-            Text="Create Account"/>
+            Text="Create Account"
+            Clicked="OnCreateClicked"/>
         <Button
             x:Name="resetPasswordButton"
             Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
             HorizontalOptions="Start"
             VerticalOptions="Start"
-            Text="Reset Password"/>
+            Text="Reset Password"
+            Clicked="OnResetPasswordClicked"/>
     </Grid>
 </ContentPage>

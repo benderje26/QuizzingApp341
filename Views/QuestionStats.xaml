@@ -56,6 +56,15 @@
                 Margin="0,30,0,0"
                 Clicked="OnNextQuestionClicked"/>
 
+          <!--
+            <Button
+                x:Name="nextQuestionButton"
+                Text="Next Question"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsVisible="True"              
+                Clicked="OnNextQuestionButtonClicked" />
+                   -->
         </VerticalStackLayout>
         
     </Grid>

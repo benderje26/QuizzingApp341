@@ -4,7 +4,14 @@
              xmlns:model="clr-namespace:QuizzingApp341.Models" 
     x:Class="QuizzingApp341.Views.CreateQuiz"
              Padding="7"
-             Title="CreateQuiz">
+             Title="Add A New Quiz">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem 
+                     Text="+" 
+                     Order="Primary" 
+                     Priority="0" 
+                     Clicked="OnCreateNewQuizButtonClicked" />
+    </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <StackLayout>
@@ -17,16 +24,9 @@
                        FontSize="24" 
                        VerticalOptions="Center" 
                        HorizontalOptions="Start" />
-                <Button Text="+" 
-                        FontSize="18" 
-                        BackgroundColor="White" 
-                        TextColor="DarkBlue" 
-                        CornerRadius="5" 
-                        Grid.Column="1" 
-                        HorizontalOptions="End" 
-                        Clicked="OnAddButtonClicked" />
             </Grid>
 
+           
             <StackLayout Padding="20" VerticalOptions="Center">
                 <!-- Quiz List (hardcoded) -->
                 <StackLayout Padding="0,10">
