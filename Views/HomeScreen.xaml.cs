@@ -16,7 +16,7 @@ public partial class HomeScreen : ContentPage {
 
         if (quizId == "12345") 
         {
-            await Navigation.PushAsync(new TestQuiz("12345")); 
+            await Navigation.PushAsync(new MultipleChoice()); 
         }
         else
         {

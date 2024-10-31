@@ -9,10 +9,10 @@ public partial class QuizHistory : ContentPage {
 
         Quizzes = new List<Quiz>
         {
-            new Quiz ("Quiz 1", DateTime.Parse("2024-01-01") ),
-            new Quiz ("Quiz 2", DateTime.Parse("2024-01-02") ),
-            new Quiz ("Quiz 3", DateTime.Parse("2024-01-03") ),
-            new Quiz ("Quiz 4", DateTime.Parse("2024-01-04") )
+            new Quiz ("Quiz 1", DateTime.Parse("2024-01-01"), DateTime.Parse("2023-01-01"), 1000, new List<Question>()),
+            new Quiz ("Quiz 2", DateTime.Parse("2024-01-02"), DateTime.Parse("2023-01-01"), 1000, new List<Question>()),
+            new Quiz ("Quiz 3", DateTime.Parse("2024-01-03"), DateTime.Parse("2023-01-01"), 1000, new List<Question>()),
+            new Quiz ("Quiz 4", DateTime.Parse("2024-01-04"), DateTime.Parse("2023-01-01"), 1000, new List<Question>())
         };
 
         BindingContext = this;

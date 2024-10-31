@@ -6,38 +6,18 @@ using System.Collections.Generic;
 /*
  * Name: Peter Skogman
  */
-public partial class QuestionStats : ContentPage {
-    //private int currentQuestionIndex = 0;
-    //private Quiz currentQuiz;
 
+public partial class QuestionStats : ContentPage
+{
+	public QuestionStats()
+	{
+		InitializeComponent();
+	}
 
-    public QuestionStats(Quiz quiz) {
-        InitializeComponent();
-       // currentQuiz = quiz;
-    }
-
-    //private async void OnNextQuestionButtonClicked(object sender, EventArgs e) {
-    //    currentQuestionIndex++;
-    //    // Check if there are more questions in the quiz
-    //    if (currentQuestionIndex < currentQuiz.Questions.Count) {
-    //        string question = currentQuiz.Questions[currentQuestionIndex];
-
-
-    //        bool isMultipleChoice = CheckIfMultipleChoice(question);
-
-    //        if (isMultipleChoice) {
-    //            // Navigate to the multiple choice screen
-    //            await Navigation.PushAsync(new MultipleChoice());
-    //        } else {
-    //            // Navigate to the fill-in-the-blank screen
-    //            await Navigation.PushAsync(new FillBlank());
-    //        }
-
-
-    //    } else {
-    //        // No more questions, display statistics page
-    //        await Navigation.PushAsync(new Statistics());
-    //    }
+    private void OnNextQuestionClicked(object sender, EventArgs e)
+    {
+        // Navigate to Create account
+        Navigation.PushAsync(new FillBlank());
     }
 
 //    //private bool CheckIfMultipleChoice(string question) {
