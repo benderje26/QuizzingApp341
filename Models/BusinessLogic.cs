@@ -36,16 +36,20 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
      * @return - all the questions from the database
      */
     public List<Question> GetAllQuestions() {
-        return Task.Run(() => database.LoadQuestions()).Result;
+        Task<List<Question>> questionsTask = database.LoadQuestions();
+        questionsTask.Wait();
+        return questionsTask.Result;
     }
 
     public Quiz CurrentQuiz {
         get {
+            //currentQuiz ??= new Quiz("First Quiz", new DateTime(), new DateTime(), 1000, GetAllQuestions());
+            currentQuiz ??= new Quiz("First Quiz", new DateTime(), new DateTime(), 1000, [new MultipleChoiceQuestion(0, "How many CS students does it take to screw in a lightbulb?", ["1", "3", "10", "30"], 3),
+            new FillBlankQuestion(1, "What is our professor's name?", ["Dr. Rogers", "Professor Rogers"], false)]);
             return currentQuiz;
         }
     }
-    private Quiz currentQuiz = new Quiz("First Quiz", new DateTime(), new DateTime(), 1000, [new MultipleChoiceQuestion(0, "How many CS students does it take to screw in a lightbulb?", ["1", "3", "10", "30"], 3),
-            new FillBlankQuestion(1, "What is our professor's name?", ["Dr. Rogers", "Professor Rogers"], false)]);
+    private Quiz? currentQuiz;
 
     /*
      * Moves to the next question of the quiz if there is one

@@ -3,6 +3,7 @@ using Supabase;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Responses;
+using System.Runtime.CompilerServices;
 
 class SupabaseDatabase : IDatabase {
 
@@ -15,23 +16,25 @@ class SupabaseDatabase : IDatabase {
 
     public SupabaseDatabase() {
         Client = new(REST_URL, API_KEY, new SupabaseOptions {
-            AutoConnectRealtime = false // may need to be changed
+            AutoConnectRealtime = false, // may need to be changed
+            
         });
+        Initialize().Wait();
     }
 
-    public async void Initialize() {
+    public async Task Initialize() {
         // initialize Supabase
         await Client.InitializeAsync();
     }
 
     public async Task<List<Question>> LoadQuestions() {
-        SupabaseQuiz? quiz = await Client
-            .From<SupabaseQuiz>()
-            .Where(x => x.Id == 0)
-            .Single();
+        //SupabaseQuiz? quiz = await Client
+        //    .From<SupabaseQuiz>()
+        //    .Where(x => x.Id == 0)
+        //    .Single();
         ModeledResponse<SupabaseQuestion> questionsResult = await Client
             .From<SupabaseQuestion>()
-            .Where(x => x.Quiz == quiz)
+            .Where(x => x.Quiz != null)
             .Get();
         List<Question> questions = [];
         foreach (SupabaseQuestion sq in questionsResult.Models) {
