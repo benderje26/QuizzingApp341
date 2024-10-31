@@ -18,14 +18,14 @@ Example: public class HomeScreen { }
 
 Method Names: Use PascalCase for all method names. Methods that return a boolean should start with "Is" or "Has" to indicate a true/false outcome.
 Example: public bool IsCurrentQuestionMultipleChoice() { return true; }
-Variable Names: Use camelCase for local variables and parameters. Avoid single-character variable names.
-Example:
+Variable Names: Use camelCase for local scope variables. Avoid single-character variable names.
+Example: int example;
 
 Constants: Use uppercase letters with underscores for constants.
-Example: 
+Example: public const int NUM_BANANAS_ON_TREES = 15;
 
 Private Fields: Use camelCase, starting with an underscore.
-Example: 
+Example: private int example;
 
 Properties: Use PascalCase for properties, following the same capitalization rule as classes.
 Example: public string QuestionNumber { get; set; }
@@ -52,9 +52,9 @@ Example: int? age = person?.Age;
 
 Namespaces: Organize namespaces to reflect the directory structure, with clear divisions between features on every file
 
-try not to hard code as possible, professor doesn't like hard code data.
+try not to hard code values when possible.
 
-when declare the variable, don't use var. variable type should alway be clear
+when declaring the variable, don't use var. Data type should always be clear
 
 use prefix interfaces with "I" to clearly differentiate them from classes.
 
