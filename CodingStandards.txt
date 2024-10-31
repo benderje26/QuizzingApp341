@@ -51,6 +51,11 @@ Example: int? age = person?.Age;
 
 Namespaces: Organize namespaces to reflect the directory structure, with clear divisions between features on every file
 
+try not to hard code as possible, professor doesn't like hard code data.
+
+when declare the variable, don't use var. variable type should alway be clear
+
+use prefix interfaces with "I" to clearly differentiate them from classes.
 
 SQL Standards:
 
