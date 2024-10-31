@@ -1,4 +1,5 @@
-﻿Welcome to our group's coding standards! It is split up into a few different sections, and if anything is
+﻿Coding Standards - Team 5
+Welcome to our group's coding standards! It is split up into a few different sections, and if anything is
 confusing, just ask someone else!
 
 C# Standards:
