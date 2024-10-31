@@ -1,5 +1,8 @@
-﻿namespace QuizzingApp341.Models;
+namespace QuizzingApp341.Models;
 using Supabase;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
+using Supabase.Postgrest.Responses;
 
 class SupabaseDatabase : IDatabase {
 
@@ -11,8 +14,8 @@ class SupabaseDatabase : IDatabase {
     private Client Client { get; set; }
 
     public SupabaseDatabase() {
-        Client = new(REST_URL, API_KEY, new Supabase.SupabaseOptions {
-            AutoConnectRealtime = true // TODO Jeremiah maybe should be false?
+        Client = new(REST_URL, API_KEY, new SupabaseOptions {
+            AutoConnectRealtime = false // may need to be changed
         });
     }
 
@@ -21,9 +24,72 @@ class SupabaseDatabase : IDatabase {
         await Client.InitializeAsync();
     }
 
-    public List<Question> LoadQuestions() {
-        return [
-            new MultipleChoiceQuestion(0, "How many CS students does it take to screw in a lightbulb?", ["1", "3", "10", "30"], 3),
-            new FillBlankQuestion(1, "What is our professor's name?", ["Dr. Rogers", "Professor Rogers"], false)];
+    public async Task<List<Question>> LoadQuestions() {
+        SupabaseQuiz? quiz = await Client
+            .From<SupabaseQuiz>()
+            .Where(x => x.Id == 0)
+            .Single();
+        ModeledResponse<SupabaseQuestion> questionsResult = await Client
+            .From<SupabaseQuestion>()
+            .Where(x => x.Quiz == quiz)
+            .Get();
+        List<Question> questions = [];
+        foreach (SupabaseQuestion sq in questionsResult.Models) {
+            if (sq.Choices != null) {
+                questions.Add(new MultipleChoiceQuestion(sq.QuestionNumber, sq.Title ?? string.Empty, sq.Choices, sq.CorrectAnswer));
+            } else {
+                questions.Add(new FillBlankQuestion(sq.QuestionNumber, sq.Title ?? string.Empty, sq.AcceptedTextAnswers, sq.CaseSensitive ?? false));
+            }
+        }
+        questions.Sort((x, y) => x.QuestionNumber.CompareTo(y.QuestionNumber));
+        return questions;
+    }
+
+    [Table("USER")]
+    public class SupabaseUser : BaseModel {
+        [PrimaryKey("id")]
+        public long? Id { get; set; }
+
+        [Column("email_address")]
+        public string? EmailAddress { get; set; }
+    }
+
+    [Table("QUIZ")]
+    public class SupabaseQuiz : BaseModel {
+        [PrimaryKey("id")]
+        public long? Id { get; set; }
+
+        [Column("creator")]
+        public SupabaseUser? Creator { get; set; }
+
+        [Column("title")]
+        public string? Title { get; set; }
+    }
+
+    [Table("QUESTION")]
+    public class SupabaseQuestion : BaseModel {
+        [PrimaryKey("id")]
+        public long? Id { get; set; }
+
+        [Column("quiz")]
+        public SupabaseQuiz? Quiz { get; set; }
+
+        [Column("question_no")]
+        public int QuestionNumber { get; set; }
+
+        [Column("title")]
+        public string? Title { get; set; }
+
+        [Column("choices")]
+        public List<string>? Choices { get; set; }
+
+        [Column("correct_answer")]
+        public int? CorrectAnswer { get; set; }
+
+        [Column("accepted_text_answers")]
+        public List<string>? AcceptedTextAnswers { get; set; }
+
+        [Column("case_sensitive")]
+        public bool? CaseSensitive { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace QuizzingApp341.Models;
+namespace QuizzingApp341.Models;
 
 public class MultipleChoiceQuestion(int questionNumber, string text, List<string> options, int? correctAnswer) : Question(questionNumber, text) {
     public int? GivenAnswer {
@@ -23,7 +23,7 @@ public class MultipleChoiceQuestion(int questionNumber, string text, List<string
     }
     List<string> options = options;
 
-    public override bool HasCorrectAnswer() => correctAnswer != null;
+    public override bool HasCorrectAnswer() => correntAnswer != null;
 
-    public override bool IsCorrect() => givenAnswer == correctAnswer;
+    public override bool IsCorrect() => givenAnswer == correntAnswer;
 }

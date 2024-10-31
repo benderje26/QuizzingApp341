@@ -42,6 +42,6 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </VerticalStackLayout>
-        
+
     </Grid>
 </ContentPage>

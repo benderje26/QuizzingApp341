@@ -20,7 +20,3 @@ public partial class QuestionStats : ContentPage
         Navigation.PushAsync(new FillBlank());
     }
 }
-//    //private bool CheckIfMultipleChoice(string question) {
-//    //    return true;
-//    //}
-//}

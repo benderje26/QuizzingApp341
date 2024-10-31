@@ -6,9 +6,9 @@ Statistics screen -->
              xmlns:drawable="clr-namespace:QuizzingApp341.Views"
              Padding="7"
              Title="Statistics">
-             <ContentPage.Resources>
-                <drawable:Canvas x:Key="MyDrawable" />
-            </ContentPage.Resources>
+    <ContentPage.Resources>
+        <drawable:Canvas x:Key="MyDrawable" />
+    </ContentPage.Resources>
 
     <!-- Define a Grid with two rows -->
     <Grid RowDefinitions="*, Auto">
@@ -26,11 +26,11 @@ Statistics screen -->
 
                 <!-- Box plot chart -->
                 <GraphicsView 
-                x:Name="Canvas"                 
-                HorizontalOptions="Fill"
-                Drawable="{StaticResource MyDrawable}" 
-                HeightRequest="100"       
-                Grid.Row="1"/>
+                    x:Name="Canvas"                 
+                    HorizontalOptions="Fill"
+                    Drawable="{StaticResource MyDrawable}" 
+                    HeightRequest="100"       
+                    Grid.Row="1"/>
 
                 <!-- Stats section -->
                 <StackLayout BackgroundColor="#E6E6E6"
@@ -48,7 +48,7 @@ Statistics screen -->
                                FontAttributes="Bold"
                                FontSize="15"/>
                         <Label Text="83"
-                            FontSize="15"/>
+                               FontSize="15"/>
                     </StackLayout>
 
                     <StackLayout Orientation="Horizontal">

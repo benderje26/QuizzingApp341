@@ -8,13 +8,13 @@
 
     <StackLayout Padding="10"
                  Spacing="10">
-        
+
         <StackLayout Orientation="Vertical"
-                        Padding="10"
-                        BackgroundColor ="#E6E6E6">
-                    <Label Text="Date: 10/14/2024"
-                           VerticalOptions="End"/>
-                </StackLayout>
+                     Padding="10"
+                     BackgroundColor ="#E6E6E6">
+            <Label Text="Date: 10/14/2024"
+                   VerticalOptions="End"/>
+        </StackLayout>
 
         <!-- List of Participants -->
         <ListView x:Name="ParticipantsListView"
@@ -26,8 +26,8 @@
 
             <ListView.Header>
                 <StackLayout Orientation="Vertical"
-                        Padding="10"
-                        HorizontalOptions="Center">
+                             Padding="10"
+                             HorizontalOptions="Center">
                     <Label Text="Participants:"
                            VerticalOptions="Start"
                            FontAttributes="Bold"
@@ -52,8 +52,7 @@
 
             <ListView.Footer>
                 <StackLayout Padding="10">
-                    <Label
-                        Text="{Binding Participants.Count, StringFormat = 'Total: {0} Participants'}"/>
+                    <Label Text="{Binding Participants.Count, StringFormat='Total: {0} Participants'}"/>
                 </StackLayout>
             </ListView.Footer>
         </ListView>

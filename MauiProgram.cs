@@ -1,12 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using QuizzingApp341.Models;
 using System.Windows;
 
 namespace QuizzingApp341;
-public static class MauiProgram 
-{
-    public static IDatabase database = new SupabaseDatabase();
-    public static IBusinessLogic BusinessLogic = new BusinessLogic(database);
+public static class MauiProgram {
+    public static IBusinessLogic BusinessLogic = new BusinessLogic(new SupabaseDatabase());
 
     public static MauiApp CreateMauiApp() {
         var builder = MauiApp.CreateBuilder();
@@ -18,7 +16,7 @@ public static class MauiProgram
             });
 
 #if DEBUG
-            builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
         return builder.Build();
