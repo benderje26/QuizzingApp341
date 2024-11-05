@@ -44,6 +44,9 @@
                              VerticalOptions="FillAndExpand"
                              Margin="5"
                              BackgroundColor="#F5F5F5">
+            <Label
+                Padding="10"
+                Text="Please enter a Quiz ID to start participating in a live Quiz:"/>
 
             <!-- Entry for entering quiz ID-->
             <VerticalStackLayout
