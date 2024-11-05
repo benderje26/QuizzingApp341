@@ -4,54 +4,77 @@
              x:Class="QuizzingApp341.Views.HomeScreen"
              Title="Home">
 
-    <Grid>
-
+    <Grid Padding="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/> <!-- Row for QR code and Search Quiz widget -->
+            <RowDefinition Height="*"/> <!-- Row for Entering Quiz ID -->
         </Grid.RowDefinitions>
 
-        <ImageButton Clicked = "OnSearchClicked"  Source="search.png"
-               WidthRequest="30"
-               HeightRequest="30"
-               HorizontalOptions="End"
-               VerticalOptions="Start"
-               Margin="0,10,10,0"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/> 
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+        <!-- First row with two widgets filling the whole row -->
+        <Button ImageSource="qr_code.png"
+                Grid.Row="0"
+                Grid.Column="0"
+                WidthRequest="150"
+                HeightRequest="150"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                Margin="5"
+                BackgroundColor="#F5F5F5"/>
 
-            <Label 
-            Text="Scan Quiz QR Code"
-            HorizontalOptions="Center"
-            FontSize="Large"
-            Margin="0,20,0,0"/>
+        <Button ImageSource="search_bar.png"
+                Grid.Row="0"
+                Grid.Column="1"
+                WidthRequest="150"
+                HeightRequest="150"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                Margin="5"
+                BackgroundColor="#F5F5F5"
+                Clicked="OnSearchClicked"/>
 
-            <Image Source="camera_icon.png" 
-               WidthRequest="100"
-               HeightRequest="100"
-               HorizontalOptions="Center"
-               VerticalOptions="Center" />
+        <!-- Second row with one widget that expands to fill the entire row -->
+        <VerticalStackLayout Grid.Row="1"
+                             Grid.ColumnSpan="2"
+                             HorizontalOptions="FillAndExpand"
+                             VerticalOptions="FillAndExpand"
+                             Margin="5"
+                             BackgroundColor="#F5F5F5">
 
-            <Label 
-            Text="OR"
-            HorizontalOptions="Center"
-            FontSize="Medium"
-            Margin="0,10,0,10"/>
+            <!-- Entry for entering quiz ID-->
+            <VerticalStackLayout
+                VerticalOptions="Center"
+                Spacing="10"
+                Padding="20">
+                <Frame 
+                BorderColor="#11017a" 
+                BackgroundColor="Transparent"
+                CornerRadius="5" 
+                Padding="10" 
+                HasShadow="False">
+                
+                <Entry
+                    x:Name="quizIdEntry"
+                    Placeholder="Enter Quiz ID"
+                    WidthRequest="250"
+                    HorizontalOptions="Center" 
+                    VerticalOptions="Center"/>
+            </Frame>
 
-            <Entry 
-            x:Name="quizIdEntry"    
-            Placeholder="Enter Quiz ID"
-            WidthRequest="250"
-            HorizontalOptions="Center" />
-
-            <Button 
-            Text="Start" 
-            WidthRequest="100"
-            HorizontalOptions="Center"
-            Margin="0,10,0,0"
-            Clicked="OnStartClicked"
-            BackgroundColor="#11017a"/>
-
+                <Button
+                    Padding="10"
+                    Text="Start"
+                    WidthRequest="100"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Margin="10,10,0,0"
+                    Clicked="OnStartClicked"
+                    BackgroundColor="#11017a"/>
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </Grid>
 </ContentPage>
