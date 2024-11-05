@@ -13,7 +13,7 @@ public partial class CreateQuiz : ContentPage {
 
 
     private void OnCreateNewQuizButtonClicked(object sender, EventArgs e) {
-        // Navigate to the page where users can create a new quiz
+        Navigation.PushAsync(new CreateNewQuiz());
     }
 
 }
