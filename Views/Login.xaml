@@ -3,34 +3,64 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.Login"
              Padding="7">
-    <Grid RowDefinitions="2*,Auto,3*" ColumnDefinitions="*,3*,*">
+        <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#FFFFFF" Offset="0.0" /> <!-- White -->
+            <GradientStop Color="#F5F5F5" Offset="1.0" /> <!-- Very Light Grey -->
+        </LinearGradientBrush>
+    </ContentPage.Background>
+             
+    <Grid RowDefinitions="Auto, Auto, *, Auto" ColumnDefinitions="*,3*,*"
+          Padding="20">
+        <VerticalStackLayout Padding="20" Grid.Row="0" Grid.Column="1" VerticalOptions="Center">
+            <Image Source="quiz.png"
+               HorizontalOptions="Center"
+               VerticalOptions="CenterAndExpand"
+               WidthRequest="200"
+               HeightRequest="200"
+               Margin="20"/>
+        </VerticalStackLayout>
+        
         <VerticalStackLayout Grid.Row="1" Grid.Column="1">
             <Entry
                 x:Name="usernameInput"
-                Placeholder="Username"/>
+                Placeholder="Username"
+                PlaceholderColor="#A9A9A9"
+                TextColor="#000000"/>
             <Entry
                 x:Name="passwordInput"
                 Placeholder="Password"
-                IsPassword="True"/>
+                IsPassword="True"
+                PlaceholderColor="#A9A9A9"
+                TextColor="#D3D3D3"/>
+
+            <Label Text="Reset Password?"
+                   TextColor="#FF707070"
+                   FontAttributes="Italic"
+                   HorizontalOptions="End">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Tapped="OnResetPasswordClicked"/>
+                </Label.GestureRecognizers>
+            </Label>
+
             <Button
                 x:Name="loginButton"
                 Text="Log In"
                 Margin="0,30,0,0"
-                Clicked="OnLoginButtonClicked"/>
+                Clicked="OnLoginButtonClicked"
+                BackgroundColor="#11017a"/>
         </VerticalStackLayout>
+        
         <Button
             x:Name="createAccountButton"
-            Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
-            HorizontalOptions="End"
-            VerticalOptions="Start"
+            Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
+            HorizontalOptions="Center"
+            VerticalOptions="End"
             Text="Create Account"
-            Clicked="OnCreateClicked"/>
-        <Button
-            x:Name="resetPasswordButton"
-            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-            HorizontalOptions="Start"
-            VerticalOptions="Start"
-            Text="Reset Password"
-            Clicked="OnResetPasswordClicked"/>
+            TextColor="#FF707070"
+            Clicked="OnCreateClicked"
+            BackgroundColor="#F5F5F5"/>
+
     </Grid>
 </ContentPage>
