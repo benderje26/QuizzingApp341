@@ -5,6 +5,7 @@ using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Responses;
 using Supabase.Gotrue;
 using Client = Supabase.Client;
+using Supabase.Gotrue.Exceptions;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -75,7 +76,7 @@ public class SupabaseDatabase : IDatabase {
         return [];
     }
 
-    public async Task<bool> CreateNewUser(string emailAddress, string username, string password) {
+    public async Task<AccountCreationResult> CreateNewUser(string emailAddress, string username, string password) {
         try {
             Session = await Client.Auth.SignUp(emailAddress, password,
                 new SignUpOptions() {
@@ -83,18 +84,21 @@ public class SupabaseDatabase : IDatabase {
                         { "username", username }
                     }
                 });
-            return Session != null;
+            return Session == null ? AccountCreationResult.NetworkError : AccountCreationResult.Success;
         } catch (Exception) {
-            return false;
+            return AccountCreationResult.NetworkError;
         }
     }
 
-    public async Task<bool> LogIn(string emailAddress, string password) {
+    public async Task<LoginResult> LogIn(string emailAddress, string password) {
         try {
             Session = await Client.Auth.SignInWithPassword(emailAddress, password);
-            return Session != null;
-        } catch (Exception) {
-            return false;
+            return Session == null ? LoginResult.BadCredentials : LoginResult.Success;
+        } catch (Exception e) {
+            if (e is GotrueException ge && ge.Reason == FailureHint.Reason.UserBadLogin) {
+                return LoginResult.BadCredentials;
+            }
+            return LoginResult.NetworkError;
         }
     }
     

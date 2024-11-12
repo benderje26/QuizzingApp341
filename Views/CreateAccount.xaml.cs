@@ -1,3 +1,4 @@
+using QuizzingApp341.Models;
 using System.Text.RegularExpressions;
 
 namespace QuizzingApp341.Views;
@@ -21,12 +22,12 @@ public partial class CreateAccount : ContentPage {
             return;
         }
 
-        string? result = await MauiProgram.BusinessLogic.CreateNewUser(emailAddress, username, password);
+        (AccountCreationResult result, string? errorMessage) = await MauiProgram.BusinessLogic.CreateNewUser(emailAddress, username, password);
 
-        if (result == null) {
+        if (result == AccountCreationResult.Success) {
             await Navigation.PopAsync();
         } else {
-            await DisplayAlert("User Creation Failed", result, "OK");
+            await DisplayAlert("User Creation Failed", errorMessage, "OK");
         }
     }
 }

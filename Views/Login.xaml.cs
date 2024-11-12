@@ -1,9 +1,11 @@
 namespace QuizzingApp341.Views;
 using System;
 using Microsoft.Maui.Controls;
+using QuizzingApp341.Models;
+
 /*
- * Name: Jeremiah Bender
- */
+* Name: Jeremiah Bender
+*/
 public partial class Login : ContentPage {
     public Login() {
         InitializeComponent();
@@ -22,14 +24,14 @@ public partial class Login : ContentPage {
     private async void OnLoginButtonClicked(object sender, EventArgs e) {
         string email = emailInput.Text ?? string.Empty;
         string password = passwordInput.Text ?? string.Empty;
-        bool loginSuccessful = await MauiProgram.BusinessLogic.LogIn(email, password);
+        (LoginResult result, string? errorMessage) = await MauiProgram.BusinessLogic.LogIn(email, password);
 
-        if (loginSuccessful) {
+        if (result == LoginResult.Success) {
             // Navigate to HomeScreen and make TabBar visible
             await Shell.Current.GoToAsync("//HomeScreen");  //TODO: change HomeScreen to UserHome once UserHome got proved 
             Shell.SetTabBarIsVisible(this, true);
         } else {
-            await DisplayAlert("Login Failed", "Invalid email or password.", "OK");
+            await DisplayAlert("Login Failed", errorMessage, "OK");
         }
     }
 

@@ -5,6 +5,8 @@ namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
+    private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
+
     /*
      * Get the current question to be displayed
      * 
@@ -93,28 +95,40 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         }
     }
 
-    public async Task<string?> CreateNewUser(string emailAddress, string username, string password) {
+    public async Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password) {
         if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
-            return "Email must be in the correct format (ex: example@example.com).";
+            return (AccountCreationResult.BadEmail, "Email must be in the correct format (ex: example@example.com).");
         }
         if (!Regexes.UsernameRegex().IsMatch(username)) {
-            return "Username must be 4 to 32 characters and only contain A-Z, a-z, 0-9, and _ (underscores).";
+            return (AccountCreationResult.BadUsername, "Username must be 4 to 32 characters and only contain A-Z, a-z, 0-9, and _ (underscores).");
         }
         if (!Regexes.PasswordRegex().IsMatch(password)) {
-            return "Password is not strong enough or invalid. It must be 8 characters with a letter, number, and symbol, or at least 16 characters of any kind.";
+            return (AccountCreationResult.BadPassword, "Password is not strong enough or invalid. It must be 8 characters with a letter, number, and symbol, or at least 16 characters of any kind.");
         }
 
-        bool success = await database.CreateNewUser(emailAddress, username, password);
+        AccountCreationResult result = await database.CreateNewUser(emailAddress, username, password);
 
-        if (!success) {
-            return "Something went wrong, possibly dupliacte email/username.";
-        }
+        string? s = result switch {
+            AccountCreationResult.Success => null,
+            AccountCreationResult.DuplicateEmail => "Email already used on another account.",
+            AccountCreationResult.DuplicateUsername => "That username is already used, pick another one.",
+            AccountCreationResult.NetworkError => "There was a network error.",
+            _ => null
+        };
 
-        return null;
+        return (result, s);
     }
 
-    public async Task<bool> LogIn(string emailAddress, string password) {
-        return await database.LogIn(emailAddress, password);
+    public async Task<(LoginResult, string?)> LogIn(string emailAddress, string password) {
+        LoginResult result = await database.LogIn(emailAddress, password);
+
+        string? s = result switch {
+            LoginResult.Success => null,
+            LoginResult.BadCredentials => "The username or password are incorrect.",
+            LoginResult.NetworkError => NETWORK_ERROR_MESSAGE,
+        };
+
+        return (result, s);
     }
 }
 
