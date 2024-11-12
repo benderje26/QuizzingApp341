@@ -27,25 +27,26 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
      * @return - all the questions of the quiz
      */
     public List<Question> Questions {
-        get { return GetAllQuestions(); }
+        get { return questions ?? GetAllQuestions().Result; }
     }
+    private List<Question>? questions;
 
     /*
      * Returns all of the questions from the database
      * 
      * @return - all the questions from the database
      */
-    public List<Question> GetAllQuestions() {
-        Task<List<Question>> questionsTask = database.LoadQuestions();
-        questionsTask.Wait();
-        return questionsTask.Result;
+    public async Task<List<Question>> GetAllQuestions() {
+        return questions = await database.LoadQuestions();
+    }
+
+    public async Task SetQuiz() {
+        await GetAllQuestions();
     }
 
     public Quiz CurrentQuiz {
         get {
-            //currentQuiz ??= new Quiz("First Quiz", new DateTime(), new DateTime(), 1000, GetAllQuestions());
-            currentQuiz ??= new Quiz("First Quiz", new DateTime(), new DateTime(), 1000, [new MultipleChoiceQuestion(0, "How many CS students does it take to screw in a lightbulb?", ["1", "3", "10", "30"], 3),
-            new FillBlankQuestion(1, "What is our professor's name?", ["Dr. Rogers", "Professor Rogers"], false)]);
+            currentQuiz ??= new Quiz("First Quiz", new DateTime(), new DateTime(), 1000, Questions);
             return currentQuiz;
         }
     }
