@@ -1,7 +1,6 @@
 ﻿namespace QuizzingApp341.Models;
 
 public interface IBusinessLogic {
-    Task<List<Question>> GetAllQuestions();
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>
@@ -23,5 +22,6 @@ public interface IBusinessLogic {
     bool SetQuiz(Quiz quiz);
     Question? NextQuestion();
     Question? PreviousQuestion();
-
+    bool SetCurrentMultipleChoiceAnswer(int optionIndex);
+    bool SetCurrentFillBlankAnswer(string value);
 }
