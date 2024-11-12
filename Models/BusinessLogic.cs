@@ -121,8 +121,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return (result, s);
     }
 
-    public async Task<(LoginResult, string?)> LogIn(string emailAddress, string password) {
-        LoginResult result = await database.LogIn(emailAddress, password);
+    public async Task<(LoginResult, string?)> Login(string emailAddress, string password) {
+        LoginResult result = await database.Login(emailAddress, password);
 
         string? s = result switch {
             LoginResult.Success => null,

@@ -15,8 +15,8 @@ public interface IBusinessLogic {
     /// <param name="emailAddress">The email address</param>
     /// <param name="password">The password</param>
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
-    Task<(LoginResult, string?)> LogIn(string emailAddress, string password);
-    Task<(SignOutResult, string?)> SignOut();
+    Task<(LoginResult, string?)> Login(string emailAddress, string password);
+    Task<(LogoutResult, string?)> Logout();
 
     Task<Quiz?> GetQuiz(string id);
     bool SetQuiz(Quiz quiz);

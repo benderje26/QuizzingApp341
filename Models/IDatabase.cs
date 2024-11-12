@@ -2,6 +2,7 @@
 
 public interface IDatabase {
     Task<AccountCreationResult> CreateNewUser(string emailAddress, string username, string password);
-    Task<LoginResult> LogIn(string emailAddress, string password);
-    public Task<List<Question>> LoadQuestions();
+    Task<LoginResult> Login(string emailAddress, string password);
+    Task<LogoutResult> Logout();
+    public Task<Quiz?> GetQuizById(string quizId);
 }

@@ -90,7 +90,7 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<LoginResult> LogIn(string emailAddress, string password) {
+    public async Task<LoginResult> Login(string emailAddress, string password) {
         try {
             Session = await Client.Auth.SignInWithPassword(emailAddress, password);
             return Session == null ? LoginResult.Other : LoginResult.Success;
