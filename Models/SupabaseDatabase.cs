@@ -93,7 +93,7 @@ public class SupabaseDatabase : IDatabase {
     public async Task<LoginResult> LogIn(string emailAddress, string password) {
         try {
             Session = await Client.Auth.SignInWithPassword(emailAddress, password);
-            return Session == null ? LoginResult.BadCredentials : LoginResult.Success;
+            return Session == null ? LoginResult.Other : LoginResult.Success;
         } catch (Exception e) {
             if (e is GotrueException ge && ge.Reason == FailureHint.Reason.UserBadLogin) {
                 return LoginResult.BadCredentials;

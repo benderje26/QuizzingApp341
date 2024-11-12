@@ -6,6 +6,7 @@ namespace QuizzingApp341.Models;
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
+    private const string OTHER_ERROR_MESSAGE = "An unknown error occured.";
 
     /*
      * Get the current question to be displayed
@@ -112,7 +113,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             AccountCreationResult.Success => null,
             AccountCreationResult.DuplicateEmail => "Email already used on another account.",
             AccountCreationResult.DuplicateUsername => "That username is already used, pick another one.",
-            AccountCreationResult.NetworkError => "There was a network error.",
+            AccountCreationResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            AccountCreationResult.Other => OTHER_ERROR_MESSAGE
             _ => null
         };
 
@@ -126,6 +128,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             LoginResult.Success => null,
             LoginResult.BadCredentials => "The username or password are incorrect.",
             LoginResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            LoginResult.Other => OTHER_ERROR_MESSAGE,
         };
 
         return (result, s);

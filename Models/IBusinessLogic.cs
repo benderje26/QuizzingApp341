@@ -2,10 +2,6 @@
 
 public interface IBusinessLogic {
     Task<List<Question>> GetAllQuestions();
-    Task SetQuiz();
-    bool IncrementCurrentQuestion();
-    bool DecrementCurrentQuestion();
-    bool IsCurrentQuestionMultipleChoice();
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>
@@ -14,7 +10,6 @@ public interface IBusinessLogic {
     /// <param name="password">The password</param>
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password);
-
     /// <summary>
     /// Attempts to log in.
     /// </summary>
@@ -22,4 +17,11 @@ public interface IBusinessLogic {
     /// <param name="password">The password</param>
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(LoginResult, string?)> LogIn(string emailAddress, string password);
+    Task<(SignOutResult, string?)> SignOut();
+
+    Task<Quiz?> GetQuiz(string id);
+    bool SetQuiz(Quiz quiz);
+    Question? NextQuestion();
+    Question? PreviousQuestion();
+
 }
