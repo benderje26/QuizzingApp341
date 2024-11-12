@@ -1,8 +1,11 @@
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
+
+    private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
 
     /*
      * Get the current question to be displayed
@@ -27,25 +30,26 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
      * @return - all the questions of the quiz
      */
     public List<Question> Questions {
-        get { return GetAllQuestions(); }
+        get { return questions ?? GetAllQuestions().Result; }
     }
+    private List<Question>? questions;
 
     /*
      * Returns all of the questions from the database
      * 
      * @return - all the questions from the database
      */
-    public List<Question> GetAllQuestions() {
-        Task<List<Question>> questionsTask = database.LoadQuestions();
-        questionsTask.Wait();
-        return questionsTask.Result;
+    public async Task<List<Question>> GetAllQuestions() {
+        return questions = await database.LoadQuestions();
+    }
+
+    public async Task SetQuiz() {
+        await GetAllQuestions();
     }
 
     public Quiz CurrentQuiz {
         get {
-            //currentQuiz ??= new Quiz("First Quiz", new DateTime(), new DateTime(), 1000, GetAllQuestions());
-            currentQuiz ??= new Quiz("First Quiz", new DateTime(), new DateTime(), 1000, [new MultipleChoiceQuestion(0, "How many CS students does it take to screw in a lightbulb?", ["1", "3", "10", "30"], 3),
-            new FillBlankQuestion(1, "What is our professor's name?", ["Dr. Rogers", "Professor Rogers"], false)]);
+            currentQuiz ??= new Quiz("First Quiz", new DateTime(), new DateTime(), 1000, Questions);
             return currentQuiz;
         }
     }
@@ -90,4 +94,54 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             return false;
         }
     }
+
+    public async Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password) {
+        if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
+            return (AccountCreationResult.BadEmail, "Email must be in the correct format (ex: example@example.com).");
+        }
+        if (!Regexes.UsernameRegex().IsMatch(username)) {
+            return (AccountCreationResult.BadUsername, "Username must be 4 to 32 characters and only contain A-Z, a-z, 0-9, and _ (underscores).");
+        }
+        if (!Regexes.PasswordRegex().IsMatch(password)) {
+            return (AccountCreationResult.BadPassword, "Password is not strong enough or invalid. It must be 8 characters with a letter, number, and symbol, or at least 16 characters of any kind.");
+        }
+
+        AccountCreationResult result = await database.CreateNewUser(emailAddress, username, password);
+
+        string? s = result switch {
+            AccountCreationResult.Success => null,
+            AccountCreationResult.DuplicateEmail => "Email already used on another account.",
+            AccountCreationResult.DuplicateUsername => "That username is already used, pick another one.",
+            AccountCreationResult.NetworkError => "There was a network error.",
+            _ => null
+        };
+
+        return (result, s);
+    }
+
+    public async Task<(LoginResult, string?)> LogIn(string emailAddress, string password) {
+        LoginResult result = await database.LogIn(emailAddress, password);
+
+        string? s = result switch {
+            LoginResult.Success => null,
+            LoginResult.BadCredentials => "The username or password are incorrect.",
+            LoginResult.NetworkError => NETWORK_ERROR_MESSAGE,
+        };
+
+        return (result, s);
+    }
+}
+
+partial class Regexes {
+    // must be a@b.c where a, b, and c are alphanumeric/underscore/"." but a little more complex
+    [GeneratedRegex(@"^\w+(\.\w+)*@\w+(\.\w+)+$")]
+    public static partial Regex EmailRegex();
+
+    // must be 4-32 letters, numbers, or underscores
+    [GeneratedRegex(@"^\w{4,32}$")]
+    public static partial Regex UsernameRegex();
+
+    // basically it must be at least 8 characters, and it must have a letter, number and symbol OR be at least 16 characters
+    [GeneratedRegex(@"^(?=.*\w|.{16,})(?=.*\d|.{16,})(?=.*[\W_]|.{16,})[a-zA-z0-9!@#$%^&*()_\-=+\[\]{}<>\\|;:'"",.?/`~]{8,32}$")]
+    public static partial Regex PasswordRegex();
 }

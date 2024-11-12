@@ -11,11 +11,11 @@ public partial class HomeScreen : ContentPage {
    
     private async void OnStartClicked(object sender, EventArgs e)
     {
-        var quizIdEntry = this.FindByName<Entry>("quizIdEntry");
-        string quizId = quizIdEntry?.Text;
+        string quizId = quizIdEntry.Text;
 
         if (quizId == "12345") 
         {
+            await MauiProgram.BusinessLogic.SetQuiz();
             await Navigation.PushAsync(new MultipleChoice()); 
         }
         else

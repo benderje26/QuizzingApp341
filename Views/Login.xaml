@@ -23,8 +23,9 @@
         
         <VerticalStackLayout Grid.Row="1" Grid.Column="1">
             <Entry
-                x:Name="usernameInput"
-                Placeholder="Username"
+                x:Name="emailInput"
+                Placeholder="Email Address"
+                Keyboard="Email"
                 PlaceholderColor="#A9A9A9"
                 TextColor="#000000"/>
             <Entry
