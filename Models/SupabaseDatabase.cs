@@ -3,6 +3,8 @@ using Supabase;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Responses;
+using Supabase.Gotrue;
+using Client = Supabase.Client;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -10,6 +12,26 @@ public class SupabaseDatabase : IDatabase {
     private const string API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjb2d3bHFqaW52emNram1uamhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkzNjc4NTIsImV4cCI6MjA0NDk0Mzg1Mn0.bzYJIRYJ3rtvEh3usrydy7M3ES1J6C5iMgPwzlqnTp8";
 
     private Client Client { get; set; }
+
+    private Session? Session {
+        get => _session; 
+        set {
+            _session = value;
+            User = value?.User;
+        }
+    }
+    private Session? _session;
+
+    private User? User {
+        get => _user;
+        set {
+            _user = value;
+            UserId = value?.Id == null ? Guid.Empty : new Guid(value.Id);
+        }
+    }
+    private User? _user;
+
+    private Guid UserId { get; set; }
 
     public SupabaseDatabase() {
         Client = new(REST_URL, API_KEY, new SupabaseOptions {
@@ -27,7 +49,8 @@ public class SupabaseDatabase : IDatabase {
         try {
             SupabaseQuiz? quiz = await Client
                 .From<SupabaseQuiz>()
-                .Where(q => q.Id == 0)
+                .Where(q => q.CreatorId == UserId)
+                .Where(q => q.Id == 1)
                 .Single();
             if (quiz == null) {
                 return [];
@@ -52,22 +75,36 @@ public class SupabaseDatabase : IDatabase {
         return [];
     }
 
-    [Table("users")]
-    public class SupabaseUser : BaseModel {
-        [PrimaryKey("id")]
-        public long Id { get; set; }
-
-        [Column("email_address")]
-        public string? EmailAddress { get; set; }
+    public async Task<bool> CreateNewUser(string emailAddress, string username, string password) {
+        try {
+            Session = await Client.Auth.SignUp(emailAddress, password,
+                new SignUpOptions() {
+                    Data = new Dictionary<string, object> {
+                        { "username", username }
+                    }
+                });
+            return Session != null;
+        } catch (Exception) {
+            return false;
+        }
     }
 
+    public async Task<bool> LogIn(string emailAddress, string password) {
+        try {
+            Session = await Client.Auth.SignInWithPassword(emailAddress, password);
+            return Session != null;
+        } catch (Exception) {
+            return false;
+        }
+    }
+    
     [Table("quizzes")]
     public class SupabaseQuiz : BaseModel {
         [PrimaryKey("id")]
         public long Id { get; set; }
 
         [Column("creator_id")]
-        public long CreatorId { get; set; }
+        public Guid CreatorId { get; set; }
 
         [Column("title")]
         public string? Title { get; set; }

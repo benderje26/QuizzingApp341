@@ -15,7 +15,8 @@
         <VerticalStackLayout Grid.Row="2" Grid.Column="1">
             <Entry
                 x:Name="emailInput"
-                Placeholder="Email Address"/>
+                Placeholder="Email Address"
+                Keyboard="Email"/>
             <Entry
                 x:Name="usernameInput"
                 Placeholder="Username"/>
@@ -28,9 +29,9 @@
                 Placeholder="Repeat Password"
                 IsPassword="True"/>
             <Button
-                x:Name="createAccountButton"
                 Text="Create Account"
-                Margin="0,30,0,0"/>
+                Margin="0,30,0,0"
+                Clicked="OnCreateAccountButtonClicked"/>
         </VerticalStackLayout>
         <Button
             x:Name="backButton"

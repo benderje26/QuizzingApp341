@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace QuizzingApp341.Models;
 
@@ -91,4 +92,42 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             return false;
         }
     }
+
+    public async Task<string?> CreateNewUser(string emailAddress, string username, string password) {
+        if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
+            return "Email must be in the correct format (ex: example@example.com).";
+        }
+        if (!Regexes.UsernameRegex().IsMatch(username)) {
+            return "Username must be 4 to 32 characters and only contain A-Z, a-z, 0-9, and _ (underscores).";
+        }
+        if (!Regexes.PasswordRegex().IsMatch(password)) {
+            return "Password is not strong enough or invalid. It must be 8 characters with a letter, number, and symbol, or at least 16 characters of any kind.";
+        }
+
+        bool success = await database.CreateNewUser(emailAddress, username, password);
+
+        if (!success) {
+            return "Something went wrong, possibly dupliacte email/username.";
+        }
+
+        return null;
+    }
+
+    public async Task<bool> LogIn(string emailAddress, string password) {
+        return await database.LogIn(emailAddress, password);
+    }
+}
+
+partial class Regexes {
+    // must be a@b.c where a, b, and c are alphanumeric/underscore/"." but a little more complex
+    [GeneratedRegex(@"^\w+(\.\w+)*@\w+(\.\w+)+$")]
+    public static partial Regex EmailRegex();
+
+    // must be 4-32 letters, numbers, or underscores
+    [GeneratedRegex(@"^\w{4,32}$")]
+    public static partial Regex UsernameRegex();
+
+    // basically it must be at least 8 characters, and it must have a letter, number and symbol OR be at least 16 characters
+    [GeneratedRegex(@"^(?=.*\w|.{16,})(?=.*\d|.{16,})(?=.*[\W_]|.{16,})[a-zA-z0-9!@#$%^&*()_\-=+\[\]{}<>\\|;:'"",.?/`~]{8,32}$")]
+    public static partial Regex PasswordRegex();
 }
