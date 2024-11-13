@@ -12,7 +12,7 @@
 
     <!-- Login Screen: Displayed first -->
     <ShellContent
-        ContentTemplate="{DataTemplate local:Login}"
+        ContentTemplate="{DataTemplate local:MyQuiz}"    
         Route="Login"
         Shell.NavBarIsVisible="False" />
 
@@ -26,9 +26,9 @@
 
 
         <Tab Title="Studio" Icon="plus.png">
-            <ShellContent Title="CreateQuiz"
-                          ContentTemplate="{DataTemplate local:CreateQuiz}" 
-                          Route="CreateQuiz" />
+            <ShellContent Title="MyQuiz"
+                          ContentTemplate="{DataTemplate local:MyQuiz}" 
+                          Route="MyQuiz" />
         </Tab>
 
         <Tab Title="Favorites" Icon="heart.png">

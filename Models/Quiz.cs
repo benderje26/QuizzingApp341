@@ -8,6 +8,7 @@ public class Quiz(string title, DateTime? lastActivated, DateTime? dateCreated, 
     public long? Time { get; set; } = time;
     public List<Question> Questions { get; set; } = questions;
 
+
     public Question? CurrentQuestion {
         get {
             if (CurrentIndex == null) {

@@ -11,6 +11,8 @@ namespace QuizzingApp341.Models {
         public bool NotFinal { get; set; }
         public int QuestionNumber { get; private set; } = questionNumber;
 
+
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? name = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
