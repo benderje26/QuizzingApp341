@@ -3,8 +3,11 @@
 public interface IBusinessLogic {
     Task<List<Question>> GetAllQuestions();
     Task SetQuiz();
-    bool IncrementCurrentQuestion();
-    bool DecrementCurrentQuestion();
+    bool IncrementCurrentQuestion(int givenAnswer);
+    bool DecrementCurrentQuestion(int givenAnswer);
+    bool IncrementCurrentQuestion(string givenAnswer);
+    bool DecrementCurrentQuestion(string givenAnswer);
+    public int GetTotalCorrect();
     bool IsCurrentQuestionMultipleChoice();
     /// <summary>
     /// Attempts to create a new user.

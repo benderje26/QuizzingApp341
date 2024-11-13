@@ -15,7 +15,8 @@ public partial class FillBlank : ContentPage
      * Next button clicked so move to the next question in the quiz 
      */
     private void OnNextClicked(object sender, EventArgs e) {
-        bool success = MauiProgram.BusinessLogic.IncrementCurrentQuestion();
+        string givenAnswer = "test";
+        bool success = MauiProgram.BusinessLogic.IncrementCurrentQuestion(givenAnswer);
         if (success) {
             bool multipleChoice = MauiProgram.BusinessLogic.IsCurrentQuestionMultipleChoice();
             if (multipleChoice) {
@@ -30,7 +31,8 @@ public partial class FillBlank : ContentPage
     * Previous button clicked so move to the previous question in the quiz 
     */
     private void OnPreviousClicked(object sender, EventArgs e) {
-        bool success = MauiProgram.BusinessLogic.DecrementCurrentQuestion();
+        string givenAnswer = "test";
+        bool success = MauiProgram.BusinessLogic.DecrementCurrentQuestion(givenAnswer);
         if (success) {
             bool multipleChoice = MauiProgram.BusinessLogic.IsCurrentQuestionMultipleChoice();
             if (multipleChoice) {
@@ -45,6 +47,7 @@ public partial class FillBlank : ContentPage
      * Submit button hit so close the quiz by going to the homescreen
      */
     private void OnSubmitClicked(object sender, EventArgs e) {
+        DisplayAlert("Quiz Over", "Congratulations! You got " + MauiProgram.BusinessLogic.GetTotalCorrect().ToString() + " correct", "OK");
         Navigation.PushModalAsync(new HomeScreen());
     }
 }

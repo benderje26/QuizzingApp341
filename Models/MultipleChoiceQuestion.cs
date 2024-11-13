@@ -26,4 +26,10 @@ public class MultipleChoiceQuestion(int questionNumber, string text, List<string
     public override bool HasCorrectAnswer() => correctAnswer != null;
 
     public override bool IsCorrect() => givenAnswer == correctAnswer;
+
+    public override void SetGivenAnswer(string givenAnswerParam) {
+        try {
+            givenAnswer = Int32.Parse(givenAnswerParam);
+        } catch { }
+    }
 }
