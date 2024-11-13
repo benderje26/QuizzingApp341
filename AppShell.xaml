@@ -12,7 +12,7 @@
 
     <!-- Login Screen: Displayed first -->
     <ShellContent
-        ContentTemplate="{DataTemplate local:MyQuiz}"    
+        ContentTemplate="{DataTemplate local:Login}"    
         Route="Login"
         Shell.NavBarIsVisible="False" />
 

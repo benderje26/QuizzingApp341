@@ -4,7 +4,7 @@
              xmlns:model="clr-namespace:QuizzingApp341.Models" 
              x:Class="QuizzingApp341.Views.MyQuiz"
              Padding="7"
-             Title="My Quiz">
+             Title="Studio">
 
     <ContentPage.Content>
         <StackLayout>
@@ -93,3 +93,4 @@
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
+
