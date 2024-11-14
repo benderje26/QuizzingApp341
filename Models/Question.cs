@@ -11,11 +11,17 @@ namespace QuizzingApp341.Models {
         public bool NotFinal { get; set; }
         public int QuestionNumber { get; private set; } = questionNumber;
 
+        public abstract QuestionType Type { get; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? name = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        public abstract void SetGivenAnswer(string givenAnswer);
+        public abstract void SetGivenAnswer(object givenAnswer);
+    }
+
+    public enum QuestionType {
+        MultipleChoice, FillBlank
     }
 }

@@ -8,6 +8,9 @@ public class FillBlankQuestion(int questionNumber, string text, List<string>? co
             OnPropertyChanged(nameof(GivenAnswer));
         }
     }
+
+    public override QuestionType Type => QuestionType.FillBlank;
+
     string givenAnswer = string.Empty;
 
     public override bool HasCorrectAnswer() => correntAnswers != null;
@@ -21,7 +24,7 @@ public class FillBlankQuestion(int questionNumber, string text, List<string>? co
         return possibilities.Contains(givenAnswer);
     }
 
-    public override void SetGivenAnswer(string givenAnswerParam) {
-          givenAnswer = givenAnswerParam;
+    public override void SetGivenAnswer(object givenAnswerParam) {
+        givenAnswer = (string) givenAnswerParam;
     }
 }
