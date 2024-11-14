@@ -74,7 +74,34 @@ public class SupabaseDatabase : IDatabase {
             Console.WriteLine(ex);
         }
         return [new MultipleChoiceQuestion(0, "How many CS students does it take to screw in a lightbulb?", ["1", "3", "10", "30"], 3),
-            new FillBlankQuestion(1, "What is our professor's name?", ["Dr. Rogers", "Professor Rogers"], false)];
+            new FillBlankQuestion(1, "What is our professor's name?", ["Dr. Rogers", "Professor Rogers"], false),
+            new MultipleChoiceQuestion(2, "How much wood would a woodchuck chuck if a woodchuck could chuck wood?", ["560", "780","500", "700"], 700),
+            new MultipleChoiceQuestion(3, "How many CS students does it take to unscrew a lightbulb?", ["1", "3", "10", "30"], 3)
+            ];
+    }
+
+    private Dictionary<int, object> correctAnswers = new Dictionary<int, object>
+   {
+        { 0, 3 }, // MultipleChoiceQuestion, correct index is 3
+        { 1, new List<string> { "Dr. Rogers", "Professor Rogers" } }, // FillBlankQuestion, correct answers
+        { 2, 3 }, // MultipleChoiceQuestion, correct index is 3
+        { 3, 3 }  // MultipleChoiceQuestion, correct index is 3
+    };
+
+    public bool CheckAnswer(int questionId, object userAnswer) {
+        if (correctAnswers.ContainsKey(questionId)) {
+            var correctAnswer = correctAnswers[questionId];
+
+            if (correctAnswer is int correctIndex && userAnswer is int selectedIndex) {
+                // Multiple-choice question comparison
+                return correctIndex == selectedIndex;
+            } else if (correctAnswer is List<string> acceptedAnswers && userAnswer is string userEnteredAnswer) {
+                // Fill-in-the-blank question comparison (case insensitive)
+                return acceptedAnswers.Contains(userEnteredAnswer, StringComparer.OrdinalIgnoreCase);
+            }
+        }
+
+        return false;
     }
 
     public async Task<AccountCreationResult> CreateNewUser(string emailAddress, string username, string password) {
