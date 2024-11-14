@@ -7,6 +7,11 @@ in) to scan a QR Code or enter a code to enter the quiz. A third function is sto
 performing. A fourth function is to be able to favorite quizzes to be able to retake them again.​
 
 
+Sprint 3 Changes
+
+Zafeer: I attempted to load quizzes from the database, but unfortunately, I ran into issues that prevented it from working as expected. As a result, I decided to use hardcoded questions instead. 
+
+
 Sprint 2 Changes
 
 Peter Skogman: I made the question pages for the quiz bind to the current questions of the quiz. Users can navigate between the questions with previous and next buttons, and a submit button at the end to return back to the home screen. 
@@ -16,3 +21,5 @@ Pachia: The box plot for the statistics screen is not an image anymore, it is ac
 Jason W: I did the navigation bar. The login screen will be shown when the user first launches the app. After the user correctly logs in, the userHome screen will show up, and the navigation bar will also show up at the bottom.
 
 Jeremiah: I worked on the database mainly. Sadly, Supabase is having a bit of trouble and I am unable to get it to load, but hopefully this should be quickly resolved. I also overall did the model for the quiz question types.
+
+Zafeer Rahim: I made the homescreen page. The changes were that now the buttons in homescreen has functionality. I also made a default code for quiz(12345) that takes the user to questions page.
