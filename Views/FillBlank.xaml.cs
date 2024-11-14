@@ -16,9 +16,10 @@ public partial class FillBlank : ContentPage
      */
     private void OnNextClicked(object sender, EventArgs e) {
         string givenAnswer = "test";
-        bool success = MauiProgram.BusinessLogic.IncrementCurrentQuestion(givenAnswer);
+        MauiProgram.BusinessLogic.SetCurrentFillBlankAnswer(givenAnswer);
+        bool success = MauiProgram.BusinessLogic.NextQuestion() != null;
         if (success) {
-            bool multipleChoice = MauiProgram.BusinessLogic.IsCurrentQuestionMultipleChoice();
+            bool multipleChoice = MauiProgram.BusinessLogic.CurrentQuestion?.Type == Models.QuestionType.MultipleChoice;
             if (multipleChoice) {
                 Navigation.PushModalAsync(new MultipleChoice());
             } else {

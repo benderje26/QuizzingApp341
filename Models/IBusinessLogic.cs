@@ -22,6 +22,7 @@ public interface IBusinessLogic {
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(LogoutResult, string?)> Logout();
 
+    Question? CurrentQuestion { get; }
     /// <summary>
     /// Attempts to get a quiz.
     /// </summary>

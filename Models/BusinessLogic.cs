@@ -18,6 +18,9 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             }
         }
     }
+
+    public Question? CurrentQuestion => CurrentQuiz?.CurrentQuestion;
+
     private Quiz? _currentQuiz;
 
     public async Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password) {
@@ -90,20 +93,20 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
 
     public bool SetCurrentMultipleChoiceAnswer(int optionIndex) {
-        if (CurrentQuiz?.CurrentQuestion?.Type != QuestionType.MultipleChoice) {
+        if (CurrentQuestion?.Type != QuestionType.MultipleChoice) {
             return false;
         }
 
-        CurrentQuiz.CurrentQuestion.SetGivenAnswer(optionIndex);
+        CurrentQuestion.SetGivenAnswer(optionIndex);
         return true;
     }
 
     public bool SetCurrentFillBlankAnswer(string value) {
-        if (CurrentQuiz?.CurrentQuestion?.Type != QuestionType.FillBlank) {
+        if (CurrentQuestion?.Type != QuestionType.FillBlank) {
             return false;
         }
 
-        CurrentQuiz.CurrentQuestion.SetGivenAnswer(value);
+        CurrentQuestion.SetGivenAnswer(value);
         return true;
     }
 

@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:QuizzingApp341.Models"
-             x:DataType="model:BusinessLogic" 
+             x:DataType="model:IBusinessLogic" 
              x:Class="QuizzingApp341.Views.FillBlank"
              Padding="7">
     <Grid>

@@ -107,9 +107,11 @@ public class SupabaseDatabase : IDatabase {
                 }
             }
             questions.Sort((x, y) => x.QuestionNumber.CompareTo(y.QuestionNumber));
-            return questions;
-        } catch (Exception ex) {
-            Console.WriteLine(ex);
+
+            Quiz result = new(quiz.Title ?? string.Empty, DateTime.Now, DateTime.Now, null, questions);
+            return result;
+        } catch (Exception) {
+            return null;
         }
     }
 
