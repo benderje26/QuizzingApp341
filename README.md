@@ -28,6 +28,6 @@ Zafeer: I attempted to load quizzes from the database, but unfortunately, I ran 
 
 Pachia: 
 
-Jason W: 
+Jason W: I added more functionality to the create new quiz, and changed the original one to "My quiz", when the user clicks on the + sign, it brings the user to createNewQuiz screen, and if the user clicks on "+ new question", a pop-up will show and ask for the question types, and each question type with bring the user to corresponding screens.  
 
 Jeremiah: 
