@@ -1,7 +1,7 @@
 namespace QuizzingApp341.Views;
 
-public partial class CreateQuiz : ContentPage {
-    public CreateQuiz() {
+public partial class MyQuiz : ContentPage {
+    public MyQuiz() {
         InitializeComponent();
     }
 
