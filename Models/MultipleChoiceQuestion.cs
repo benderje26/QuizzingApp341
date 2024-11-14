@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 namespace QuizzingApp341.Models;
 
 public class MultipleChoiceQuestion(int questionNumber, bool isFinal, string text, List<string> options, int? correctAnswer) : Question(questionNumber, isFinal, text) {
+    // Define the Text property to store the question text
+    public string Text { get; private set; } = text;
     public int? GivenAnswer {
         get { return givenAnswer; }
         set {

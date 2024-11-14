@@ -5,52 +5,66 @@
              Title="Create New Quiz">
 
     <ScrollView>
-        <StackLayout Padding="20" Spacing="20">
+        <StackLayout Padding="20"
+                Spacing="20">
 
             <!-- Title Label -->
-            <Label Text="Create New Quiz" 
-                   FontSize="30" 
-                   TextColor="Black" 
-                   HorizontalOptions="Center" />
+            <Label Text="Create New Quiz"
+                   FontSize="30"
+                   TextColor="Black"
+                   HorizontalOptions="Center"/>
 
             <!-- Quiz Name -->
-            <StackLayout Orientation="Horizontal" Spacing="10">
-                <Label Text="Quiz Name:" 
-                       FontSize="25" 
+            <StackLayout Orientation="Horizontal"
+                    Spacing="10">
+                <Label Text="Quiz Name:"
+                       FontSize="25"
                        TextColor="Black"
-                       VerticalOptions="Center" />
-                <Entry Placeholder="Enter quiz name" 
+                       VerticalOptions="Center"/>
+                <Entry Placeholder="Enter quiz name"
                        FontSize="18"
                        TextColor="Black"
-                       HorizontalOptions="FillAndExpand" />
+                       HorizontalOptions="FillAndExpand"/>
             </StackLayout>
 
             <!-- StackLayout for Questions -->
-            <StackLayout x:Name="QuestionsStack" Spacing="10">
-             
+            <StackLayout x:Name="QuestionsStack"
+                    Spacing="10">
+                <CollectionView ItemsSource="{Binding Questions}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="5">
+                                <!-- Assume each question has a Text property -->
+                                <Label Text="{Binding Text}"
+                                        FontSize="Medium"/>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
             </StackLayout>
 
             <!-- Add New Question Button -->
-            <Button Text="+ New Question" 
+            <Button Text="+ New Question"
                     FontAttributes="Bold"
-                    FontSize="18" 
+                    FontSize="18"
                     BackgroundColor="LightGray"
                     TextColor="Black"
                     CornerRadius="10"
                     HeightRequest="50"
                     Margin="0,10,0,0"
-                    Clicked="OnQuestionTypeButtonClicked" />
+                    Clicked="OnQuestionTypeButtonClicked"/>
 
             <!-- Save New Quiz Button -->
-            <Button Text="Save New Quiz" 
+            <Button Text="Save New Quiz"
                     FontAttributes="Bold"
-                    FontSize="18" 
+                    FontSize="18"
                     BackgroundColor="#FF5A5F"
                     TextColor="Black"
                     CornerRadius="10"
                     HeightRequest="50"
-                    Margin="0,10,0,20" 
-                    Clicked="OnSaveNewQuizClicked" />
+                    Margin="0,10,0,20"
+                    Clicked="OnSaveNewQuizClicked"/>
         </StackLayout>
     </ScrollView>
 

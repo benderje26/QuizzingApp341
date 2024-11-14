@@ -1,9 +1,20 @@
 using CommunityToolkit.Maui.Views;
+using QuizzingApp341.Models;
+using System.Collections.ObjectModel;
 
 namespace QuizzingApp341.Views {
     public partial class CreateNewQuiz : ContentPage {
+        public ObservableCollection<Object> Questions { get; set; } = new ObservableCollection<Object>();
         public CreateNewQuiz() {
             InitializeComponent();
+
+            // Subscribe to the message and add the question to the collection
+            MessagingCenter.Subscribe<CreateMultipleChoiceQuiz, MultipleChoiceQuestion>(this, "AddQuestion", (sender, question) => {
+                Questions.Add(question);
+                Console.WriteLine($"Question added: {question.Text}");
+            });
+
+            BindingContext = this;
         }
 
         private async void OnQuestionTypeButtonClicked(object sender, EventArgs e) {
