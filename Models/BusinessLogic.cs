@@ -14,12 +14,14 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         set {
             _currentQuiz = value;
             if (value != null) {
-                value.CurrentIndex = null;
+                value.CurrentIndex = 0;
             }
         }
     }
 
     public Question? CurrentQuestion => CurrentQuiz?.CurrentQuestion;
+    public MultipleChoiceQuestion? CurrentMultipleChoiceQuestion { get => CurrentQuestion as MultipleChoiceQuestion; }
+    public FillBlankQuestion? CurrentFillBlankQuestion { get => CurrentQuestion as FillBlankQuestion; }
 
     private Quiz? _currentQuiz;
 
@@ -120,7 +122,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
         foreach (Question question in CurrentQuiz.Questions) {
             total++;
-            if (question.HasCorrectAnswer()) {
+            if (question.IsCorrect()) {
                 correct++;
             }
         }

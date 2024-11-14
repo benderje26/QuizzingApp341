@@ -23,6 +23,8 @@ public interface IBusinessLogic {
     Task<(LogoutResult, string?)> Logout();
 
     Question? CurrentQuestion { get; }
+    MultipleChoiceQuestion? CurrentMultipleChoiceQuestion { get; }
+    FillBlankQuestion? CurrentFillBlankQuestion { get; }
     /// <summary>
     /// Attempts to get a quiz.
     /// </summary>

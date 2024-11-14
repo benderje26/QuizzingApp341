@@ -1,6 +1,6 @@
 namespace QuizzingApp341.Models;
 
-public class FillBlankQuestion(int questionNumber, string text, List<string>? correntAnswers, bool caseSensitive) : Question(questionNumber, text) {
+public class FillBlankQuestion(int questionNumber, bool isFinal, string text, List<string>? correntAnswers, bool caseSensitive) : Question(questionNumber, isFinal, text) {
     public string GivenAnswer {
         get { return givenAnswer; }
         set {
@@ -17,7 +17,7 @@ public class FillBlankQuestion(int questionNumber, string text, List<string>? co
 
     public override bool IsCorrect() {
         List<string> possibilities = correntAnswers ?? [];
-        if (caseSensitive) {
+        if (!caseSensitive) {
             string toLower = givenAnswer.ToLower();
             return possibilities.Where(x => x.ToLower().Equals(toLower)).Any();
         }

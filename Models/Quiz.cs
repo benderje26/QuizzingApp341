@@ -52,7 +52,7 @@ public class Quiz(string title, DateTime? lastActivated, DateTime? dateCreated, 
     }
 
     public Question? NextQuestion() {
-        if (!HasPreviousQuestion()) {
+        if (!HasNextQuestion()) {
             return null;
         }
         CurrentIndex = (CurrentIndex ?? -1) + 1;

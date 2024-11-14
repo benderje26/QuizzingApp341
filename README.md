@@ -28,4 +28,4 @@ Pachia:
 
 Jason W:
 
-Jeremiah: I did a good chunk of the backend with the database and made it work with the UI code the rest of the team was working on. I also integrated the business logic t oaccess information from the database, and I redid the API for the business logic so that it was more versatile.
+Jeremiah: I did a good chunk of the backend with the database and made it work with the UI code the rest of the team was working on. I also integrated the business logic to access information from the database, and I redid the API for the business logic so that it was more versatile.

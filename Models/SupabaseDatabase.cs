@@ -89,21 +89,22 @@ public class SupabaseDatabase : IDatabase {
         try {
             SupabaseQuiz? quiz = await Client
                 .From<SupabaseQuiz>()
-                .Where(q => q.Id == id)
+                .Where(q => q.Identifier == id)
                 .Single();
             if (quiz == null) {
                 return null;
             }
             ModeledResponse<SupabaseQuestion> questionsResult = await Client
                 .From<SupabaseQuestion>()
-                .Where(q => q.QuizId == quiz.Id)
+                .Where(q => q.QuizId == quiz.Identifier)
                 .Get();
             List<Question> questions = [];
-            foreach (SupabaseQuestion sq in questionsResult.Models) {
+            for (int i = 0, length = questionsResult.Models.Count; i < length; i++) {
+                SupabaseQuestion sq = questionsResult.Models[i];
                 if (sq.Choices != null) {
-                    questions.Add(new MultipleChoiceQuestion(sq.QuestionNumber, sq.Title ?? string.Empty, sq.Choices, sq.CorrectAnswer));
+                    questions.Add(new MultipleChoiceQuestion(sq.QuestionNumber, i == length - 1, sq.Title ?? string.Empty, sq.Choices, sq.CorrectAnswer));
                 } else {
-                    questions.Add(new FillBlankQuestion(sq.QuestionNumber, sq.Title ?? string.Empty, sq.AcceptedTextAnswers, sq.CaseSensitive ?? false));
+                    questions.Add(new FillBlankQuestion(sq.QuestionNumber, i == length - 1, sq.Title ?? string.Empty, sq.AcceptedTextAnswers, sq.CaseSensitive ?? false));
                 }
             }
             questions.Sort((x, y) => x.QuestionNumber.CompareTo(y.QuestionNumber));
@@ -118,7 +119,10 @@ public class SupabaseDatabase : IDatabase {
     [Table("quizzes")]
     public class SupabaseQuiz : BaseModel {
         [PrimaryKey("id")]
-        public string Id { get; set; }
+        public long Id { get; set; }
+
+        [Column("identifier")]
+        public string? Identifier { get; set; }
 
         [Column("creator_id")]
         public Guid CreatorId { get; set; }
@@ -132,8 +136,8 @@ public class SupabaseDatabase : IDatabase {
         [PrimaryKey("id")]
         public long Id { get; set; }
 
-        [Column("quiz_id")]
-        public string QuizId { get; set; }
+        [Column("quiz_identifier")]
+        public string? QuizId { get; set; }
 
         [Column("question_no")]
         public int QuestionNumber { get; set; }
