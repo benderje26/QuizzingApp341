@@ -126,7 +126,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public int GetTotalCorrect() {
         return CurrentQuiz.TotalCorrect.Value;
     }
-
+    
     /*
      * Checks to see if the current questions is a multiple choice question
      * and if not it means the question is a fill blank questions
