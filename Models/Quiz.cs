@@ -25,6 +25,24 @@ public class Quiz(string title, DateTime? lastActivated, DateTime? dateCreated, 
     }
     private int? currentIndex = 0;
 
+    public int? TotalCorrect {
+        get { return totalCorrect; }
+        set {
+            totalCorrect = value;
+        }
+    }
+    private int? totalCorrect = 0;
+
+    public int IncrementTotalCorrect() {
+        TotalCorrect = (TotalCorrect ?? 0) + 1;
+        return TotalCorrect.Value;
+    }
+
+    public int DecrementTotalCorrect() {
+        TotalCorrect = (TotalCorrect ?? 1) - 1;
+        return TotalCorrect.Value;
+    }
+
     public bool HasNextQuestion() {
         if (CurrentIndex == null) {
             return Questions.Count > 0;

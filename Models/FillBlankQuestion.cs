@@ -20,4 +20,8 @@ public class FillBlankQuestion(int questionNumber, string text, List<string>? co
         }
         return possibilities.Contains(givenAnswer);
     }
+
+    public override void SetGivenAnswer(string givenAnswerParam) {
+          givenAnswer = givenAnswerParam;
+    }
 }

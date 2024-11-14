@@ -60,7 +60,28 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
      * 
      * @return - whether or not it moved to the next question
      */
-    public bool IncrementCurrentQuestion() {
+    public bool IncrementCurrentQuestion(int givenAnswer) {
+        CurrentQuestion[0].SetGivenAnswer(givenAnswer.ToString());
+        if (CurrentQuestion[0].IsCorrect()) {
+            CurrentQuiz.IncrementTotalCorrect();
+        }
+        if (CurrentQuiz.HasNextQuestion()) {
+            CurrentQuiz.NextQuestion();
+            return true;
+        }
+        return false;
+    }
+
+    /*
+ * Moves to the next question of the quiz if there is one
+ * 
+ * @return - whether or not it moved to the next question
+ */
+    public bool IncrementCurrentQuestion(string givenAnswer) {
+        CurrentQuestion[0].SetGivenAnswer(givenAnswer);
+        if (CurrentQuestion[0].IsCorrect()) {
+            CurrentQuiz.IncrementTotalCorrect();
+        } 
         if (CurrentQuiz.HasNextQuestion()) {
             CurrentQuiz.NextQuestion();
             return true;
@@ -73,12 +94,37 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
      * 
      * @return - whether or not it moved to the previous question
      */
-    public bool DecrementCurrentQuestion() {
+    public bool DecrementCurrentQuestion(int givenAnswer) {
+        CurrentQuestion[0].SetGivenAnswer(givenAnswer.ToString());
+        if (CurrentQuestion[0].IsCorrect()) {
+            CurrentQuiz.DecrementTotalCorrect();
+        }
         if (CurrentQuiz.HasPreviousQuestion()) {
             CurrentQuiz.PreviousQuestion();
             return true;
         }
         return false;
+    }
+
+    /*
+ * Moves to the previous question of the quiz if there is one
+ * 
+ * @return - whether or not it moved to the previous question
+ */
+    public bool DecrementCurrentQuestion(string givenAnswer) {
+        CurrentQuestion[0].SetGivenAnswer(givenAnswer);
+        if (CurrentQuestion[0].IsCorrect()) {
+            CurrentQuiz.DecrementTotalCorrect();
+        }
+        if (CurrentQuiz.HasPreviousQuestion()) {
+            CurrentQuiz.PreviousQuestion();
+            return true;
+        }
+        return false;
+    }
+    
+    public int GetTotalCorrect() {
+        return CurrentQuiz.TotalCorrect.Value;
     }
 
     /*
