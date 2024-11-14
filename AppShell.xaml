@@ -12,7 +12,7 @@
 
     <!-- Login Screen: Displayed first -->
     <ShellContent
-        ContentTemplate="{DataTemplate local:Login}"
+        ContentTemplate="{DataTemplate local:HomeScreen}"
         Route="Login"
         Shell.NavBarIsVisible="False" />
 

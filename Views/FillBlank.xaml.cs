@@ -27,6 +27,9 @@ public partial class FillBlank : ContentPage
         }
     }
 
+
+
+
     /*
     * Previous button clicked so move to the previous question in the quiz 
     */
