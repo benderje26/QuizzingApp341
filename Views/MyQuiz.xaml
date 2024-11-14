@@ -7,90 +7,53 @@
              Title="Studio">
 
     <ContentPage.Content>
-        <StackLayout>
-            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="Start" Padding="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+        <AbsoluteLayout>
 
-                <Label Text="My Quizzes" 
-                       FontSize="40" 
-                       TextColor="Black" 
-                       VerticalOptions="Center" 
-                       HorizontalOptions="Start" 
-                       Grid.Column="0" />
+            <!-- Main content in a StackLayout -->
+            <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1" 
+                         AbsoluteLayout.LayoutFlags="All">
 
-                <Button Text="+" 
-                        FontSize="40" 
-                        Clicked="OnCreateNewQuizButtonClicked" 
-                        BackgroundColor="Transparent" 
-                        TextColor="Black" 
-                        HorizontalOptions="End" 
-                        Margin="10,0,0,0" 
-                        Grid.Column="1" />
-            </Grid>
+                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="Start" Padding="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
+                    <Label Text="All Quizzes" 
+                           FontSize="25" 
+                           TextColor="Black" 
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Start" 
+                           Grid.Column="0" />
+                </Grid>
 
-            <StackLayout Padding="20" VerticalOptions="Center">
-                <StackLayout Padding="0,10">
-                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
-                        <Label Text="Quiz Title 1" FontSize="18" />
-                        <Button Text="Study"
-                                FontSize="18"
-                                BackgroundColor="DarkBlue"
-                                TextColor="White"
-                                CornerRadius="5"
-                                HorizontalOptions="End"
-                                Clicked="StudyButtonClickedCreateQuiz" />
-                    </Grid>
-
-                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
-                        <Label Text="Quiz Title 2" FontSize="18" />
-                        <Button Text="Study"
-                                FontSize="18"
-                                BackgroundColor="DarkBlue"
-                                TextColor="White"
-                                CornerRadius="5"
-                                HorizontalOptions="End"
-                                Clicked="StudyButtonClickedCreateQuiz" />
-                    </Grid>
-
-                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
-                        <Label Text="Quiz Title 3" FontSize="18" />
-                        <Button Text="Study"
-                                FontSize="18"
-                                BackgroundColor="DarkBlue"
-                                TextColor="White"
-                                CornerRadius="5"
-                                HorizontalOptions="End"
-                                Clicked="StudyButtonClickedCreateQuiz" />
-                    </Grid>
-
-                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
-                        <Label Text="Quiz Title 4" FontSize="18" />
-                        <Button Text="Study"
-                                FontSize="18"
-                                BackgroundColor="DarkBlue"
-                                TextColor="White"
-                                CornerRadius="5"
-                                HorizontalOptions="End"
-                                Clicked="StudyButtonClickedCreateQuiz" />
-                    </Grid>
-
-                    <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
-                        <Label Text="Quiz Title 5" FontSize="18" />
-                        <Button Text="Study"
-                                FontSize="18"
-                                BackgroundColor="DarkBlue"
-                                TextColor="White"
-                                CornerRadius="5"
-                                HorizontalOptions="End"
-                                Clicked="StudyButtonClickedCreateQuiz" />
-                    </Grid>
+                <StackLayout Padding="20" VerticalOptions="Start">
+                    <StackLayout Padding="0,10">
+                        <!-- Quiz items - Maybe should do a listview here.. -->
+                        <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
+                            <Label Text="Quiz Title 1" FontSize="18" />
+                            <Button Text="Study"
+                                    FontSize="18"
+                                    BackgroundColor="DarkBlue"
+                                    TextColor="White"
+                                    CornerRadius="5"
+                                    HorizontalOptions="End"
+                                    Clicked="StudyButtonClickedCreateQuiz" />
+                        </Grid>
+                        <!-- Repeat for other quiz items as needed -->
+                    </StackLayout>
                 </StackLayout>
             </StackLayout>
-        </StackLayout>
+
+            <!-- Add Quiz Button in the bottom right corner -->
+            <ImageButton Source="add_quiz.png"
+                         WidthRequest="50"
+                         HeightRequest="50"
+                         AbsoluteLayout.LayoutBounds="1,1"
+                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                         Margin="0,0,10,10"
+                         Clicked="OnCreateNewQuizButtonClicked" />
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>
 
