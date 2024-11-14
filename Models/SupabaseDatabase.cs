@@ -6,6 +6,7 @@ using Supabase.Postgrest.Responses;
 using Supabase.Gotrue;
 using Client = Supabase.Client;
 using Supabase.Gotrue.Exceptions;
+using System.Net.Mail;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -46,64 +47,6 @@ public class SupabaseDatabase : IDatabase {
         await Client.InitializeAsync();
     }
 
-    public async Task<List<Question>> LoadQuestions() {
-        try {
-            SupabaseQuiz? quiz = await Client
-                .From<SupabaseQuiz>()
-                .Where(q => q.CreatorId == UserId)
-                .Where(q => q.Id == 1)
-                .Single();
-            if (quiz == null) {
-                return [];
-            }
-            ModeledResponse<SupabaseQuestion> questionsResult = await Client
-                .From<SupabaseQuestion>()
-                .Where(q => q.QuizId == quiz.Id)
-                .Get();
-            List<Question> questions = [];
-            foreach (SupabaseQuestion sq in questionsResult.Models) {
-                if (sq.Choices != null) {
-                    questions.Add(new MultipleChoiceQuestion(sq.QuestionNumber, sq.Title ?? string.Empty, sq.Choices, sq.CorrectAnswer));
-                } else {
-                    questions.Add(new FillBlankQuestion(sq.QuestionNumber, sq.Title ?? string.Empty, sq.AcceptedTextAnswers, sq.CaseSensitive ?? false));
-                }
-            }
-            questions.Sort((x, y) => x.QuestionNumber.CompareTo(y.QuestionNumber));
-            return questions;
-        } catch (Exception ex) {
-            Console.WriteLine(ex);
-        }
-        return [new MultipleChoiceQuestion(0, "How many CS students does it take to screw in a lightbulb?", ["1", "3", "10", "30"], 3),
-            new FillBlankQuestion(1, "What is our professor's name?", ["Dr. Rogers", "Professor Rogers"], false),
-            new MultipleChoiceQuestion(2, "How much wood would a woodchuck chuck if a woodchuck could chuck wood?", ["560", "780","500", "700"], 700),
-            new MultipleChoiceQuestion(3, "How many CS students does it take to unscrew a lightbulb?", ["1", "3", "10", "30"], 3)
-            ];
-    }
-
-    private Dictionary<int, object> correctAnswers = new Dictionary<int, object>
-   {
-        { 0, 3 }, // MultipleChoiceQuestion, correct index is 3
-        { 1, new List<string> { "Dr. Rogers", "Professor Rogers" } }, // FillBlankQuestion, correct answers
-        { 2, 3 }, // MultipleChoiceQuestion, correct index is 3
-        { 3, 3 }  // MultipleChoiceQuestion, correct index is 3
-    };
-
-    public bool CheckAnswer(int questionId, object userAnswer) {
-        if (correctAnswers.ContainsKey(questionId)) {
-            var correctAnswer = correctAnswers[questionId];
-
-            if (correctAnswer is int correctIndex && userAnswer is int selectedIndex) {
-                // Multiple-choice question comparison
-                return correctIndex == selectedIndex;
-            } else if (correctAnswer is List<string> acceptedAnswers && userAnswer is string userEnteredAnswer) {
-                // Fill-in-the-blank question comparison (case insensitive)
-                return acceptedAnswers.Contains(userEnteredAnswer, StringComparer.OrdinalIgnoreCase);
-            }
-        }
-
-        return false;
-    }
-
     public async Task<AccountCreationResult> CreateNewUser(string emailAddress, string username, string password) {
         try {
             Session = await Client.Auth.SignUp(emailAddress, password,
@@ -118,10 +61,10 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<LoginResult> LogIn(string emailAddress, string password) {
+    public async Task<LoginResult> Login(string emailAddress, string password) {
         try {
             Session = await Client.Auth.SignInWithPassword(emailAddress, password);
-            return Session == null ? LoginResult.BadCredentials : LoginResult.Success;
+            return Session == null ? LoginResult.Other : LoginResult.Success;
         } catch (Exception e) {
             if (e is GotrueException ge && ge.Reason == FailureHint.Reason.UserBadLogin) {
                 return LoginResult.BadCredentials;
@@ -129,11 +72,57 @@ public class SupabaseDatabase : IDatabase {
             return LoginResult.NetworkError;
         }
     }
-    
+
+    public async Task<LogoutResult> Logout() {
+        if (Client == null) {
+            return LogoutResult.Other;
+        }
+        try {
+            await Client.Auth.SignOut();
+            return LogoutResult.Success;
+        } catch (Exception) {
+            return LogoutResult.NetworkError;
+        }
+    }
+
+    public async Task<Quiz?> GetQuizById(string id) {
+        try {
+            SupabaseQuiz? quiz = await Client
+                .From<SupabaseQuiz>()
+                .Where(q => q.Identifier == id)
+                .Single();
+            if (quiz == null) {
+                return null;
+            }
+            ModeledResponse<SupabaseQuestion> questionsResult = await Client
+                .From<SupabaseQuestion>()
+                .Where(q => q.QuizId == quiz.Identifier)
+                .Get();
+            List<Question> questions = [];
+            for (int i = 0, length = questionsResult.Models.Count; i < length; i++) {
+                SupabaseQuestion sq = questionsResult.Models[i];
+                if (sq.Choices != null) {
+                    questions.Add(new MultipleChoiceQuestion(sq.QuestionNumber, i == length - 1, sq.Title ?? string.Empty, sq.Choices, sq.CorrectAnswer));
+                } else {
+                    questions.Add(new FillBlankQuestion(sq.QuestionNumber, i == length - 1, sq.Title ?? string.Empty, sq.AcceptedTextAnswers, sq.CaseSensitive ?? false));
+                }
+            }
+            questions.Sort((x, y) => x.QuestionNumber.CompareTo(y.QuestionNumber));
+
+            Quiz result = new(quiz.Title ?? string.Empty, DateTime.Now, DateTime.Now, null, questions);
+            return result;
+        } catch (Exception) {
+            return null;
+        }
+    }
+
     [Table("quizzes")]
     public class SupabaseQuiz : BaseModel {
         [PrimaryKey("id")]
         public long Id { get; set; }
+
+        [Column("identifier")]
+        public string? Identifier { get; set; }
 
         [Column("creator_id")]
         public Guid CreatorId { get; set; }
@@ -147,8 +136,8 @@ public class SupabaseDatabase : IDatabase {
         [PrimaryKey("id")]
         public long Id { get; set; }
 
-        [Column("quiz_id")]
-        public long QuizId { get; set; }
+        [Column("quiz_identifier")]
+        public string? QuizId { get; set; }
 
         [Column("question_no")]
         public int QuestionNumber { get; set; }

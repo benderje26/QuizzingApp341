@@ -1,6 +1,9 @@
+using CommunityToolkit.Maui.Core.Extensions;
+using System.Collections.ObjectModel;
+
 namespace QuizzingApp341.Models;
 
-public class MultipleChoiceQuestion(int questionNumber, string text, List<string> options, int? correctAnswer) : Question(questionNumber, text) {
+public class MultipleChoiceQuestion(int questionNumber, bool isFinal, string text, List<string> options, int? correctAnswer) : Question(questionNumber, isFinal, text) {
     public int? GivenAnswer {
         get { return givenAnswer; }
         set {
@@ -12,7 +15,7 @@ public class MultipleChoiceQuestion(int questionNumber, string text, List<string
     }
     int? givenAnswer;
 
-    public List<string> Options {
+    public ObservableCollection<IndexValuePair> Options {
         get { return options; }
         set {
             if (options != value) {
@@ -21,15 +24,21 @@ public class MultipleChoiceQuestion(int questionNumber, string text, List<string
             }
         }
     }
-    List<string> options = options;
+
+    public override QuestionType Type => QuestionType.MultipleChoice;
+
+    ObservableCollection<IndexValuePair> options = options.Select((val, index) => new IndexValuePair(index, val)).ToObservableCollection();
 
     public override bool HasCorrectAnswer() => correctAnswer != null;
 
     public override bool IsCorrect() => givenAnswer == correctAnswer;
 
-    public override void SetGivenAnswer(string givenAnswerParam) {
-        try {
-            givenAnswer = Int32.Parse(givenAnswerParam);
-        } catch { }
+    public override void SetGivenAnswer(object givenAnswerParam) {
+        givenAnswer = (int) givenAnswerParam;
     }
+}
+
+public class IndexValuePair(int index, string value) {
+    public int Index { get { return index; } }
+    public string Value { get { return value; } }
 }

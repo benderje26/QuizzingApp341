@@ -15,10 +15,11 @@ public partial class FillBlank : ContentPage
      * Next button clicked so move to the next question in the quiz 
      */
     private void OnNextClicked(object sender, EventArgs e) {
-        string givenAnswer = "test";
-        bool success = MauiProgram.BusinessLogic.IncrementCurrentQuestion(givenAnswer);
+        string givenAnswer = textEntry.Text ?? string.Empty;
+        MauiProgram.BusinessLogic.SetCurrentFillBlankAnswer(givenAnswer);
+        bool success = MauiProgram.BusinessLogic.NextQuestion() != null;
         if (success) {
-            bool multipleChoice = MauiProgram.BusinessLogic.IsCurrentQuestionMultipleChoice();
+            bool multipleChoice = MauiProgram.BusinessLogic.CurrentQuestion?.Type == Models.QuestionType.MultipleChoice;
             if (multipleChoice) {
                 Navigation.PushModalAsync(new MultipleChoice());
             } else {
@@ -34,10 +35,11 @@ public partial class FillBlank : ContentPage
     * Previous button clicked so move to the previous question in the quiz 
     */
     private void OnPreviousClicked(object sender, EventArgs e) {
-        string givenAnswer = "test";
-        bool success = MauiProgram.BusinessLogic.DecrementCurrentQuestion(givenAnswer);
+        string givenAnswer = textEntry.Text ?? string.Empty;
+        MauiProgram.BusinessLogic.SetCurrentFillBlankAnswer(givenAnswer);
+        bool success = MauiProgram.BusinessLogic.PreviousQuestion() != null;
         if (success) {
-            bool multipleChoice = MauiProgram.BusinessLogic.IsCurrentQuestionMultipleChoice();
+            bool multipleChoice = MauiProgram.BusinessLogic.CurrentQuestion?.Type == Models.QuestionType.MultipleChoice;
             if (multipleChoice) {
                 Navigation.PushModalAsync(new MultipleChoice());
             } else {
@@ -49,8 +51,11 @@ public partial class FillBlank : ContentPage
     /*
      * Submit button hit so close the quiz by going to the homescreen
      */
-    private void OnSubmitClicked(object sender, EventArgs e) {
-        DisplayAlert("Quiz Over", "Congratulations! You got " + MauiProgram.BusinessLogic.GetTotalCorrect().ToString() + " correct", "OK");
+    private async void OnSubmitClicked(object sender, EventArgs e) {
+        string givenAnswer = textEntry.Text ?? string.Empty;
+        MauiProgram.BusinessLogic.SetCurrentFillBlankAnswer(givenAnswer);
+        (int correct, int total) = MauiProgram.BusinessLogic.GetScore();
+        await DisplayAlert("Quiz Over", "Congratulations! You got " + correct + " out of " + total + " correct", "OK");
         Navigation.PushModalAsync(new HomeScreen());
     }
 }

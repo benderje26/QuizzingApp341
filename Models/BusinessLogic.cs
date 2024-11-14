@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 
 namespace QuizzingApp341.Models;
@@ -6,140 +7,23 @@ namespace QuizzingApp341.Models;
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
+    private const string OTHER_ERROR_MESSAGE = "An unknown error occured.";
 
-    /*
-     * Get the current question to be displayed
-     * 
-     * @return - the question to be displayed
-     */
-    public ObservableCollection<Question> CurrentQuestion {
-        get {
-            ObservableCollection<Question> currentQuestion = new ObservableCollection<Question>();
-            Question question = CurrentQuiz.CurrentQuestion;
-            question.First = CurrentQuiz.HasPreviousQuestion();
-            question.Final = CurrentQuiz.HasNextQuestion();
-            question.NotFinal = !question.Final;
-            currentQuestion.Add(question);
-            return currentQuestion;
+    private Quiz? CurrentQuiz {
+        get => _currentQuiz;
+        set {
+            _currentQuiz = value;
+            if (value != null) {
+                value.CurrentIndex = 0;
+            }
         }
-    }
-    
-    /*
-     * The current questions of the quiz being taken
-     * 
-     * @return - all the questions of the quiz
-     */
-    public List<Question> Questions {
-        get { return questions ?? GetAllQuestions().Result; }
-    }
-    private List<Question>? questions;
-
-    /*
-     * Returns all of the questions from the database
-     * 
-     * @return - all the questions from the database
-     */
-    public async Task<List<Question>> GetAllQuestions() {
-        return questions = await database.LoadQuestions();
     }
 
-    public async Task SetQuiz() {
-        await GetAllQuestions();
-    }
+    public Question? CurrentQuestion => CurrentQuiz?.CurrentQuestion;
+    public MultipleChoiceQuestion? CurrentMultipleChoiceQuestion { get => CurrentQuestion as MultipleChoiceQuestion; }
+    public FillBlankQuestion? CurrentFillBlankQuestion { get => CurrentQuestion as FillBlankQuestion; }
 
-    public Quiz CurrentQuiz {
-        get {
-            currentQuiz ??= new Quiz("First Quiz", new DateTime(), new DateTime(), 1000, Questions);
-            return currentQuiz;
-        }
-    }
-    private Quiz? currentQuiz;
-
-    /*
-     * Moves to the next question of the quiz if there is one
-     * 
-     * @return - whether or not it moved to the next question
-     */
-    public bool IncrementCurrentQuestion(int givenAnswer) {
-        CurrentQuestion[0].SetGivenAnswer(givenAnswer.ToString());
-        if (CurrentQuestion[0].IsCorrect()) {
-            CurrentQuiz.IncrementTotalCorrect();
-        }
-        if (CurrentQuiz.HasNextQuestion()) {
-            CurrentQuiz.NextQuestion();
-            return true;
-        }
-        return false;
-    }
-
-    /*
- * Moves to the next question of the quiz if there is one
- * 
- * @return - whether or not it moved to the next question
- */
-    public bool IncrementCurrentQuestion(string givenAnswer) {
-        CurrentQuestion[0].SetGivenAnswer(givenAnswer);
-        if (CurrentQuestion[0].IsCorrect()) {
-            CurrentQuiz.IncrementTotalCorrect();
-        } 
-        if (CurrentQuiz.HasNextQuestion()) {
-            CurrentQuiz.NextQuestion();
-            return true;
-        }
-        return false;
-    }
-
-    /*
-     * Moves to the previous question of the quiz if there is one
-     * 
-     * @return - whether or not it moved to the previous question
-     */
-    public bool DecrementCurrentQuestion(int givenAnswer) {
-        CurrentQuestion[0].SetGivenAnswer(givenAnswer.ToString());
-        if (CurrentQuestion[0].IsCorrect()) {
-            CurrentQuiz.DecrementTotalCorrect();
-        }
-        if (CurrentQuiz.HasPreviousQuestion()) {
-            CurrentQuiz.PreviousQuestion();
-            return true;
-        }
-        return false;
-    }
-
-    /*
- * Moves to the previous question of the quiz if there is one
- * 
- * @return - whether or not it moved to the previous question
- */
-    public bool DecrementCurrentQuestion(string givenAnswer) {
-        CurrentQuestion[0].SetGivenAnswer(givenAnswer);
-        if (CurrentQuestion[0].IsCorrect()) {
-            CurrentQuiz.DecrementTotalCorrect();
-        }
-        if (CurrentQuiz.HasPreviousQuestion()) {
-            CurrentQuiz.PreviousQuestion();
-            return true;
-        }
-        return false;
-    }
-    
-    public int GetTotalCorrect() {
-        return CurrentQuiz.TotalCorrect.Value;
-    }
-    
-    /*
-     * Checks to see if the current questions is a multiple choice question
-     * and if not it means the question is a fill blank questions
-     * 
-     * @return - whether or not the question is multiple choice
-     */
-    public bool IsCurrentQuestionMultipleChoice() {
-        if (CurrentQuestion[0] is MultipleChoiceQuestion) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    private Quiz? _currentQuiz;
 
     public async Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password) {
         if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
@@ -158,23 +42,92 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             AccountCreationResult.Success => null,
             AccountCreationResult.DuplicateEmail => "Email already used on another account.",
             AccountCreationResult.DuplicateUsername => "That username is already used, pick another one.",
-            AccountCreationResult.NetworkError => "There was a network error.",
-            _ => null
+            AccountCreationResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            AccountCreationResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
         };
 
         return (result, s);
     }
 
-    public async Task<(LoginResult, string?)> LogIn(string emailAddress, string password) {
-        LoginResult result = await database.LogIn(emailAddress, password);
+    public async Task<(LoginResult, string?)> Login(string emailAddress, string password) {
+        LoginResult result = await database.Login(emailAddress, password);
 
         string? s = result switch {
             LoginResult.Success => null,
             LoginResult.BadCredentials => "The username or password are incorrect.",
             LoginResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            LoginResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
         };
 
         return (result, s);
+    }
+
+    public async Task<(LogoutResult, string?)> Logout() {
+        LogoutResult result = await database.Logout();
+
+        string? s = result switch {
+            LogoutResult.Success => null,
+            LogoutResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            LogoutResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
+    public async Task<Quiz?> GetQuiz(string id) {
+        return await database.GetQuizById(id);
+    }
+
+    public bool SetQuiz(Quiz quiz) {
+        CurrentQuiz = quiz;
+        return true;
+    }
+
+    public Question? NextQuestion() {
+        return CurrentQuiz?.NextQuestion();
+    }
+
+    public Question? PreviousQuestion() {
+        return CurrentQuiz?.PreviousQuestion();
+    }
+
+    public bool SetCurrentMultipleChoiceAnswer(int optionIndex) {
+        if (CurrentQuestion?.Type != QuestionType.MultipleChoice) {
+            return false;
+        }
+
+        CurrentQuestion.SetGivenAnswer(optionIndex);
+        return true;
+    }
+
+    public bool SetCurrentFillBlankAnswer(string value) {
+        if (CurrentQuestion?.Type != QuestionType.FillBlank) {
+            return false;
+        }
+
+        CurrentQuestion.SetGivenAnswer(value);
+        return true;
+    }
+
+    public (int, int) GetScore() {
+        if (CurrentQuiz == null) {
+            return (0, 0);
+        }
+
+        int total = 0;
+        int correct = 0;
+
+        foreach (Question question in CurrentQuiz.Questions) {
+            total++;
+            if (question.IsCorrect()) {
+                correct++;
+            }
+        }
+
+        return (correct, total);
     }
 }
 

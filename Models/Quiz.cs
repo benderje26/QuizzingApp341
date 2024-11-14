@@ -24,24 +24,24 @@ public class Quiz(string title, DateTime? lastActivated, DateTime? dateCreated, 
             currentIndex = value;
         }
     }
-    private int? currentIndex = 0;
+    private int? currentIndex;
 
-    public int? TotalCorrect {
+    public int TotalCorrect {
         get { return totalCorrect; }
         set {
             totalCorrect = value;
         }
     }
-    private int? totalCorrect = 0;
+    private int totalCorrect = 0;
 
     public int IncrementTotalCorrect() {
-        TotalCorrect = (TotalCorrect ?? 0) + 1;
-        return TotalCorrect.Value;
+        TotalCorrect++;
+        return TotalCorrect;
     }
 
     public int DecrementTotalCorrect() {
-        TotalCorrect = (TotalCorrect ?? 1) - 1;
-        return TotalCorrect.Value;
+        TotalCorrect--;
+        return TotalCorrect;
     }
 
     public bool HasNextQuestion() {
@@ -51,8 +51,11 @@ public class Quiz(string title, DateTime? lastActivated, DateTime? dateCreated, 
         return CurrentIndex < Questions.Count - 1;
     }
 
-    public Question NextQuestion() {
-        CurrentIndex = (CurrentIndex ?? 0) + 1;
+    public Question? NextQuestion() {
+        if (!HasNextQuestion()) {
+            return null;
+        }
+        CurrentIndex = (CurrentIndex ?? -1) + 1;
         return Questions[CurrentIndex.Value];
     }
 
@@ -63,8 +66,11 @@ public class Quiz(string title, DateTime? lastActivated, DateTime? dateCreated, 
         return CurrentIndex > 0;
     }
 
-    public Question PreviousQuestion() {
-        CurrentIndex = (CurrentIndex ?? Questions.Count-1) - 1;
+    public Question? PreviousQuestion() {
+        if (!HasPreviousQuestion()) {
+            return null;
+        }
+        CurrentIndex = (CurrentIndex ?? Questions.Count - 1) - 1;
         return Questions[CurrentIndex.Value];
     }
 }

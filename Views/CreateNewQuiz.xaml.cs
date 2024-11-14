@@ -26,15 +26,12 @@ namespace QuizzingApp341.Views {
             await this.ShowPopupAsync(popup);
         }
 
-        private void OnSaveNewQuizClicked(object sender, EventArgs e) {
+        private async void OnSaveNewQuizClicked(object sender, EventArgs e) {
             var newPage = new MyQuiz();
 
             //completely reset the navigation stack
-            Application.Current.MainPage = new NavigationPage(newPage);
+            await Navigation.PopToRootAsync();
+            await Navigation.PushAsync(new NavigationPage(newPage));
         }
-
-
-
-
     }
 }

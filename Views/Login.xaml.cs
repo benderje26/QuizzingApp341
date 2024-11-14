@@ -24,7 +24,7 @@ public partial class Login : ContentPage {
     private async void OnLoginButtonClicked(object sender, EventArgs e) {
         string email = emailInput.Text ?? string.Empty;
         string password = passwordInput.Text ?? string.Empty;
-        (LoginResult result, string? errorMessage) = await MauiProgram.BusinessLogic.LogIn(email, password);
+        (LoginResult result, string? errorMessage) = await MauiProgram.BusinessLogic.Login(email, password);
 
         if (result == LoginResult.Success) {
             // Navigate to HomeScreen and make TabBar visible

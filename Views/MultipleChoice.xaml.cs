@@ -7,7 +7,8 @@ namespace QuizzingApp341.Views;
  */
 public partial class MultipleChoice : ContentPage
 {
-    public bool FinalQuestion { get; set; } 
+    int? selectedIndex;
+
 	public MultipleChoice()
 	{
 		InitializeComponent();
@@ -18,10 +19,14 @@ public partial class MultipleChoice : ContentPage
      * Next button clicked so move to the next question in the quiz 
      */
     private void OnNextClicked(object sender, EventArgs e) {
-        int givenAnswer = 3;
-        bool success = MauiProgram.BusinessLogic.IncrementCurrentQuestion(givenAnswer);
+        int? selected = selectedIndex;
+        if (selected == null) {
+            return;
+        }
+        MauiProgram.BusinessLogic.SetCurrentMultipleChoiceAnswer(selected.Value);
+        bool success = MauiProgram.BusinessLogic.NextQuestion() != null;
         if (success) {
-            bool multipleChoice = MauiProgram.BusinessLogic.IsCurrentQuestionMultipleChoice();
+            bool multipleChoice = MauiProgram.BusinessLogic.CurrentQuestion?.Type == QuestionType.MultipleChoice;
             if (multipleChoice) {
                 Navigation.PushModalAsync(new MultipleChoice());
             } else {
@@ -34,10 +39,14 @@ public partial class MultipleChoice : ContentPage
     * Previous button clicked so move to the previous question in the quiz 
     */
     private void OnPreviousClicked(object sender, EventArgs e) {
-        int givenAnswer = 3;
-        bool success = MauiProgram.BusinessLogic.DecrementCurrentQuestion(givenAnswer);
+        int? selected = selectedIndex;
+        if (selected == null) {
+            return;
+        }
+        MauiProgram.BusinessLogic.SetCurrentMultipleChoiceAnswer(selected.Value);
+        bool success = MauiProgram.BusinessLogic.PreviousQuestion() != null;
         if (success) {
-            bool multipleChoice = MauiProgram.BusinessLogic.IsCurrentQuestionMultipleChoice();
+            bool multipleChoice = MauiProgram.BusinessLogic.CurrentQuestion?.Type == QuestionType.MultipleChoice;
             if (multipleChoice) {
                 Navigation.PushModalAsync(new MultipleChoice());
             } else {
@@ -49,8 +58,25 @@ public partial class MultipleChoice : ContentPage
     /*
      * Submit button hit so close the quiz by going to the homescreen
      */
-    private void OnSubmitClicked(object sender, EventArgs e) {
-        DisplayAlert("Quiz Over", "Congratulations! You got " + MauiProgram.BusinessLogic.GetTotalCorrect().ToString() + " correct", "OK");
-        Navigation.PushModalAsync(new HomeScreen());
+    private async void OnSubmitClicked(object sender, EventArgs e) {
+        int? selected = selectedIndex;
+        if (selected == null) {
+            return;
+        }
+        MauiProgram.BusinessLogic.SetCurrentMultipleChoiceAnswer(selected.Value);
+        (int correct, int total) = MauiProgram.BusinessLogic.GetScore();
+        await DisplayAlert("Quiz Over", "Congratulations! You got " + correct + " out of " + total + " correct", "OK");
+        await Navigation.PushModalAsync(new HomeScreen());
     }
+
+    private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e) {
+        if (e.Value) {
+            RadioButton? rb = sender as RadioButton;
+
+            if (rb?.BindingContext is IndexValuePair value) {
+                selectedIndex = value.Index;
+            }
+        }
+    }
+
 }
