@@ -73,7 +73,8 @@ public class SupabaseDatabase : IDatabase {
         } catch (Exception ex) {
             Console.WriteLine(ex);
         }
-        return [];
+        return [new MultipleChoiceQuestion(0, "How many CS students does it take to screw in a lightbulb?", ["1", "3", "10", "30"], 3),
+            new FillBlankQuestion(1, "What is our professor's name?", ["Dr. Rogers", "Professor Rogers"], false)];
     }
 
     public async Task<AccountCreationResult> CreateNewUser(string emailAddress, string username, string password) {

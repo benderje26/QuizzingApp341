@@ -15,5 +15,7 @@ namespace QuizzingApp341.Models {
         protected void OnPropertyChanged([CallerMemberName] string? name = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+        public abstract void SetGivenAnswer(string givenAnswer);
     }
 }

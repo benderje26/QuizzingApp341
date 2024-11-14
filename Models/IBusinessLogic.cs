@@ -20,8 +20,11 @@ public interface IBusinessLogic {
 
     Task<Quiz?> GetQuiz(string id);
     bool SetQuiz(Quiz quiz);
+    QuestionType GetCurrentQuestionType();
     Question? NextQuestion();
     Question? PreviousQuestion();
     bool SetCurrentMultipleChoiceAnswer(int optionIndex);
     bool SetCurrentFillBlankAnswer(string value);
+    (int, int) GetScore();
+
 }
