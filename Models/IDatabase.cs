@@ -23,9 +23,17 @@ public interface IDatabase {
     Task<LogoutResult> Logout();
 
     /// <summary>
+    /// Attempts to send user email to reset password
+    /// </summary>
+    /// <returns>The result of attempting to send user email to reset password </returns>
+    Task<ResetPasswordResult> ResetPassword(string emailAddress);
+
+    /// <summary>
     /// Attempts to get a quiz.
     /// </summary>
     /// <param name="id">The given id of the quiz</param>
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
     public Task<Quiz?> GetQuizById(string id);
+
+    Task<List<Quiz>> GetFavoritesByUserId();
 }

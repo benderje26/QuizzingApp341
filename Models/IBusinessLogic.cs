@@ -22,7 +22,14 @@ public interface IBusinessLogic {
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(LogoutResult, string?)> Logout();
 
+    /// <summary>
+    /// Attempts to send user email to reset password
+    /// </summary>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    Task<(ResetPasswordResult, string?)> ResetPassword(string emailAddress);
+
     Question? CurrentQuestion { get; }
+    List<Quiz> FavoriteQuizzes { get; }
     MultipleChoiceQuestion? CurrentMultipleChoiceQuestion { get; }
     FillBlankQuestion? CurrentFillBlankQuestion { get; }
     /// <summary>

@@ -1,11 +1,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:model="clr-namespace:QuizzingApp341.Models"
+             x:DataType="model:IBusinessLogic" 
              x:Class="QuizzingApp341.Views.FavoriteQuizzes" 
              Padding="7">
 
     <StackLayout Padding="20" VerticalOptions="FillAndExpand">
 
-        <ScrollView VerticalOptions="FillAndExpand">
+        <!--<ScrollView VerticalOptions="FillAndExpand">
             <StackLayout Padding="0,10">
                 <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
                     <Label Text="Quiz Title 1" FontSize="18" VerticalOptions="Center" />
@@ -62,14 +64,13 @@
                             Clicked="StudyButtonClicked" />
                 </Grid>
             </StackLayout>
-        </ScrollView>
+        </ScrollView>-->
 
-        <!-- CollectionView to display favorite quizzes dynamically 
+         <!--CollectionView to display favorite quizzes dynamically--> 
         <CollectionView x:Name="QuizzesCollectionView"
-                        ItemsSource="{Binding FavoriteQuizzes}"
-                        IsVisible="{Binding HasFavorites}">
+                        ItemsSource="{Binding FavoriteQuizzes}">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="model:Quizzes">
+                <DataTemplate x:DataType="model:Quiz">
                     <SwipeView>
                         <SwipeView.RightItems>
                             <SwipeItems>
@@ -92,6 +93,6 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        -->
+        
     </StackLayout>
 </ContentPage>

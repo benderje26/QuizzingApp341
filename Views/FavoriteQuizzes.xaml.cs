@@ -3,6 +3,7 @@ namespace QuizzingApp341.Views;
 public partial class FavoriteQuizzes : ContentPage {
     public FavoriteQuizzes() {
         InitializeComponent();
+        BindingContext = MauiProgram.BusinessLogic;
     }
 
 

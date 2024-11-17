@@ -85,6 +85,18 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    public async Task<ResetPasswordResult> ResetPassword(string emailAddress) {
+        if (emailAddress == null || emailAddress == "") {
+            return ResetPasswordResult.BadEmail;
+        }
+        try {
+            await Client.Auth.ResetPasswordForEmail(emailAddress);
+            return ResetPasswordResult.EmailSent;
+        } catch (Exception e) {
+            return ResetPasswordResult.NetworkError;
+        }
+    }
+
     public async Task<Quiz?> GetQuizById(string id) {
         try {
             SupabaseQuiz? quiz = await Client
@@ -113,6 +125,34 @@ public class SupabaseDatabase : IDatabase {
             return result;
         } catch (Exception) {
             return null;
+        }
+    }
+
+    public async Task<List<Quiz>> GetFavoritesByUserId() {
+        try {
+            //ModeledResponse<SupabaseFavorites> favorites = await Client
+            //    .From<SupabaseFavorites>()
+            //    .Where(f => f.UserId == new Guid("626bfab7-ea7c-43ce-91e5-160633828b1d"))
+            //    .Get();
+            //if (favorites == null) {
+            //    return new List<Quiz>();
+            //}
+            //List<Quiz> quizzes = [];
+            //for (int i = 0, length = favorites.Models.Count; i < length; i++) {
+            //    SupabaseFavorites sq = favorites.Models[i];
+            //    SupabaseQuiz? quiz = await Client
+            //        .From<SupabaseQuiz>()
+            //        .Where(q => q.Id == sq.QuizId)
+            //        .Single();
+            //    if (quiz != null) {
+            //        quizzes.Add(new Quiz(quiz.Title, DateTime.Now, DateTime.Now, null, new List<Question>()));
+            //    }
+
+            List<Quiz> test = [];
+            test.Add(new Quiz("HardCoded DB Works", DateTime.Now, DateTime.Now, null, new List<Question>()));
+            return test;
+        } catch (Exception) {
+            return new List<Quiz>();
         }
     }
 
@@ -156,5 +196,18 @@ public class SupabaseDatabase : IDatabase {
 
         [Column("case_sensitive")]
         public bool? CaseSensitive { get; set; }
+    }
+
+    [Table("favorites")]
+    public class SupabaseFavorites : BaseModel {
+        [PrimaryKey("favorites_id")]
+        public long Id { get; set; }
+
+        [Column("quiz_id")]
+        public long QuizId { get; set; }
+
+        [Column("user_id")]
+        public Guid UserId { get; set; }
+
     }
 }

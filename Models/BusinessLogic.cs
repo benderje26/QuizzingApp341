@@ -1,3 +1,4 @@
+using QuizzingApp341.Views;
 using System.Collections.ObjectModel;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
@@ -8,6 +9,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
     private const string OTHER_ERROR_MESSAGE = "An unknown error occured.";
+    private const string BAD_EMAIL = "A bad email was given.";
 
     private Quiz? CurrentQuiz {
         get => _currentQuiz;
@@ -17,6 +19,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
                 value.CurrentIndex = 0;
             }
         }
+    }
+
+    public List<Quiz> FavoriteQuizzes {
+        get { return database.GetFavoritesByUserId().Result; }
     }
 
     public Question? CurrentQuestion => CurrentQuiz?.CurrentQuestion;
@@ -71,6 +77,19 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             LogoutResult.Success => null,
             LogoutResult.NetworkError => NETWORK_ERROR_MESSAGE,
             LogoutResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
+    public async Task<(ResetPasswordResult, string?)> ResetPassword(string emailAddress) {
+        ResetPasswordResult result = await database.ResetPassword(emailAddress);
+
+        string? s = result switch {
+            ResetPasswordResult.EmailSent => null,
+            ResetPasswordResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            ResetPasswordResult.BadEmail => BAD_EMAIL,
             _ => OTHER_ERROR_MESSAGE
         };
 
