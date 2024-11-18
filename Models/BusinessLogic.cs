@@ -64,11 +64,31 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
     // FOR QUIZ LOGIC
 
-    public async Task<Quiz?> GetQuiz(long id) {
+    public async Task<SupabaseDatabase.SupabaseQuiz?> GetQuiz(long id) {
         return await database.GetQuizById(id);
     }
 
+    public async Task<ObservableCollection<SupabaseDatabase.SupabaseQuestion>?> GetQuestions(long id) {
+        var result = await database.GetQuestions(id);
+        if (result != null) {
+            List<SupabaseDatabase.SupabaseQuestion> questions = result;
+            return new ObservableCollection<SupabaseDatabase.SupabaseQuestion>(questions);
+        }
+        return null; 
+    }
     
+    public async Task<long?> AddQuestion(SupabaseDatabase.SupabaseQuestion question) {
+        var result = await database.AddQuestion(question);
+        return result;
+    }
+
+    public async Task<bool> DeleteQuestion(long id) {
+        return await database.DeleteQuestion(id);
+    }
+
+    public async Task<bool> EditQuestion(SupabaseDatabase.SupabaseQuestion question) {
+        return await database.EditQuestion(question);
+    }
 }
 
 partial class Regexes {

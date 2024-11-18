@@ -1,3 +1,4 @@
+using HomeKit;
 using System.Collections.ObjectModel;
 
 namespace QuizzingApp341.Models;
@@ -6,8 +7,8 @@ namespace QuizzingApp341.Models;
 public class Quiz {
 
     // The quiz table from supabase that has columns Id, created_at, creator, title
-    public SupabaseDatabase.SupabaseQuiz SupabaseQuiz {get; set;} 
-    public ObservableCollection<SupabaseDatabase.SupabaseQuestion> Questions {get; set;}
+    public SupabaseDatabase.SupabaseQuiz SupabaseQuiz { get; set; }
+    public ObservableCollection<SupabaseDatabase.SupabaseQuestion> Questions { get; set; }
 
     // Constructor for setting a quiz
     public Quiz(SupabaseDatabase.SupabaseQuiz supabaseQuiz) {
@@ -27,16 +28,20 @@ public class Quiz {
     /// <returns>
     /// returns true if it successfully gets all the questions for this quiz
     /// </returns>
-    public bool getQuestions() {
+    public async Task<bool> GetQuestions() {
         try {
-            // TODO
             // Get all the questions from db using SupabaseQuiz.ID
+            var result = await MauiProgram.BusinessLogic.GetQuestions(SupabaseQuiz.Id);
 
+            if (result == null) {
+                return false;
+            }
 
-        } catch  {
+            Questions = result;
+            return true;
+        } catch {
             return false;
         }
-        return true;
     }
 
     /// <summary>
@@ -48,17 +53,16 @@ public class Quiz {
     /// Returns true if its successfully added to the db otherwise false... could return question id instead...
     /// </returns>
     //
-    public bool addQuestion(SupabaseDatabase.SupabaseQuestion question) {
+    public async Task<bool> AddQuestion(SupabaseDatabase.SupabaseQuestion question) {
         try {
-            // TODO
             // Add the question to the db
-            // long? id = BusinessLogic.addQuestionToDB(Question); // returns null if the question was not added, otherwise returns the id assigned to the question
-            // if (id == null) { // If the question was not added to the db, return false
-            //     return false;
-            // }
+            long? id = await MauiProgram.BusinessLogic.AddQuestion(question); // returns null if the question was not added, otherwise returns the id assigned to the question
+            if (id == null) { // If the question was not added to the db, return false
+                return false;
+            }
 
-            // If the question was added to the db set the id of the question to the one returned from the db and add it to the questions list
-            // question.id = the id assigned to the question in the db
+            // If the question was added to the db set the id of the question to the one returned from the db and add it to the questions list 
+            question.Id = id;
             Questions.Add(question);
         } catch {
             return false;
@@ -73,12 +77,15 @@ public class Quiz {
     /// <returns>
     /// returns true if successfully deleted in db otherwise false
     /// </returns>
-    public bool deleteQuestion(long questionID) {
+    public async Task<bool> DeleteQuestion(long questionID) {
         try {
-            //TODO
             // Delete from the table in db using the question id
+            if (await MauiProgram.BusinessLogic.DeleteQuestion(questionID)) {
+                return true;
+            }
 
-            // If successful with db, delete it in the Questions list
+            // If successful with db, delete/reset it in the Questions list
+            await GetQuestions();
         } catch {
             return false;
         }
@@ -92,12 +99,19 @@ public class Quiz {
     /// <returns>
     /// returns true if successfully edited in db otherwise false
     /// </returns>
-    public bool editQuestion(SupabaseDatabase.SupabaseQuestion question) {
+    public async Task<bool>  EditQuestion(SupabaseDatabase.SupabaseQuestion question) {
         try {
-            //TODO
-            // Use the question Id and replace the ones in the table with this question
-
-            // Fix the question in THIS Questions list
+            // Update the question 
+            if (await MauiProgram.BusinessLogic.EditQuestion(question)) {
+                // Fix the question in THIS Questions list
+                for (int i = 0; i < Questions.Count; i++) {
+                    if (Questions[i].Id == question.Id) {
+                        Questions[i] = question;
+                        return true;
+                    }
+                }
+                
+            }
         } catch {
             return false;
         }

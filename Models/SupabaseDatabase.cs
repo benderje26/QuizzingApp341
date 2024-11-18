@@ -7,8 +7,11 @@ using Supabase.Gotrue;
 using Client = Supabase.Client;
 using Supabase.Gotrue.Exceptions;
 using System.Net.Mail;
+using System.Collections.ObjectModel;
+using Microsoft.Extensions.Logging.Abstractions;
 
 public class SupabaseDatabase : IDatabase {
+    // FOR USER AND AUTHENTICATION
 
     private const string REST_URL = "https://tcogwlqjinvzckjmnjhp.supabase.co";
     private const string API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjb2d3bHFqaW52emNram1uamhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkzNjc4NTIsImV4cCI6MjA0NDk0Mzg1Mn0.bzYJIRYJ3rtvEh3usrydy7M3ES1J6C5iMgPwzlqnTp8";
@@ -85,21 +88,7 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<SupabaseQuiz?> GetQuizById(long id) {
-        try {
-            SupabaseQuiz? quiz = await Client
-                .From<SupabaseQuiz>()
-                .Where(q => q.Id == id)
-                .Single();
-            if (quiz == null) {
-                return null;
-            } else {
-                return quiz;
-            }
-        } catch (Exception) {
-            return null;
-        }
-    }
+    // For Quiz Logic
 
     [Table("quizzes")]
     public class SupabaseQuiz : BaseModel {
@@ -119,7 +108,7 @@ public class SupabaseDatabase : IDatabase {
     [Table("questions")]
     public class SupabaseQuestion : BaseModel {
         [PrimaryKey("id")]
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         [Column("quiz_identifier")]
         public string? QuizId { get; set; }
@@ -141,5 +130,80 @@ public class SupabaseDatabase : IDatabase {
 
         [Column("case_sensitive")]
         public bool? CaseSensitive { get; set; }
+    }
+
+    public async Task<SupabaseQuiz?> GetQuizById(long id) {
+        try {
+            SupabaseQuiz? quiz = await Client
+                .From<SupabaseQuiz>()
+                .Where(q => q.Id == id)
+                .Single();
+            if (quiz == null) {
+                return null;
+            } else {
+                return quiz;
+            }
+        } catch (Exception) {
+            return null;
+        }
+    }
+
+    public async Task<List<SupabaseQuestion>?> GetQuestions(long id) {
+        try {
+            var result = await Client
+                .From<SupabaseQuestion>()
+                .Where(q => q.Id == id).Get();
+            
+
+            if (result == null) {
+                return null;
+            }
+            return result.Models; // Return the list of supabase questions
+        } catch {
+            return null;
+        }
+    }
+
+
+    public async Task<long?> AddQuestion(SupabaseQuestion question) {
+        try {
+            var result = await Client
+                .From<SupabaseQuestion>()
+                .Insert(question);
+            
+            if (result == null || result.Model == null) {
+                return null;
+            }
+            
+
+            return result.Model.Id;
+        } catch {
+            return null;
+        }
+    }
+
+    public async Task<bool> DeleteQuestion(long id) {
+        try {
+            await Client
+            .From<SupabaseQuestion>()
+            .Where(q => q.Id == id)
+            .Delete();
+
+        } catch {
+            return false;
+        }
+        return true;
+    }
+
+    public async Task<bool> EditQuestion(SupabaseQuestion question) {
+        try {
+            await Client
+            .From<SupabaseQuestion>()
+            .Upsert(question);
+            
+        } catch {
+            return false;
+        }
+        return true;
     }
 }
