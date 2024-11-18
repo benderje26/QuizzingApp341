@@ -7,7 +7,7 @@ namespace QuizzingApp341.Models;
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
-    private const string OTHER_ERROR_MESSAGE = "An unknown error occured.";
+    private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
 
     private Quiz? CurrentQuiz {
         get => _currentQuiz;

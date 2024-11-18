@@ -1,13 +1,10 @@
 namespace QuizzingApp341.Models;
+public class ActiveQuiz {
+    public List<Question> Questions { get; set; }
+    public DateTime ActivationTime {get; set;}
+    public ActiveQuiz() {
 
-// This class represents a quiz that contains a title, date created, last date activated, questions and answers
-public class Quiz(string title, DateTime? lastActivated, DateTime? dateCreated, long? time, List<Question> questions) {
-    public string Title { get; set; } = title;
-    public DateTime? LastActivated { get; set; } = lastActivated;
-    public DateTime? DateCreated { get; set; } = dateCreated;
-    public long? Time { get; set; } = time;
-    public List<Question> Questions { get; set; } = questions;
-
+    }
 
     public Question? CurrentQuestion {
         get {
