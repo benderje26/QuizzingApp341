@@ -85,32 +85,17 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<Quiz?> GetQuizById(string id) {
+    public async Task<SupabaseQuiz?> GetQuizById(long id) {
         try {
             SupabaseQuiz? quiz = await Client
                 .From<SupabaseQuiz>()
-                .Where(q => q.Identifier == id)
+                .Where(q => q.Id == id)
                 .Single();
             if (quiz == null) {
                 return null;
+            } else {
+                return quiz;
             }
-            ModeledResponse<SupabaseQuestion> questionsResult = await Client
-                .From<SupabaseQuestion>()
-                .Where(q => q.QuizId == quiz.Identifier)
-                .Get();
-            List<Question> questions = [];
-            for (int i = 0, length = questionsResult.Models.Count; i < length; i++) {
-                SupabaseQuestion sq = questionsResult.Models[i];
-                if (sq.Choices != null) {
-                    questions.Add(new MultipleChoiceQuestion(sq.QuestionNumber, i == length - 1, sq.Title ?? string.Empty, sq.Choices, sq.CorrectAnswer));
-                } else {
-                    questions.Add(new FillBlankQuestion(sq.QuestionNumber, i == length - 1, sq.Title ?? string.Empty, sq.AcceptedTextAnswers, sq.CaseSensitive ?? false));
-                }
-            }
-            questions.Sort((x, y) => x.QuestionNumber.CompareTo(y.QuestionNumber));
-
-            Quiz result = new(quiz.Title ?? string.Empty, DateTime.Now, DateTime.Now, null, questions);
-            return result;
         } catch (Exception) {
             return null;
         }
