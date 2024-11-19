@@ -90,6 +90,24 @@ public class SupabaseDatabase : IDatabase {
 
     // For Quiz Logic
 
+    [Table ("active_quizzes")]
+    public class SupabaseActiveQuiz : BaseModel {
+        [PrimaryKey("id")]
+        public long Id {get; set;}
+
+        [Column("quiz_id")]
+        public long QuizId {get; set;}
+
+        [Column("access_code")]
+        public string? AccessCode {get; set;}
+
+        [Column("is_active")]
+        public bool IsActive{get; set;}
+
+        [Column("current_question")]
+        public int CurrentQuestion {get; set;}
+    }
+
     [Table("quizzes")]
     public class SupabaseQuiz : BaseModel {
         [PrimaryKey("id")]
@@ -200,7 +218,7 @@ public class SupabaseDatabase : IDatabase {
             await Client
             .From<SupabaseQuestion>()
             .Upsert(question);
-            
+
         } catch {
             return false;
         }
