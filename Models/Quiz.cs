@@ -11,7 +11,7 @@ public class Quiz {
 
     public SupabaseDatabase.SupabaseActiveQuiz? SupabaseActiveQuiz { get; set; }
 
-    static int CurrentQuestion = 0;
+    static int CurrentQuestion {get; set;} = 0;
 
     // Constructor for setting a quiz
     public Quiz(SupabaseDatabase.SupabaseQuiz supabaseQuiz) {
@@ -52,6 +52,7 @@ public class Quiz {
         return false;
     }
 
+    //TODO
     /// <summary>
     /// This starts a quiz for a user, which needs an id
     /// </summary>
@@ -156,6 +157,24 @@ public class Quiz {
         } catch {
             return false;
         }
+        return true;
+    }
+
+    public async Task<bool> NextQuestion() {
+        // TODO
+        // Change the current question in DB
+        CurrentQuestion++;
+
+        // Return true if successful
+        return true;
+    }
+
+    public async Task<bool> PreviousQuestion() {
+        // TODO
+        // Change the current question in DB
+        CurrentQuestion--;
+
+        // Return true if successful
         return true;
     }
 }
