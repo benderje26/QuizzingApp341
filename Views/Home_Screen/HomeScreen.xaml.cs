@@ -15,16 +15,17 @@ public partial class HomeScreen : ContentPage {
     {
         string quizId = quizIdEntry.Text;
 
-        if (await MauiProgram.BusinessLogic.GetQuiz(quizId) is Quiz quiz) {
-            MauiProgram.BusinessLogic.SetQuiz(quiz);
-            bool multipleChoice = MauiProgram.BusinessLogic.CurrentQuestion?.Type == Models.QuestionType.MultipleChoice;
-            if (multipleChoice) {
-                await Navigation.PushModalAsync(new MultipleChoice());
-            } else {
-                await Navigation.PushModalAsync(new FillBlank());
-            }
-        } else {
-            await DisplayAlert("Invalid Quiz ID", "Please enter a valid Quiz ID.", "OK");
-        }
+        // if (await MauiProgram.BusinessLogic.GetQuiz(quizId) is Quiz quiz) {
+        //     MauiProgram.BusinessLogic.SetQuiz(quiz);
+        //     bool multipleChoice = MauiProgram.BusinessLogic.CurrentQuestion?.Type == Models.QuestionType.MultipleChoice;
+        //     if (multipleChoice) {
+        //         await Navigation.PushModalAsync(new MultipleChoice());
+        //     } else {
+        //         await Navigation.PushModalAsync(new FillBlank());
+        //     }
+        // } else {
+        //     await DisplayAlert("Invalid Quiz ID", "Please enter a valid Quiz ID.", "OK");
+        // }
+        // TODO
     }
 }
