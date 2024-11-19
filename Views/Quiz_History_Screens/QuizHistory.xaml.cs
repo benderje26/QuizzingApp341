@@ -7,6 +7,7 @@ public partial class QuizHistory : ContentPage {
     public QuizHistory() {
         InitializeComponent();
 
+        // TODO Get the user's quiz history (should include all the quizzes they've taken and quizzes they've activated)
         Quizzes = new List<Quiz>
         {
         };
