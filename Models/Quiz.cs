@@ -6,8 +6,12 @@ namespace QuizzingApp341.Models;
 public class Quiz {
 
     // The quiz table from supabase that has columns Id, created_at, creator, title
-    public SupabaseDatabase.SupabaseQuiz SupabaseQuiz { get; set; }
+    public SupabaseDatabase.SupabaseQuiz? SupabaseQuiz { get; set; }
     public ObservableCollection<SupabaseDatabase.SupabaseQuestion> Questions { get; set; }
+
+    public SupabaseDatabase.SupabaseActiveQuiz? SupabaseActiveQuiz { get; set; }
+
+    static int CurrentQuestion = 0;
 
     // Constructor for setting a quiz
     public Quiz(SupabaseDatabase.SupabaseQuiz supabaseQuiz) {
@@ -15,10 +19,48 @@ public class Quiz {
         Questions = [];
     }
 
+    /// <summary>
+    /// Sets an active quiz, if a user is about to take a quiz, it also needs to set the SupabaseQuiz and Questions
+    /// Call SetActiveQuizInfo() after this constructor
+    /// Quiz quiz = new Quiz(supabaseActiveQuiz);
+    /// await quiz.SetActiveQuizInfo();
+    /// </summary>
+    /// <param name="supabaseActiveQuiz"></param>
+    public Quiz(SupabaseDatabase.SupabaseActiveQuiz supabaseActiveQuiz) {
+        SupabaseActiveQuiz = supabaseActiveQuiz;
+    }
+
     // Overloaded constructor for taking a quiz
     public Quiz(SupabaseDatabase.SupabaseQuiz supabaseQuiz, ObservableCollection<SupabaseDatabase.SupabaseQuestion> questions) {
         SupabaseQuiz = supabaseQuiz;
         Questions = questions;
+    }
+
+    /// <summary>
+    /// Sets the supabaseQuiz and questions from an activated quiz
+    /// Should be called after the Quiz is activated passing in the active quiz to the constructor
+    /// </summary>
+    /// <returns>
+    /// returns true if it successfully updated SupabaseQuiz and Questions otherwise false
+    /// </returns>
+    public async Task<bool> SetActiveQuizInfo() {
+        if (SupabaseActiveQuiz != null) {
+            SupabaseQuiz = await MauiProgram.BusinessLogic.GetQuiz(SupabaseActiveQuiz.QuizId);
+            Questions = await MauiProgram.BusinessLogic.GetQuestions(SupabaseActiveQuiz.QuizId) ?? [];
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// This starts a quiz for a user, which needs an id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="accessCode"></param>
+    public void StartQuiz(String accessCode) {// Can either take a LiveQuiz Id or an Access code
+        // SupabaseActiveQuiz = BusinessLogic.GetActiveQuizFromAccessCode(accessCode);
+        // Get the supabaseQuiz with the quiz id
+        // Get the supabasequestions with the quiz id
     }
 
     /// <summary>
@@ -98,7 +140,7 @@ public class Quiz {
     /// <returns>
     /// returns true if successfully edited in db otherwise false
     /// </returns>
-    public async Task<bool>  EditQuestion(SupabaseDatabase.SupabaseQuestion question) {
+    public async Task<bool> EditQuestion(SupabaseDatabase.SupabaseQuestion question) {
         try {
             // Update the question 
             if (await MauiProgram.BusinessLogic.EditQuestion(question)) {
@@ -109,7 +151,7 @@ public class Quiz {
                         return true;
                     }
                 }
-                
+
             }
         } catch {
             return false;
