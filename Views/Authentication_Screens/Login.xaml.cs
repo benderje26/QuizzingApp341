@@ -47,8 +47,12 @@ public partial class Login : ContentPage {
         // Get user ID
         UserInfo user = MauiProgram.BusinessLogic.UserInfo();
        
+        ObservableCollection<Quiz>? userCreatedQuizzes = [];
         // Set other variables ahead of time for the app
-        ObservableCollection<Quiz>? userCreatedQuizzes = await MauiProgram.BusinessLogic.GetUserCreatedQuizzes(user.ID);
+        if (user.ID != null) {
+            userCreatedQuizzes = await MauiProgram.BusinessLogic.GetUserCreatedQuizzes(user.ID);
+        }
+
         if (userCreatedQuizzes != null) {
             user.CreatedQuizzes = userCreatedQuizzes;
         };

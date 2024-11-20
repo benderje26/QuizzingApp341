@@ -1,4 +1,4 @@
-using Microsoft.VisualBasic.ApplicationServices;
+
 using System.Collections.ObjectModel;
 using System.Net.Mail;
 using System.Text.RegularExpressions;

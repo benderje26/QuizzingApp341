@@ -24,7 +24,7 @@
                 <Entry Placeholder="Enter quiz name"
                        FontSize="18"
                        TextColor="Black"
-                       HorizontalOptions="FillAndExpand"/>
+                       />
             </StackLayout>
 
             <!-- StackLayout for Questions -->
