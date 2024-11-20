@@ -1,28 +1,39 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Android.App.AppSearch;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 
+// This class corresponds to the questions table in db
 namespace QuizzingApp341.Models {
-    public abstract class Question(int questionNumber, bool isFinal, string questionText) : INotifyPropertyChanged {
-        public virtual string Text { get; private set; } = questionText;
-        public abstract bool IsCorrect();
-        public abstract bool HasCorrectAnswer();
-        public bool First { get; private set; } = questionNumber == 0;
-        public bool Final { get => isFinal; }
-        public bool NotFirst { get => !First; }
-        public bool NotFinal { get => !isFinal; }
-        public int QuestionNumber { get; private set; } = questionNumber;
+    [Table("questions")]
+    public class Question : BaseModel {
+        [PrimaryKey("id")]
+        public long? Id { get; set; }
 
-        public abstract QuestionType Type { get; }
+        [Column("question_no")]
+        public int QuestionNum { get; set; }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string? name = null) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
+        [Column("question_no")]
+        public int QuestionNumber { get; set; }
 
-        public abstract void SetGivenAnswer(object givenAnswer);
+        [Column("question_type")]
+        public QuestionType QuestionType {get; set;}
+
+        [Column("question_text")]
+        public string? QuestionText { get; set; }
+
+        [Column("acceptable_answers")]
+        public List<string>? acceptableAnswers { get; set; }
+
+        [Column("multiple_choice_options")]
+        public List<string>? MultipleChoiceOptions { get; set; }
+
+        [Column("case_sensitive")]
+        public bool? CaseSensitive { get; set; }
     }
 
-    public enum QuestionType {
-        MultipleChoice, FillBlank
+    public enum QuestionType : int {
+        MultipleChoice = 0, FillBlank = 1
     }
 }

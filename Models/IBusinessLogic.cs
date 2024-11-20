@@ -1,5 +1,5 @@
 ﻿namespace QuizzingApp341.Models;
-
+using System.Collections.ObjectModel;
 public interface IBusinessLogic {
     /// <summary>
     /// Attempts to create a new user.
@@ -22,47 +22,46 @@ public interface IBusinessLogic {
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(LogoutResult, string?)> Logout();
 
-    Question? CurrentQuestion { get; }
-    MultipleChoiceQuestion? CurrentMultipleChoiceQuestion { get; }
-    FillBlankQuestion? CurrentFillBlankQuestion { get; }
     /// <summary>
     /// Attempts to get a quiz.
     /// </summary>
     /// <param name="id">The given id of the quiz</param>
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
-    Task<Quiz?> GetQuiz(string id);
+    Task<Quiz?> GetQuiz(long id);
+    
     /// <summary>
-    /// Sets the current quiz.
+    /// Gets all of the questions from the questions table in db that matches the given id
     /// </summary>
-    /// <param name="quiz">The quiz to set as the current</param>
-    /// <returns>true if success, false if failure</returns>
-    bool SetQuiz(Quiz quiz);
-    /// <summary>
-    /// Gets the next question.
-    /// </summary>
-    /// <returns>The next question or null if there is no more</returns>
-    Question? NextQuestion();
-    /// <summary>
-    /// Gets the previous question.
-    /// </summary>
-    /// <returns>The previous question or null if it is the first</returns>
-    Question? PreviousQuestion();
-    /// <summary>
-    /// Sets the index of the option selected for the current multiple choice question.
-    /// </summary>
-    /// <param name="optionIndex">The index of the option picked</param>
-    /// <returns>true if it worked, false if it didn't</returns>
-    bool SetCurrentMultipleChoiceAnswer(int optionIndex);
-    /// <summary>
-    /// Sets the input for the current fill blank question.
-    /// </summary>
-    /// <param name="value">The text inputted</param>
-    /// <returns>true if it worked, false if it didn't</returns>
-    bool SetCurrentFillBlankAnswer(string value);
-    /// <summary>
-    /// Gets the score of the current quiz.
-    /// </summary>
-    /// <returns>The amount correct and the total in the format (correct, total)</returns>
-    (int, int) GetScore();
+    /// <param name="id"></param>
+    /// <returns>
+    /// returns the observable collection if lookup is successful otherwise null
+    /// </returns>
+    Task<ObservableCollection<Question>?> GetQuestions(long id);
 
-}
+    /// <summary>
+    /// Adds a question to the questions table 
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns>
+    /// Returns the id to that question after it gets added to the db otherwise null
+    /// </returns>
+    Task<long?> AddQuestion(Question question);
+
+    /// <summary>
+    /// Deletes a question in the questions table
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>
+    /// Returns true if successfully deleted otherwise null
+    /// </returns>
+    Task<bool> DeleteQuestion(long id);
+
+    /// <summary>
+    /// Edits a question by updating it in the db
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns>
+    /// returns true if successfully updated, otherwise false
+    /// </returns>
+    Task<bool> EditQuestion(Question question);
+}   

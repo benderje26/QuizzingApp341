@@ -7,10 +7,6 @@
 
     <StackLayout Padding="10"
                  Spacing="20">
-        <Label Text="Quiz History"
-               FontSize="24"
-               HorizontalOptions="Center"
-               TextColor="#11017a"/>
 
         <!-- List of Quizzes in the history -->
         <ListView x:Name="QuizzesListView"

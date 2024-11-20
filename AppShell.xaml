@@ -28,7 +28,7 @@
 
         <Tab Title="Studio" Icon="plus.png">
             <ShellContent Title="MyQuiz"
-                          ContentTemplate="{DataTemplate local:MyQuiz}" 
+                          ContentTemplate="{DataTemplate local:QuizStudio}" 
                           Route="MyQuiz" />
         </Tab>
 
