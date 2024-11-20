@@ -76,9 +76,9 @@ public partial class MultipleChoice : ContentPage
         if (e.Value) {
             RadioButton? rb = sender as RadioButton;
 
-            if (rb?.BindingContext is IndexValuePair value) {
-                selectedIndex = value.Index;
-            }
+            // if (rb?.BindingContext is IndexValuePair value) {
+            //     selectedIndex = value.Index;
+            // }
         }
     }
 

@@ -27,7 +27,7 @@ public interface IBusinessLogic {
     /// </summary>
     /// <param name="id">The given id of the quiz</param>
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
-    Task<SupabaseDatabase.SupabaseQuiz?> GetQuiz(long id);
+    Task<Quiz?> GetQuiz(long id);
     
     /// <summary>
     /// Gets all of the questions from the questions table in db that matches the given id
@@ -36,7 +36,7 @@ public interface IBusinessLogic {
     /// <returns>
     /// returns the observable collection if lookup is successful otherwise null
     /// </returns>
-    Task<ObservableCollection<SupabaseDatabase.SupabaseQuestion>?> GetQuestions(long id);
+    Task<ObservableCollection<Question>?> GetQuestions(long id);
 
     /// <summary>
     /// Adds a question to the questions table 
@@ -45,7 +45,7 @@ public interface IBusinessLogic {
     /// <returns>
     /// Returns the id to that question after it gets added to the db otherwise null
     /// </returns>
-    Task<long?> AddQuestion(SupabaseDatabase.SupabaseQuestion question);
+    Task<long?> AddQuestion(Question question);
 
     /// <summary>
     /// Deletes a question in the questions table
@@ -63,5 +63,5 @@ public interface IBusinessLogic {
     /// <returns>
     /// returns true if successfully updated, otherwise false
     /// </returns>
-    Task<bool> EditQuestion(SupabaseDatabase.SupabaseQuestion question);
+    Task<bool> EditQuestion(Question question);
 }   

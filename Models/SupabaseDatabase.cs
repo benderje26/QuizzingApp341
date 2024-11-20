@@ -90,70 +90,11 @@ public class SupabaseDatabase : IDatabase {
 
     // For Quiz Logic
 
-    [Table ("active_quizzes")]
-    public class SupabaseActiveQuiz : BaseModel {
-        [PrimaryKey("id")]
-        public long Id {get; set;}
 
-        [Column("quiz_id")]
-        public long QuizId {get; set;}
-
-        [Column("access_code")]
-        public string? AccessCode {get; set;}
-
-        [Column("is_active")]
-        public bool IsActive{get; set;}
-
-        [Column("current_question")]
-        public int CurrentQuestion {get; set;}
-    }
-
-    [Table("quizzes")]
-    public class SupabaseQuiz : BaseModel {
-        [PrimaryKey("id")]
-        public long Id { get; set; }
-
-        [Column("identifier")]
-        public string? Identifier { get; set; }
-
-        [Column("creator_id")]
-        public Guid CreatorId { get; set; }
-
-        [Column("title")]
-        public string? Title { get; set; }
-    }
-
-    [Table("questions")]
-    public class SupabaseQuestion : BaseModel {
-        [PrimaryKey("id")]
-        public long? Id { get; set; }
-
-        [Column("quiz_identifier")]
-        public string? QuizId { get; set; }
-
-        [Column("question_no")]
-        public int QuestionNumber { get; set; }
-
-        [Column("title")]
-        public string? Title { get; set; }
-
-        [Column("choices")]
-        public List<string>? Choices { get; set; }
-
-        [Column("correct_answer")]
-        public int? CorrectAnswer { get; set; }
-
-        [Column("accepted_text_answers")]
-        public List<string>? AcceptedTextAnswers { get; set; }
-
-        [Column("case_sensitive")]
-        public bool? CaseSensitive { get; set; }
-    }
-
-    public async Task<SupabaseQuiz?> GetQuizById(long id) {
+    public async Task<Quiz?> GetQuizById(long id) {
         try {
-            SupabaseQuiz? quiz = await Client
-                .From<SupabaseQuiz>()
+            Quiz? quiz = await Client
+                .From<Quiz>()
                 .Where(q => q.Id == id)
                 .Single();
             if (quiz == null) {
@@ -166,10 +107,10 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<List<SupabaseQuestion>?> GetQuestions(long id) {
+    public async Task<List<Question>?> GetQuestions(long id) {
         try {
             var result = await Client
-                .From<SupabaseQuestion>()
+                .From<Question>()
                 .Where(q => q.Id == id).Get();
             
 
@@ -183,10 +124,10 @@ public class SupabaseDatabase : IDatabase {
     }
 
 
-    public async Task<long?> AddQuestion(SupabaseQuestion question) {
+    public async Task<long?> AddQuestion(Question question) {
         try {
             var result = await Client
-                .From<SupabaseQuestion>()
+                .From<Question>()
                 .Insert(question);
             
             if (result == null || result.Model == null) {
@@ -203,7 +144,7 @@ public class SupabaseDatabase : IDatabase {
     public async Task<bool> DeleteQuestion(long id) {
         try {
             await Client
-            .From<SupabaseQuestion>()
+            .From<Question>()
             .Where(q => q.Id == id)
             .Delete();
 
@@ -213,10 +154,10 @@ public class SupabaseDatabase : IDatabase {
         return true;
     }
 
-    public async Task<bool> EditQuestion(SupabaseQuestion question) {
+    public async Task<bool> EditQuestion(Question question) {
         try {
             await Client
-            .From<SupabaseQuestion>()
+            .From<Question>()
             .Upsert(question);
 
         } catch {

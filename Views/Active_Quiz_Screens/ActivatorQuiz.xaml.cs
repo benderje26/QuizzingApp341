@@ -1,7 +1,7 @@
 namespace QuizzingApp341.Views;
 // This class displays the screen for the instructor/user who activated the quiz
-public partial class InstructorQuiz : ContentPage {
-    public InstructorQuiz() {
+public partial class ActivatorQuiz : ContentPage {
+    public ActivatorQuiz() {
         InitializeComponent();
     }
 
