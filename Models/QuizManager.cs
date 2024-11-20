@@ -7,9 +7,9 @@ public class QuizManager {
 
     // The quiz table from supabase that has columns Id, created_at, creator, title
     public Quiz? Quiz { get; set; }
-    public ObservableCollection<Question> Questions { get; set; }
+    public ObservableCollection<Question> Questions { get; set; } = [];
 
-    public  ActiveQuiz ActiveQuiz { get; set; }
+    public  ActiveQuiz? ActiveQuiz { get; set; }
 
     static int CurrentQuestion {get; set;} = 0;
 
@@ -25,7 +25,7 @@ public class QuizManager {
     /// Quiz quiz = new Quiz(ActiveQuiz);
     /// await quiz.SetActiveQuizInfo();
     /// </summary>
-    /// <param name="ActiveQuiz"></param>
+    /// <param name="activeQuiz"></param>
     public QuizManager(ActiveQuiz activeQuiz) {
         ActiveQuiz = activeQuiz;
     }
@@ -56,7 +56,6 @@ public class QuizManager {
     /// <summary>
     /// This starts a quiz for a user, which needs an id
     /// </summary>
-    /// <param name="id"></param>
     /// <param name="accessCode"></param>
     public void StartQuiz(String accessCode) {// Can either take a LiveQuiz Id or an Access code
         // ActiveQuiz = BusinessLogic.GetActiveQuizFromAccessCode(accessCode);
