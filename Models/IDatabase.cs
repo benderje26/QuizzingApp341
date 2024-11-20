@@ -27,5 +27,41 @@ public interface IDatabase {
     /// </summary>
     /// <param name="id">The given id of the quiz</param>
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
-    public Task<Quiz?> GetQuizById(string id);
+    public Task<Quiz?> GetQuizById(long id);
+
+    /// <summary>
+    /// Gets all of the questions from the questions table in db that matches the given id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>
+    /// returns the observable collection if lookup is successful otherwise null
+    /// </returns>
+    public Task<List<Question>?> GetQuestions(long id);
+
+    /// <summary>
+    /// Adds a question to the questions table 
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns>
+    /// Returns the id to that question after it gets added to the db otherwise null
+    /// </returns>
+    public Task<long?> AddQuestion(Question question);
+
+    /// <summary>
+    /// Deletes a question in the questions table
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>
+    /// Returns true if successfully deleted otherwise null
+    /// </returns>
+    public Task<bool> DeleteQuestion(long id);
+
+    /// <summary>
+    /// Edits a question by updating it in the db
+    /// </summary>
+    /// <param name="question"></param>
+    /// <returns>
+    /// returns true if successfully updated, otherwise false
+    /// </returns>
+    public Task<bool> EditQuestion(Question question);
 }

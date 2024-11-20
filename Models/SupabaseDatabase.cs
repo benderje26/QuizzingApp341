@@ -7,8 +7,11 @@ using Supabase.Gotrue;
 using Client = Supabase.Client;
 using Supabase.Gotrue.Exceptions;
 using System.Net.Mail;
+using System.Collections.ObjectModel;
+using Microsoft.Extensions.Logging.Abstractions;
 
 public class SupabaseDatabase : IDatabase {
+    // FOR USER AND AUTHENTICATION
 
     private const string REST_URL = "https://tcogwlqjinvzckjmnjhp.supabase.co";
     private const string API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjb2d3bHFqaW52emNram1uamhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkzNjc4NTIsImV4cCI6MjA0NDk0Mzg1Mn0.bzYJIRYJ3rtvEh3usrydy7M3ES1J6C5iMgPwzlqnTp8";
@@ -85,76 +88,81 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<Quiz?> GetQuizById(string id) {
+    // For Quiz Logic
+
+
+    public async Task<Quiz?> GetQuizById(long id) {
         try {
-            SupabaseQuiz? quiz = await Client
-                .From<SupabaseQuiz>()
-                .Where(q => q.Identifier == id)
+            Quiz? quiz = await Client
+                .From<Quiz>()
+                .Where(q => q.Id == id)
                 .Single();
             if (quiz == null) {
                 return null;
+            } else {
+                return quiz;
             }
-            ModeledResponse<SupabaseQuestion> questionsResult = await Client
-                .From<SupabaseQuestion>()
-                .Where(q => q.QuizId == quiz.Identifier)
-                .Get();
-            List<Question> questions = [];
-            for (int i = 0, length = questionsResult.Models.Count; i < length; i++) {
-                SupabaseQuestion sq = questionsResult.Models[i];
-                if (sq.Choices != null) {
-                    questions.Add(new MultipleChoiceQuestion(sq.QuestionNumber, i == length - 1, sq.Title ?? string.Empty, sq.Choices, sq.CorrectAnswer));
-                } else {
-                    questions.Add(new FillBlankQuestion(sq.QuestionNumber, i == length - 1, sq.Title ?? string.Empty, sq.AcceptedTextAnswers, sq.CaseSensitive ?? false));
-                }
-            }
-            questions.Sort((x, y) => x.QuestionNumber.CompareTo(y.QuestionNumber));
-
-            Quiz result = new(quiz.Title ?? string.Empty, DateTime.Now, DateTime.Now, null, questions);
-            return result;
         } catch (Exception) {
             return null;
         }
     }
 
-    [Table("quizzes")]
-    public class SupabaseQuiz : BaseModel {
-        [PrimaryKey("id")]
-        public long Id { get; set; }
+    public async Task<List<Question>?> GetQuestions(long id) {
+        try {
+            var result = await Client
+                .From<Question>()
+                .Where(q => q.Id == id).Get();
+            
 
-        [Column("identifier")]
-        public string? Identifier { get; set; }
-
-        [Column("creator_id")]
-        public Guid CreatorId { get; set; }
-
-        [Column("title")]
-        public string? Title { get; set; }
+            if (result == null) {
+                return null;
+            }
+            return result.Models; // Return the list of supabase questions
+        } catch {
+            return null;
+        }
     }
 
-    [Table("questions")]
-    public class SupabaseQuestion : BaseModel {
-        [PrimaryKey("id")]
-        public long Id { get; set; }
 
-        [Column("quiz_identifier")]
-        public string? QuizId { get; set; }
+    public async Task<long?> AddQuestion(Question question) {
+        try {
+            var result = await Client
+                .From<Question>()
+                .Insert(question);
+            
+            if (result == null || result.Model == null) {
+                return null;
+            }
+            
 
-        [Column("question_no")]
-        public int QuestionNumber { get; set; }
+            return result.Model.Id;
+        } catch {
+            return null;
+        }
+    }
 
-        [Column("title")]
-        public string? Title { get; set; }
+    public async Task<bool> DeleteQuestion(long id) {
+        try {
+            await Client
+            .From<Question>()
+            .Where(q => q.Id == id)
+            .Delete();
 
-        [Column("choices")]
-        public List<string>? Choices { get; set; }
+        } catch {
+            return false;
+        }
+        return true;
+    }
 
-        [Column("correct_answer")]
-        public int? CorrectAnswer { get; set; }
+    public async Task<bool> EditQuestion(Question question) {
+        try {
+            await Client
+            .From<Question>()
+            .Upsert(question);
 
-        [Column("accepted_text_answers")]
-        public List<string>? AcceptedTextAnswers { get; set; }
-
-        [Column("case_sensitive")]
-        public bool? CaseSensitive { get; set; }
+        } catch {
+            return false;
+        }
+        return true;
     }
 }

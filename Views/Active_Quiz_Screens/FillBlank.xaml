@@ -19,11 +19,13 @@
 
         <VerticalStackLayout Grid.Row="1" Grid.Column="1">
             <Grid RowDefinitions="*,2*,*" ColumnDefinitions="*,*,*">
-                <Label Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding CurrentQuestion.Text}" HorizontalOptions="Center" FontSize="32" Margin="0,40,0,0"/>
+                <!-- TODO  -->
+                <!-- <Label Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding CurrentQuestion.Text}" HorizontalOptions="Center" FontSize="32" Margin="0,40,0,0"/> -->
                 <Entry x:Name="textEntry" Grid.Row="1" Grid.ColumnSpan="3" Placeholder="Type Answer Here" WidthRequest="250" HorizontalOptions="Center" FontSize="24" Margin="0,30,0,0"/>
-                <Button Grid.Row="2" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="16" Margin="0,30,5,0" Clicked="OnPreviousClicked" IsVisible="{Binding CurrentQuestion.NotFirst}"/>
-                <Button Grid.Row="2" Grid.Column="2" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="16" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding CurrentQuestion.NotFinal}"/>
-                <Button Grid.Row="2" Grid.Column="2" x:Name="submit" Text="Submit" MaximumWidthRequest="150" FontSize="16" Margin="5,30,0,0" Clicked="OnSubmitClicked" IsVisible="{Binding CurrentQuestion.Final}"/>
+                <!-- TODO -->
+                <!-- <Button Grid.Row="2" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="16" Margin="0,30,5,0" Clicked="OnPreviousClicked" IsVisible="{Binding CurrentQuestion.NotFirst}"/> -->
+                <!-- <Button Grid.Row="2" Grid.Column="2" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="16" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding CurrentQuestion.NotFinal}"/> -->
+                <!-- <Button Grid.Row="2" Grid.Column="2" x:Name="submit" Text="Submit" MaximumWidthRequest="150" FontSize="16" Margin="5,30,0,0" Clicked="OnSubmitClicked" IsVisible="{Binding CurrentQuestion.Final}"/> -->
             </Grid>
         </VerticalStackLayout>
 

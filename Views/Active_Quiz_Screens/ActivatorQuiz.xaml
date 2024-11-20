@@ -1,7 +1,7 @@
 <!-- This file defines UI elements for the Instructor's Quiz Screen -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="QuizzingApp341.Views.InstructorQuiz"
+             x:Class="QuizzingApp341.Views.ActivatorQuiz"
              Padding="7">
 
     <!-- Define a Grid with two rows -->

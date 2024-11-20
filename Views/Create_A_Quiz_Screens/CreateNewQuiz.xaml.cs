@@ -27,7 +27,7 @@ namespace QuizzingApp341.Views {
         }
 
         private async void OnSaveNewQuizClicked(object sender, EventArgs e) {
-            var newPage = new MyQuiz();
+            var newPage = new QuizStudio();
 
             //completely reset the navigation stack
             await Navigation.PopToRootAsync();

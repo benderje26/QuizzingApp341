@@ -1,7 +1,8 @@
 namespace QuizzingApp341.Views;
+using QuizzingApp341.Models;
 
-public partial class MyQuiz : ContentPage {
-    public MyQuiz() {
+public partial class QuizStudio : ContentPage {
+    public QuizStudio() {
         InitializeComponent();
     }
 

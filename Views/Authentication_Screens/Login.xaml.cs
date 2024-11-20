@@ -35,4 +35,7 @@ public partial class Login : ContentPage {
         }
     }
 
+    private async void SkipLogin(object sender, EventArgs e) {
+        await Shell.Current.GoToAsync("//HomeScreen");
+    }
 }

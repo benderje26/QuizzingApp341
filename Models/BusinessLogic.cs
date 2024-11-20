@@ -5,25 +5,9 @@ using System.Text.RegularExpressions;
 namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
-
+    // FOR AUTHENTICATION
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
-    private const string OTHER_ERROR_MESSAGE = "An unknown error occured.";
-
-    private Quiz? CurrentQuiz {
-        get => _currentQuiz;
-        set {
-            _currentQuiz = value;
-            if (value != null) {
-                value.CurrentIndex = 0;
-            }
-        }
-    }
-
-    public Question? CurrentQuestion => CurrentQuiz?.CurrentQuestion;
-    public MultipleChoiceQuestion? CurrentMultipleChoiceQuestion { get => CurrentQuestion as MultipleChoiceQuestion; }
-    public FillBlankQuestion? CurrentFillBlankQuestion { get => CurrentQuestion as FillBlankQuestion; }
-
-    private Quiz? _currentQuiz;
+    private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
 
     public async Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password) {
         if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
@@ -77,57 +61,33 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return (result, s);
     }
 
-    public async Task<Quiz?> GetQuiz(string id) {
+
+    // FOR QUIZ LOGIC
+
+    public async Task<Quiz> GetQuiz(long id) {
         return await database.GetQuizById(id);
     }
 
-    public bool SetQuiz(Quiz quiz) {
-        CurrentQuiz = quiz;
-        return true;
-    }
-
-    public Question? NextQuestion() {
-        return CurrentQuiz?.NextQuestion();
-    }
-
-    public Question? PreviousQuestion() {
-        return CurrentQuiz?.PreviousQuestion();
-    }
-
-    public bool SetCurrentMultipleChoiceAnswer(int optionIndex) {
-        if (CurrentQuestion?.Type != QuestionType.MultipleChoice) {
-            return false;
+    public async Task<ObservableCollection<Question>?> GetQuestions(long id) {
+        var result = await database.GetQuestions(id);
+        if (result != null) {
+            List<Question> questions = result;
+            return new ObservableCollection<Question>(questions);
         }
-
-        CurrentQuestion.SetGivenAnswer(optionIndex);
-        return true;
+        return null; 
+    }
+    
+    public async Task<long?> AddQuestion(Question question) {
+        var result = await database.AddQuestion(question);
+        return result;
     }
 
-    public bool SetCurrentFillBlankAnswer(string value) {
-        if (CurrentQuestion?.Type != QuestionType.FillBlank) {
-            return false;
-        }
-
-        CurrentQuestion.SetGivenAnswer(value);
-        return true;
+    public async Task<bool> DeleteQuestion(long id) {
+        return await database.DeleteQuestion(id);
     }
 
-    public (int, int) GetScore() {
-        if (CurrentQuiz == null) {
-            return (0, 0);
-        }
-
-        int total = 0;
-        int correct = 0;
-
-        foreach (Question question in CurrentQuiz.Questions) {
-            total++;
-            if (question.IsCorrect()) {
-                correct++;
-            }
-        }
-
-        return (correct, total);
+    public async Task<bool> EditQuestion(Question question) {
+        return await database.EditQuestion(question);
     }
 }
 
