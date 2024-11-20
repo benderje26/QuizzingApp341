@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic.ApplicationServices;
 using System.Collections.ObjectModel;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
@@ -6,6 +7,9 @@ namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
     // FOR AUTHENTICATION
+    public UserInfo UserInfo() {
+        return new UserInfo("ba08579e-8e08-43c5-bffc-612393113c28"); // Hardcoded for now..
+    }
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
     private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
 
@@ -64,7 +68,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
     // FOR QUIZ LOGIC
 
-    public async Task<Quiz> GetQuiz(long id) {
+    public async Task<Quiz?> GetQuiz(long id) {
         return await database.GetQuizById(id);
     }
 
@@ -88,6 +92,15 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
     public async Task<bool> EditQuestion(Question question) {
         return await database.EditQuestion(question);
+    }
+
+    public async Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(string userID) {
+        var result = await database.GetUserCreatedQuizzes(userID);
+        if (result != null) {
+            List<Quiz> quizzes = result;
+            return new ObservableCollection<Quiz>(quizzes);
+        }
+        return null; 
     }
 }
 

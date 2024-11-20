@@ -165,4 +165,17 @@ public class SupabaseDatabase : IDatabase {
         }
         return true;
     }
+
+    public async Task<List<Quiz>?> GetUserCreatedQuizzes(string userID) {
+        try {
+            var result = await Client
+                .From<Quiz>()
+                .Where(q => q.CreatorId == userID)
+                .Get();
+                
+            return (result == null) ? null: result.Models;
+        } catch {
+            return null;
+        }
+    }
 }

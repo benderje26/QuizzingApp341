@@ -1,6 +1,7 @@
 ﻿namespace QuizzingApp341.Models;
 using System.Collections.ObjectModel;
 public interface IBusinessLogic {
+    public UserInfo UserInfo();
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>
@@ -64,4 +65,13 @@ public interface IBusinessLogic {
     /// returns true if successfully updated, otherwise false
     /// </returns>
     Task<bool> EditQuestion(Question question);
+
+    /// <summary>
+    /// Gets all the quizzes the current user has created from the quizzes table in db
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <returns>
+    /// Returns an Observable Collection of all the quizzes the user has created
+    /// </returns>
+    Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(string userID);
 }   
