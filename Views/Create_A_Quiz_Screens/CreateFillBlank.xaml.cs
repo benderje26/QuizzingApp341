@@ -29,8 +29,6 @@ public partial class CreateFillBlank : ContentPage
         // Do something with the retrieved data - make a question object - saving to Database
 
         // Navigate back to the CreateNewQuiz page
-        var newPage = new CreateNewQuiz();
-        Navigation.InsertPageBefore(newPage, this);
         Navigation.PopAsync();
     }
 

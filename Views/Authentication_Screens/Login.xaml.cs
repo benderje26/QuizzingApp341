@@ -1,5 +1,6 @@
 namespace QuizzingApp341.Views;
 using System;
+using System.Collections.ObjectModel;
 using Microsoft.Maui.Controls;
 using QuizzingApp341.Models;
 
@@ -27,6 +28,8 @@ public partial class Login : ContentPage {
         (LoginResult result, string? errorMessage) = await MauiProgram.BusinessLogic.Login(email, password);
 
         if (result == LoginResult.Success) {
+            // Set variables for user ahead of time
+            await SetUser();
             // Navigate to HomeScreen and make TabBar visible
             await Shell.Current.GoToAsync("//HomeScreen");  //TODO: change HomeScreen to UserHome once UserHome got proved 
             Shell.SetTabBarIsVisible(this, true);
@@ -37,5 +40,17 @@ public partial class Login : ContentPage {
 
     private async void SkipLogin(object sender, EventArgs e) {
         await Shell.Current.GoToAsync("//HomeScreen");
+    }
+
+    // This method sets variables if needed for the User class
+    private async Task SetUser() {
+        // Get user ID
+        UserInfo user = MauiProgram.BusinessLogic.UserInfo();
+       
+        // Set other variables ahead of time for the app
+        ObservableCollection<Quiz>? userCreatedQuizzes = await MauiProgram.BusinessLogic.GetUserCreatedQuizzes(user.ID);
+        if (userCreatedQuizzes != null) {
+            user.CreatedQuizzes = userCreatedQuizzes;
+        };
     }
 }

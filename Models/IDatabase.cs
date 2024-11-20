@@ -64,4 +64,13 @@ public interface IDatabase {
     /// returns true if successfully updated, otherwise false
     /// </returns>
     public Task<bool> EditQuestion(Question question);
+
+    /// <summary>
+    /// Gets all the quizzes the current user has created from the quizzes table in db
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <returns>
+    /// Returns a list of all the quizzes the user has created
+    /// </returns>
+    public Task<List<Quiz>?> GetUserCreatedQuizzes(string userID);
 }
