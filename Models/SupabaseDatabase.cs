@@ -132,8 +132,9 @@ public class SupabaseDatabase : IDatabase {
         try {
             var result = await Client
                 .From<Question>()
-                .Where(q => q.Id == id).Get();
-
+                .Where(q => q.QuizId == id)
+                .Get();
+                
             if (result == null) {
                 return null;
             }

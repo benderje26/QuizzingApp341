@@ -12,7 +12,7 @@ namespace QuizzingApp341.Models {
         public int QuestionNum { get; set; }
 
         [Column("question_type")]
-        public QuestionType QuestionType {get; set;}
+        public String? QuestionType {get; set;} // TODO Convert to QuestionType Enum?? It's coming in as a string from the table.. Or we can just use this without the QuestionType enum
 
         [Column("question")]
         public string? QuestionText { get; set; }
@@ -30,7 +30,7 @@ namespace QuizzingApp341.Models {
         public long QuizId {get; set;}
     }
 
-    public enum QuestionType : int {
-        MultipleChoice = 0, FillBlank = 1
+    public enum QuestionType {
+        MultipleChoice, FillBlank
     }
 }
