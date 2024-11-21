@@ -53,6 +53,11 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return (result, s);
     }
 
+    // TODO DELETE THIS WHEN LOGIN WORKS
+    public async Task SkipLogin() {
+        await database.SkipLogin();
+    }
+
     public async Task<(LogoutResult, string?)> Logout() {
         LogoutResult result = await database.Logout();
 
@@ -95,7 +100,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return await database.EditQuestion(question);
     }
 
-    public async Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid userId) {
+    public async Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userId) {
         var result = await database.GetUserCreatedQuizzes(userId);
         if (result != null) {
             List<Quiz> quizzes = result;

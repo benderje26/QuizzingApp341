@@ -1,6 +1,7 @@
 ﻿namespace QuizzingApp341.Models;
 
 public interface IDatabase {
+    Task SkipLogin(); // TODO DELETE THIS WHEN LOGIN WORKS
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>
@@ -72,7 +73,7 @@ public interface IDatabase {
     /// <returns>
     /// Returns a list of all the quizzes the user has created
     /// </returns>
-    Task<List<Quiz>?> GetUserCreatedQuizzes(Guid userId);
+    Task<List<Quiz>?> GetUserCreatedQuizzes(Guid? userId);
 
     /// <summary>
     /// Gets the user's info for the currently logged in user. This should not request any data from the database,

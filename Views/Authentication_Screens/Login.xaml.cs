@@ -29,7 +29,6 @@ public partial class Login : ContentPage {
 
         if (result == LoginResult.Success) {
             // Set variables for user ahead of time
-            await SetUser();
             // Navigate to HomeScreen and make TabBar visible
             await Shell.Current.GoToAsync("//HomeScreen");  //TODO: change HomeScreen to UserHome once UserHome got proved 
             Shell.SetTabBarIsVisible(this, true);
@@ -39,22 +38,9 @@ public partial class Login : ContentPage {
     }
 
     private async void SkipLogin(object sender, EventArgs e) {
-        await SetUser();
-        await Shell.Current.GoToAsync("//HomeScreen"); 
+        Console.WriteLine("SKIP LOGIN CLICKED");
+        await MauiProgram.BusinessLogic.SkipLogin();
+        await Shell.Current.GoToAsync("//HomeScreen");
     }
 
-    // This method sets variables if needed for the User class
-    private async Task SetUser() {
-        MauiProgram.BusinessLogic.UserInfo = new UserInfo("ba08579e-8e08-43c5-bffc-612393113c28");
-        ObservableCollection<Quiz>? userCreatedQuizzes = [];
-        // Set other variables ahead of time for the app
-        if (MauiProgram.BusinessLogic.UserInfo.ID != null) {
-            userCreatedQuizzes = await MauiProgram.BusinessLogic.GetUserCreatedQuizzes(MauiProgram.BusinessLogic.UserInfo.ID);
-        }
-
-        if (userCreatedQuizzes != null) {
-            MauiProgram.BusinessLogic.UserInfo.CreatedQuizzes = userCreatedQuizzes;
-            Console.Write(userCreatedQuizzes);
-        };
-    }
 }
