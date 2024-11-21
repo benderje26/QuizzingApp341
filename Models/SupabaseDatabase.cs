@@ -3,7 +3,7 @@ using Supabase;
 using Supabase.Gotrue;
 using Client = Supabase.Client;
 using Supabase.Gotrue.Exceptions;
-using AndroidX.Activity;
+//using AndroidX.Activity;
 using System.Collections.ObjectModel;
 
 public class SupabaseDatabase : IDatabase {
@@ -33,11 +33,11 @@ public class SupabaseDatabase : IDatabase {
     }
 
     private User? User {
-        get => _user;
+        get => _user; 
     }
     private User? _user;
 
-    private Guid UserId { get; set; }
+    private Guid UserId { get; set; } = Guid.Parse("ba08579e-8e08-43c5-bffc-612393113c28");
 
     private async Task GenerateUserInfo() {
         if (User == null) {
@@ -47,6 +47,10 @@ public class SupabaseDatabase : IDatabase {
             CreatedQuizzes = new ObservableCollection<Quiz>(await GetUserCreatedQuizzes(UserId) ?? [])
         };
         userInfo = info;
+    }
+
+    public async Task SkipLogin() {
+        await GenerateUserInfo(); // TODO DELETE THIS METHOD WHEN LOGIN WORKS
     }
 
     public UserInfo? GetUserInfo() {
@@ -179,7 +183,7 @@ public class SupabaseDatabase : IDatabase {
         return true;
     }
 
-    public async Task<List<Quiz>?> GetUserCreatedQuizzes(Guid userId) {
+    public async Task<List<Quiz>?> GetUserCreatedQuizzes(Guid? userId) {
         try {
             var result = await Client
                 .From<Quiz>()
@@ -187,7 +191,8 @@ public class SupabaseDatabase : IDatabase {
                 .Get();
                 
             return result?.Models;
-        } catch {
+        } catch (Exception e){
+            Console.Write("ERRORRRRR" + e);
             return null;
         }
     }

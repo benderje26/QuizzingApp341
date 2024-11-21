@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:model="clr-namespace:QuizzingApp341.Models" 
+             xmlns:model="clr-namespace:QuizzingApp341.Models"
+             xmlns:local="clr-namespace:QuizzingApp341.Views"
              x:Class="QuizzingApp341.Views.QuizStudio"
              Padding="7"
              Title="Studio">
@@ -10,37 +11,54 @@
         <AbsoluteLayout>
 
             <!-- Main content in a StackLayout -->
-            <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1" 
+            <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
                          AbsoluteLayout.LayoutFlags="All">
 
-                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="Start" Padding="10">
+                <Grid
+                    VerticalOptions="Start"
+                    Padding="10">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Text="All Quizzes" 
-                           FontSize="25" 
-                           TextColor="Black" 
-                           VerticalOptions="Center" 
-                           HorizontalOptions="Start" 
-                           Grid.Column="0" />
+                    <Label Text="All Quizzes"
+                           FontSize="25"
+                           TextColor="Black"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Start"
+                           Grid.Column="0"/>
                 </Grid>
 
-                <StackLayout Padding="20" VerticalOptions="Start">
+                <StackLayout Padding="20"
+                             VerticalOptions="Start">
                     <StackLayout Padding="0,10">
-                        <!-- Quiz items - Maybe should do a listview here.. -->
-                        <Grid ColumnDefinitions="*, Auto" Padding="0, 10" VerticalOptions="Center">
-                            <Label Text="Quiz Title 1" FontSize="18" />
-                            <Button Text="Study"
-                                    FontSize="18"
-                                    BackgroundColor="DarkBlue"
-                                    TextColor="White"
-                                    CornerRadius="5"
-                                    HorizontalOptions="End"
-                                    Clicked="StudyButtonClickedCreateQuiz" />
-                        </Grid>
-                        <!-- Repeat for other quiz items as needed -->
+                        <!-- Quiz items  -->
+                        <StackLayout x:Name="quizzesList"
+                                     Spacing="10">
+                            <CollectionView ItemsSource="{Binding CreatedQuizzes}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="*, Auto"
+                                              Padding="0, 10"
+                                              VerticalOptions="Center">
+                                            <Label Text="{Binding Title}"
+                                                   FontSize="18"/>
+                                            <!-- <Label Text ="{Binding Id}" IsVisible="false" x:Name ="QuizId"/> -->
+                                            <ImageButton
+                                                WidthRequest="20"
+                                                HeightRequest="20"
+                                                Source="edit.png"
+                                                CornerRadius="5"
+                                                HorizontalOptions="End"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:QuizStudio}}, Path=EditQuizCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                        </StackLayout>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
@@ -52,7 +70,7 @@
                          AbsoluteLayout.LayoutBounds="1,1"
                          AbsoluteLayout.LayoutFlags="PositionProportional"
                          Margin="0,0,10,10"
-                         Clicked="OnCreateNewQuizButtonClicked" />
+                         Clicked="OnCreateNewQuizButtonClicked"/>
         </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>
