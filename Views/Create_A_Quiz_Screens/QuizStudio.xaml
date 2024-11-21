@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:QuizzingApp341.Models"
+             xmlns:local="clr-namespace:QuizzingApp341.Views"
              x:Class="QuizzingApp341.Views.QuizStudio"
              Padding="7"
              Title="Studio">
@@ -13,9 +14,9 @@
             <StackLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
                          AbsoluteLayout.LayoutFlags="All">
 
-                <Grid 
-                      VerticalOptions="Start"
-                      Padding="10">
+                <Grid
+                    VerticalOptions="Start"
+                    Padding="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -35,19 +36,23 @@
                         <!-- Quiz items  -->
                         <StackLayout x:Name="quizzesList"
                                      Spacing="10">
-                            <CollectionView ItemsSource="{Binding Quizzes}">
+                            <CollectionView ItemsSource="{Binding CreatedQuizzes}">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid ColumnDefinitions="*, Auto"
                                               Padding="0, 10"
                                               VerticalOptions="Center">
-                                            <Label Text="{Binding Quiz.Title}"
+                                            <Label Text="{Binding Title}"
                                                    FontSize="18"/>
+                                            <!-- <Label Text ="{Binding Id}" IsVisible="false" x:Name ="QuizId"/> -->
                                             <ImageButton
-                                                    Source ="edit.png"
-                                                    CornerRadius="5"
-                                                    HorizontalOptions="End"
-                                                    Clicked="StudyButtonClickedCreateQuiz"/>
+                                                WidthRequest="20"
+                                                HeightRequest="20"
+                                                Source="edit.png"
+                                                CornerRadius="5"
+                                                HorizontalOptions="End"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:QuizStudio}}, Path=EditQuizCommand}"
+                                                CommandParameter="{Binding .}"/>
                                         </Grid>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>

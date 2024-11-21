@@ -39,22 +39,22 @@ public partial class Login : ContentPage {
     }
 
     private async void SkipLogin(object sender, EventArgs e) {
-        await Shell.Current.GoToAsync("//HomeScreen");
+        await SetUser();
+        await Shell.Current.GoToAsync("//HomeScreen"); 
     }
 
     // This method sets variables if needed for the User class
     private async Task SetUser() {
-        // Get user ID
-        UserInfo user = MauiProgram.BusinessLogic.UserInfo();
-       
+        MauiProgram.BusinessLogic.UserInfo = new UserInfo("ba08579e-8e08-43c5-bffc-612393113c28");
         ObservableCollection<Quiz>? userCreatedQuizzes = [];
         // Set other variables ahead of time for the app
-        if (user.ID != null) {
-            userCreatedQuizzes = await MauiProgram.BusinessLogic.GetUserCreatedQuizzes(user.ID);
+        if (MauiProgram.BusinessLogic.UserInfo.ID != null) {
+            userCreatedQuizzes = await MauiProgram.BusinessLogic.GetUserCreatedQuizzes(MauiProgram.BusinessLogic.UserInfo.ID);
         }
 
         if (userCreatedQuizzes != null) {
-            user.CreatedQuizzes = userCreatedQuizzes;
+            MauiProgram.BusinessLogic.UserInfo.CreatedQuizzes = userCreatedQuizzes;
+            Console.Write(userCreatedQuizzes);
         };
     }
 }

@@ -6,10 +6,9 @@ using System.Text.RegularExpressions;
 namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
+    public UserInfo UserInfo {get; set;}
+
     // FOR AUTHENTICATION
-    public UserInfo UserInfo() {
-        return new UserInfo("ba08579e-8e08-43c5-bffc-612393113c28"); // Hardcoded for now..
-    }
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
     private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
 
@@ -35,7 +34,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             _ => OTHER_ERROR_MESSAGE
         };
 
-        return (result, s);
+        return (result, s); 
     }
 
     public async Task<(LoginResult, string?)> Login(string emailAddress, string password) {
@@ -98,6 +97,11 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var result = await database.GetUserCreatedQuizzes(userID);
         if (result != null) {
             List<Quiz> quizzes = result;
+            Console.WriteLine("**************************************************************************User Quizzes: **************************************************************************");
+           
+            foreach (Quiz quiz in quizzes) {
+            Console.WriteLine(quiz.Title);
+            }
             return new ObservableCollection<Quiz>(quizzes);
         }
         return null; 

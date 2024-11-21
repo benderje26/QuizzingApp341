@@ -1,7 +1,8 @@
 ﻿namespace QuizzingApp341.Models;
 using System.Collections.ObjectModel;
 public interface IBusinessLogic {
-    public UserInfo UserInfo();
+    UserInfo UserInfo { get; set; }
+
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>

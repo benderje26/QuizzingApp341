@@ -1,21 +1,27 @@
 namespace QuizzingApp341.Views;
 using QuizzingApp341.Models;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 public partial class QuizStudio : ContentPage {
-    UserInfo userInfo = MauiProgram.BusinessLogic.UserInfo();
-    ObservableCollection<Quiz> CreatedQuizzes {get; set;} = [];
+    public ObservableCollection<Quiz> CreatedQuizzes {get; set;} = new ObservableCollection<Quiz>();
+    public ICommand EditQuizCommand {get; set;}
     public QuizStudio() {
         InitializeComponent();
-        CreatedQuizzes = userInfo.CreatedQuizzes;
+        CreatedQuizzes = MauiProgram.BusinessLogic.UserInfo.CreatedQuizzes;
+        EditQuizCommand = new Command<Quiz>(EditQuiz);
+
+        foreach (Quiz quiz in CreatedQuizzes) {
+            Console.WriteLine(quiz.Title);
+        }
+
+        BindingContext = this;
     }
 
-
-    // Event handler for button click
-    private void StudyButtonClickedCreateQuiz(object sender, EventArgs e) {
-        // pull out the quiz that got clicked
+    private async void EditQuiz(Quiz quiz) {
+        await Navigation.PushAsync(new EditQuiz(quiz));
     }
-
+  
 
     private void OnCreateNewQuizButtonClicked(object sender, EventArgs e) {
         Navigation.PushAsync(new CreateNewQuiz());

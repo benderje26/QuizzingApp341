@@ -10,6 +10,6 @@ public class UserInfo {
 
     // Sets the user's id
     public UserInfo(string id) {
-        ID = id;
+        ID = "ba08579e-8e08-43c5-bffc-612393113c28";
     }
 }
