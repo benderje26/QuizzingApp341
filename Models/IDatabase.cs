@@ -1,4 +1,5 @@
-﻿namespace QuizzingApp341.Models;
+﻿
+namespace QuizzingApp341.Models;
 
 public interface IDatabase {
     /// <summary>
@@ -73,4 +74,5 @@ public interface IDatabase {
     /// Returns a list of all the quizzes the user has created
     /// </returns>
     public Task<List<Quiz>?> GetUserCreatedQuizzes(string userID);
+    Task<List<Quiz>?> GetAllQuizzesAsync();
 }

@@ -1,6 +1,8 @@
 namespace QuizzingApp341.Views;
 using System;
+#if ANDROID
 using Android.Print;
+#endif
 using Microsoft.Maui.Controls;
 using QuizzingApp341.Models;
 

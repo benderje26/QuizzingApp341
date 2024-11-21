@@ -1,4 +1,4 @@
-using Microsoft.VisualBasic.ApplicationServices;
+using Supabase.Gotrue;
 using System.Collections.ObjectModel;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
+   
     // FOR AUTHENTICATION
     public UserInfo UserInfo() {
         return new UserInfo("ba08579e-8e08-43c5-bffc-612393113c28"); // Hardcoded for now..
@@ -78,9 +79,9 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             List<Question> questions = result;
             return new ObservableCollection<Question>(questions);
         }
-        return null; 
+        return null;
     }
-    
+
     public async Task<long?> AddQuestion(Question question) {
         var result = await database.AddQuestion(question);
         return result;
@@ -100,7 +101,12 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             List<Quiz> quizzes = result;
             return new ObservableCollection<Quiz>(quizzes);
         }
-        return null; 
+        return null;
+    }
+
+    public async Task<ObservableCollection<Quiz>?> GetAllQuizzes() {
+        var result = await database.GetAllQuizzesAsync();
+        return result == null ? null : new ObservableCollection<Quiz>(result);
     }
 }
 

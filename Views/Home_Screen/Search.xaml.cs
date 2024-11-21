@@ -1,20 +1,36 @@
 using System.Collections.ObjectModel;
+using QuizzingApp341.Models;
 
 namespace QuizzingApp341.Views;
 
 public partial class Search : ContentPage {
+    private readonly IBusinessLogic _businessLogic;
+
     public ObservableCollection<QuizSearch> Quizzes { get; set; }
 
-    public Search() {
+    public Search(IBusinessLogic businessLogic) {
         InitializeComponent();
-        Quizzes = new ObservableCollection<QuizSearch>
-        {
-            new QuizSearch ( "Anatomy Quiz 1",  "Created by user1" ),
-            new QuizSearch (  "Anatomy Quiz 2",  "Created by user2" )
-        };
+        _businessLogic = businessLogic ?? throw new ArgumentNullException(nameof(businessLogic));
 
         BindingContext = this;
+        LoadQuizzesAsync();
     }
+
+    private async void LoadQuizzesAsync() {
+        try {
+            // Fetch quizzes from the database
+            var quizzes = await _businessLogic.GetAllQuizzes();
+            if (quizzes != null) {
+                Quizzes.Clear();
+                foreach (var quiz in quizzes) {
+                    Quizzes.Add(new QuizSearch(quiz.Title, $"Created by {quiz.CreatorId}"));
+                }
+            }
+        } catch (Exception ex) {
+            await DisplayAlert("Error", $"Failed to load quizzes: {ex.Message}", "OK");
+        }
+    }
+
 
     // Command for study button
     public Command<QuizSearch> StudyCommand => new Command<QuizSearch>(async (quiz) => {

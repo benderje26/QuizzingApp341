@@ -90,6 +90,14 @@ public class SupabaseDatabase : IDatabase {
 
     // For Quiz Logic
 
+    public async Task<List<Quiz>?> GetAllQuizzesAsync() {
+        try {
+            var result = await Client.From<Quiz>().Get();
+            return result?.Models;
+        } catch {
+            return null;
+        }
+    }
 
     public async Task<Quiz?> GetQuizById(long id) {
         try {
