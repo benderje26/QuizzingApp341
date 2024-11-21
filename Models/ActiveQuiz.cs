@@ -1,4 +1,4 @@
-using Java.Sql;
+//using Java.Sql;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 namespace QuizzingApp341.Models;
@@ -11,7 +11,7 @@ namespace QuizzingApp341.Models;
         public long Id {get; set;}
 
         [Column("quiz_id")]
-        public long QuizId {get; set;}
+        public int QuizId {get; set;}
 
         [Column("access_code")]
         public string? AccessCode {get; set;}

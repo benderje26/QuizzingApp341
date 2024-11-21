@@ -10,16 +10,14 @@ public partial class QuizStudio : ContentPage {
         InitializeComponent();
         CreatedQuizzes = MauiProgram.BusinessLogic.UserInfo.CreatedQuizzes;
         EditQuizCommand = new Command<Quiz>(EditQuiz);
-
-        foreach (Quiz quiz in CreatedQuizzes) {
-            Console.WriteLine(quiz.Title);
-        }
-
         BindingContext = this;
     }
 
     private async void EditQuiz(Quiz quiz) {
-        await Navigation.PushAsync(new EditQuiz(quiz));
+        QuizManager quizManager = new QuizManager(quiz);
+        var test = await quizManager.GetQuestions();
+      
+        await Navigation.PushAsync(new EditQuiz(quizManager));
     }
   
 

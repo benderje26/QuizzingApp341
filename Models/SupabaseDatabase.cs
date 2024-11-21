@@ -107,13 +107,14 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<List<Question>?> GetQuestions(long id) {
+    public async Task<List<Question>?> GetQuestions(int id) {
         try {
             var result = await Client
                 .From<Question>()
-                .Where(q => q.Id == id).Get();
+                .Where(q => q.QuizId == id).Get();
             
-
+                Console.WriteLine("**********************");
+                Console.WriteLine(result);
             if (result == null) {
                 return null;
             }

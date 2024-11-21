@@ -71,7 +71,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return await database.GetQuizById(id);
     }
 
-    public async Task<ObservableCollection<Question>?> GetQuestions(long id) {
+    public async Task<ObservableCollection<Question>?> GetQuestions(int id) {
         var result = await database.GetQuestions(id);
         if (result != null) {
             List<Question> questions = result;

@@ -36,7 +36,7 @@ public interface IDatabase {
     /// <returns>
     /// returns the observable collection if lookup is successful otherwise null
     /// </returns>
-    public Task<List<Question>?> GetQuestions(long id);
+    public Task<List<Question>?> GetQuestions(int id);
 
     /// <summary>
     /// Adds a question to the questions table 

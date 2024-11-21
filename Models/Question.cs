@@ -14,13 +14,10 @@ namespace QuizzingApp341.Models {
         [Column("question_no")]
         public int QuestionNum { get; set; }
 
-        [Column("question_no")]
-        public int QuestionNumber { get; set; }
-
         [Column("question_type")]
         public QuestionType QuestionType {get; set;}
 
-        [Column("question_text")]
+        [Column("question")]
         public string? QuestionText { get; set; }
 
         [Column("acceptable_answers")]
@@ -31,6 +28,9 @@ namespace QuizzingApp341.Models {
 
         [Column("case_sensitive")]
         public bool? CaseSensitive { get; set; }
+
+        [Column("quiz_id")]
+        public int QuizId {get; set;}
     }
 
     public enum QuestionType : int {
