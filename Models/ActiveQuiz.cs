@@ -11,7 +11,7 @@ namespace QuizzingApp341.Models;
         public long Id {get; set;}
 
         [Column("quiz_id")]
-        public int QuizId {get; set;}
+        public long QuizId {get; set;}
 
         [Column("access_code")]
         public string? AccessCode {get; set;}
