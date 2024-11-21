@@ -42,7 +42,7 @@ public interface IBusinessLogic {
     /// <returns>
     /// returns the observable collection if lookup is successful otherwise null
     /// </returns>
-    Task<ObservableCollection<Question>?> GetQuestions(int id);
+    Task<ObservableCollection<Question>?> GetQuestions(long id);
 
     /// <summary>
     /// Adds a question to the questions table 

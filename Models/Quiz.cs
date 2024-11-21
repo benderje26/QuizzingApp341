@@ -6,7 +6,7 @@ namespace QuizzingApp341.Models;
 [Table("quizzes")]
     public class Quiz : BaseModel {
         [PrimaryKey("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [Column("creator_id")]
         public Guid? CreatorId { get; set; }

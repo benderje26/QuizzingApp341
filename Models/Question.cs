@@ -27,7 +27,7 @@ namespace QuizzingApp341.Models {
         public bool? CaseSensitive { get; set; }
 
         [Column("quiz_id")]
-        public int QuizId {get; set;}
+        public long QuizId {get; set;}
     }
 
     public enum QuestionType : int {
