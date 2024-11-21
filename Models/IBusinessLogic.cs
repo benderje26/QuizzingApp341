@@ -1,7 +1,11 @@
 ﻿namespace QuizzingApp341.Models;
 using System.Collections.ObjectModel;
 public interface IBusinessLogic {
-    public UserInfo UserInfo();
+    /// <summary>
+    /// Gets the info for the current user.
+    /// </summary>
+    /// <returns>The current user's info, or null if there is no logged in user</returns>
+    public UserInfo? UserInfo();
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>
@@ -69,9 +73,9 @@ public interface IBusinessLogic {
     /// <summary>
     /// Gets all the quizzes the current user has created from the quizzes table in db
     /// </summary>
-    /// <param name="userID"></param>
+    /// <param name="userId"></param>
     /// <returns>
     /// Returns an Observable Collection of all the quizzes the user has created
     /// </returns>
-    Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(string userID);
+    Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid userId);
 }   
