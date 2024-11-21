@@ -1,17 +1,17 @@
-using Microsoft.VisualBasic.ApplicationServices;
 using System.Collections.ObjectModel;
-using System.Net.Mail;
 using System.Text.RegularExpressions;
 
 namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
-    // FOR AUTHENTICATION
-    public UserInfo UserInfo() {
-        return new UserInfo("ba08579e-8e08-43c5-bffc-612393113c28"); // Hardcoded for now..
-    }
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
     private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
+
+    private UserInfo? userInfo;
+
+    public UserInfo? UserInfo() {
+        return database.GetUserInfo();
+    }
 
     public async Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password) {
         if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
@@ -94,8 +94,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return await database.EditQuestion(question);
     }
 
-    public async Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(string userID) {
-        var result = await database.GetUserCreatedQuizzes(userID);
+    public async Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid userId) {
+        var result = await database.GetUserCreatedQuizzes(userId);
         if (result != null) {
             List<Quiz> quizzes = result;
             return new ObservableCollection<Quiz>(quizzes);

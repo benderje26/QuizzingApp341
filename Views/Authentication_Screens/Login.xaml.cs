@@ -45,12 +45,14 @@ public partial class Login : ContentPage {
     // This method sets variables if needed for the User class
     private async Task SetUser() {
         // Get user ID
-        UserInfo user = MauiProgram.BusinessLogic.UserInfo();
-       
-        // Set other variables ahead of time for the app
-        ObservableCollection<Quiz>? userCreatedQuizzes = await MauiProgram.BusinessLogic.GetUserCreatedQuizzes(user.ID);
-        if (userCreatedQuizzes != null) {
-            user.CreatedQuizzes = userCreatedQuizzes;
-        };
+        UserInfo? user = MauiProgram.BusinessLogic.UserInfo();
+
+        // Set other variables ahead of time for the 
+        if (user?.Id is Guid id) {
+            ObservableCollection<Quiz>? userCreatedQuizzes = await MauiProgram.BusinessLogic.GetUserCreatedQuizzes(id);
+            if (userCreatedQuizzes != null) {
+                user.CreatedQuizzes = userCreatedQuizzes;
+            }
+        }
     }
 }
