@@ -82,7 +82,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var result = await database.GetQuestions(id);
         if (result != null) {
             List<Question> questions = result;
-            return new ObservableCollection<Question>(questions);
+            return new ObservableCollection<Question>(questions.OrderBy(q => q.QuestionNum));
         }
         return null; 
     }
