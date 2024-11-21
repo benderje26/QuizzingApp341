@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
+    #region User and Auth
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
     private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
 
@@ -64,10 +65,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
         return (result, s);
     }
+    #endregion
 
 
-    // FOR QUIZ LOGIC
-
+    #region Quizzes
     public async Task<Quiz?> GetQuiz(long id) {
         return await database.GetQuizById(id);
     }
@@ -102,6 +103,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         }
         return null; 
     }
+    #endregion
 }
 
 partial class Regexes {
