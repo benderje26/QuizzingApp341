@@ -71,7 +71,7 @@ public class QuizManager {
     /// </returns>
     public async Task<bool> GetQuestions() {
         try {
-            // Get all the questions from db using Quiz.ID
+            // Get all the questions from db using Quiz.Id
             var result = await MauiProgram.BusinessLogic.GetQuestions(Quiz.Id);
 
             if (result == null) {
@@ -112,16 +112,16 @@ public class QuizManager {
     }
 
     /// <summary>
-    /// Deletes a question in the db using a questionID
+    /// Deletes a question in the db using a questionId
     /// </summary>
-    /// <param name="questionID"></param>
+    /// <param name="questionId"></param>
     /// <returns>
     /// returns true if successfully deleted in db otherwise false
     /// </returns>
-    public async Task<bool> DeleteQuestion(long questionID) {
+    public async Task<bool> DeleteQuestion(long questionId) {
         try {
             // Delete from the table in db using the question id
-            if (await MauiProgram.BusinessLogic.DeleteQuestion(questionID)) {
+            if (await MauiProgram.BusinessLogic.DeleteQuestion(questionId)) {
                 return true;
             }
 

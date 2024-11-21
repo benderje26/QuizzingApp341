@@ -27,50 +27,57 @@ public interface IDatabase {
     /// </summary>
     /// <param name="id">The given id of the quiz</param>
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
-    public Task<Quiz?> GetQuizById(long id);
+    Task<Quiz?> GetQuizById(long id);
 
     /// <summary>
-    /// Gets all of the questions from the questions table in db that matches the given id
+    /// Gets all of the questions from the database that matches the given id.
     /// </summary>
     /// <param name="id"></param>
     /// <returns>
     /// returns the observable collection if lookup is successful otherwise null
     /// </returns>
-    public Task<List<Question>?> GetQuestions(int id);
+    Task<List<Question>?> GetQuestions(long id);
 
     /// <summary>
-    /// Adds a question to the questions table 
+    /// Adds a question to the database.
     /// </summary>
     /// <param name="question"></param>
     /// <returns>
     /// Returns the id to that question after it gets added to the db otherwise null
     /// </returns>
-    public Task<long?> AddQuestion(Question question);
+    Task<long?> AddQuestion(Question question);
 
     /// <summary>
-    /// Deletes a question in the questions table
+    /// Deletes a question from the database.
     /// </summary>
     /// <param name="id"></param>
     /// <returns>
     /// Returns true if successfully deleted otherwise null
     /// </returns>
-    public Task<bool> DeleteQuestion(long id);
+    Task<bool> DeleteQuestion(long id);
 
     /// <summary>
-    /// Edits a question by updating it in the db
+    /// Edits a question by updating it in the database.
     /// </summary>
     /// <param name="question"></param>
     /// <returns>
     /// returns true if successfully updated, otherwise false
     /// </returns>
-    public Task<bool> EditQuestion(Question question);
+    Task<bool> EditQuestion(Question question);
 
     /// <summary>
-    /// Gets all the quizzes the current user has created from the quizzes table in db
+    /// Gets all the quizzes the current user has created from the quizzes table in the database.
     /// </summary>
-    /// <param name="userID"></param>
+    /// <param name="userId"></param>
     /// <returns>
     /// Returns a list of all the quizzes the user has created
     /// </returns>
-    public Task<List<Quiz>?> GetUserCreatedQuizzes(string userID);
+    Task<List<Quiz>?> GetUserCreatedQuizzes(Guid userId);
+
+    /// <summary>
+    /// Gets the user's info for the currently logged in user. This should not request any data from the database,
+    /// but should run in generally a very short amount of time.
+    /// </summary>
+    /// <returns>The user's info, or null if there is no logged in user</returns>
+    UserInfo? GetUserInfo();
 }

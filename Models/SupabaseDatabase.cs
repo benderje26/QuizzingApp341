@@ -1,42 +1,57 @@
 namespace QuizzingApp341.Models;
 using Supabase;
-using Supabase.Postgrest.Attributes;
-using Supabase.Postgrest.Models;
-using Supabase.Postgrest.Responses;
 using Supabase.Gotrue;
 using Client = Supabase.Client;
 using Supabase.Gotrue.Exceptions;
-using System.Net.Mail;
+using AndroidX.Activity;
 using System.Collections.ObjectModel;
-using Microsoft.Extensions.Logging.Abstractions;
 
 public class SupabaseDatabase : IDatabase {
-    // FOR USER AND AUTHENTICATION
 
+    #region Auth and User
     private const string REST_URL = "https://tcogwlqjinvzckjmnjhp.supabase.co";
     private const string API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjb2d3bHFqaW52emNram1uamhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkzNjc4NTIsImV4cCI6MjA0NDk0Mzg1Mn0.bzYJIRYJ3rtvEh3usrydy7M3ES1J6C5iMgPwzlqnTp8";
 
     private Client Client { get; set; }
 
+    private UserInfo? userInfo;
+
     private Session? Session {
         get => _session; 
-        set {
-            _session = value;
-            User = value?.User;
-        }
     }
     private Session? _session;
 
+    private async Task SetSession(Session? s) {
+        _session = s;
+        await SetUser(s?.User);
+    }
+
+    private async Task SetUser(User? u) {
+        _user = u;
+        UserId = u?.Id == null ? Guid.Empty : new Guid(u.Id);
+        await GenerateUserInfo();
+    }
+
     private User? User {
         get => _user;
-        set {
-            _user = value;
-            UserId = value?.Id == null ? Guid.Empty : new Guid(value.Id);
-        }
     }
     private User? _user;
 
     private Guid UserId { get; set; }
+
+    private async Task GenerateUserInfo() {
+        if (User == null) {
+            userInfo = null;
+        }
+        UserInfo info = new(UserId) {
+            CreatedQuizzes = new ObservableCollection<Quiz>(await GetUserCreatedQuizzes(UserId) ?? [])
+        };
+        userInfo = info;
+    }
+
+    public UserInfo? GetUserInfo() {
+        return userInfo;
+    }
 
     public SupabaseDatabase() {
         Client = new(REST_URL, API_KEY, new SupabaseOptions {
@@ -52,27 +67,27 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<AccountCreationResult> CreateNewUser(string emailAddress, string username, string password) {
         try {
-            Session = await Client.Auth.SignUp(emailAddress, password,
+            await SetSession(await Client.Auth.SignUp(emailAddress, password,
                 new SignUpOptions() {
                     Data = new Dictionary<string, object> {
                         { "username", username }
                     }
-                });
+                }));
             return Session == null ? AccountCreationResult.NetworkError : AccountCreationResult.Success;
         } catch (Exception) {
-            return AccountCreationResult.NetworkError;
+            return AccountCreationResult.Other;
         }
     }
 
     public async Task<LoginResult> Login(string emailAddress, string password) {
         try {
-            Session = await Client.Auth.SignInWithPassword(emailAddress, password);
+            await SetSession(await Client.Auth.SignInWithPassword(emailAddress, password));
             return Session == null ? LoginResult.Other : LoginResult.Success;
         } catch (Exception e) {
             if (e is GotrueException ge && ge.Reason == FailureHint.Reason.UserBadLogin) {
                 return LoginResult.BadCredentials;
             }
-            return LoginResult.NetworkError;
+            return LoginResult.Other;
         }
     }
 
@@ -82,15 +97,17 @@ public class SupabaseDatabase : IDatabase {
         }
         try {
             await Client.Auth.SignOut();
+            await SetUser(null);
             return LogoutResult.Success;
         } catch (Exception) {
             return LogoutResult.NetworkError;
         }
     }
 
-    // For Quiz Logic
+    #endregion
 
 
+    #region Quizzes
     public async Task<Quiz?> GetQuizById(long id) {
         try {
             Quiz? quiz = await Client
@@ -111,10 +128,8 @@ public class SupabaseDatabase : IDatabase {
         try {
             var result = await Client
                 .From<Question>()
-                .Where(q => q.QuizId == id).Get();
-            
-                Console.WriteLine("**********************");
-                Console.WriteLine(result);
+                .Where(q => q.Id == id).Get();
+
             if (result == null) {
                 return null;
             }
@@ -135,7 +150,6 @@ public class SupabaseDatabase : IDatabase {
                 return null;
             }
             
-
             return result.Model.Id;
         } catch {
             return null;
@@ -148,7 +162,6 @@ public class SupabaseDatabase : IDatabase {
             .From<Question>()
             .Where(q => q.Id == id)
             .Delete();
-
         } catch {
             return false;
         }
@@ -160,23 +173,23 @@ public class SupabaseDatabase : IDatabase {
             await Client
             .From<Question>()
             .Upsert(question);
-
         } catch {
             return false;
         }
         return true;
     }
 
-    public async Task<List<Quiz>?> GetUserCreatedQuizzes(string userID) {
+    public async Task<List<Quiz>?> GetUserCreatedQuizzes(Guid userId) {
         try {
             var result = await Client
                 .From<Quiz>()
-                .Where(q => q.CreatorId == userID)
+                .Where(q => q.CreatorId == userId)
                 .Get();
                 
-            return (result == null) ? null: result.Models;
+            return result?.Models;
         } catch {
             return null;
         }
     }
+    #endregion
 }
