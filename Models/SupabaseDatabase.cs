@@ -5,6 +5,8 @@ using Client = Supabase.Client;
 using Supabase.Gotrue.Exceptions;
 //using AndroidX.Activity;
 using System.Collections.ObjectModel;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -192,6 +194,22 @@ public class SupabaseDatabase : IDatabase {
                 
             return result?.Models;
         } catch (Exception e){
+            Console.Write("ERRORRRRR" + e);
+            return null;
+        }
+    }
+
+    public async Task<ObservableCollection<Quiz>> GetFavoriteQuizzess() {
+        try {
+            Quiz first = new Quiz();
+            first.Title = "first";
+            Quiz two = new Quiz();
+            two.Title = "two";
+            ObservableCollection<Quiz> fq = new ObservableCollection<Quiz>();
+            fq.Add(first);
+            fq.Add(two);
+            return fq;
+        } catch (Exception e) {
             Console.Write("ERRORRRRR" + e);
             return null;
         }

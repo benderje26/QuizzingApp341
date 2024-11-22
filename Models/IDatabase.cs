@@ -1,4 +1,6 @@
-﻿namespace QuizzingApp341.Models;
+﻿using System.Collections.ObjectModel;
+
+namespace QuizzingApp341.Models;
 
 public interface IDatabase {
     Task SkipLogin(); // TODO DELETE THIS WHEN LOGIN WORKS
@@ -81,4 +83,10 @@ public interface IDatabase {
     /// </summary>
     /// <returns>The user's info, or null if there is no logged in user</returns>
     UserInfo? GetUserInfo();
+
+    /// <summary>
+    /// Gets the favorited quizzess for the user
+    /// </summary>
+    /// <returns>The user's favorited quizess</returns>
+    Task<ObservableCollection<Quiz>> GetFavoriteQuizzess();
 }

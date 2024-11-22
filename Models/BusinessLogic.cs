@@ -113,6 +113,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         }
         return null; 
     }
+
+    public ObservableCollection<Quiz> FavoriteQuizzes {
+        get { return database.GetFavoriteQuizzess().Result; }
+    }
     #endregion
 }
 
