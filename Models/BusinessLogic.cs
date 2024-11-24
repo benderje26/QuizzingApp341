@@ -117,6 +117,16 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public ObservableCollection<Quiz> FavoriteQuizzes {
         get { return database.GetFavoriteQuizzess().Result; }
     }
+
+    public async Task<long?> AddFavoriteQuiz(long quizId) {
+        var result = await database.AddFavoriteQuiz(quizId);
+        return result;
+    }
+
+    public async Task<bool> DeleteFavoriteQuiz(long quizId) {
+        var result = await database.DeleteFavoriteQuiz(quizId);
+        return result;
+    }
     #endregion
 }
 

@@ -89,4 +89,22 @@ public interface IDatabase {
     /// </summary>
     /// <returns>The user's favorited quizess</returns>
     Task<ObservableCollection<Quiz>> GetFavoriteQuizzess();
+
+    /// <summary>
+    /// Adds a favorite quiz to the database.
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns the id to that favorite quiz after it gets added to the db otherwise null
+    /// </returns>
+    Task<long?> AddFavoriteQuiz(long quizId);
+
+    /// <summary>
+    /// Deletes a favorite quiz from the database.
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns whether the favorite quiz was successfully deleted
+    /// </returns>
+    Task<bool> DeleteFavoriteQuiz(long quizId);
 }

@@ -79,4 +79,22 @@ public interface IBusinessLogic {
     /// Returns an Observable Collection of all the quizzes the user has created
     /// </returns>
     Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userId);
+
+    /// <summary>
+    /// Adds a favorite quiz to the questions table 
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns the id to that favorite quiz after it gets added to the db otherwise null
+    /// </returns>
+    Task<long?> AddFavoriteQuiz(long quizId);
+
+    /// <summary>
+    /// Deletes a favorite quiz from the questions table 
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns whether or not the favorite quiz was successfully deleted
+    /// </returns>
+    Task<bool> DeleteFavoriteQuiz(long quizId);
 }   

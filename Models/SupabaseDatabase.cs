@@ -203,16 +203,68 @@ public class SupabaseDatabase : IDatabase {
         try {
             Quiz first = new Quiz();
             first.Title = "first";
+            first.Id = 0;
             Quiz two = new Quiz();
             two.Title = "two";
+            two.Id = 1;
             ObservableCollection<Quiz> fq = new ObservableCollection<Quiz>();
             fq.Add(first);
             fq.Add(two);
             return fq;
+
+            //This is the code that will be used to no longer hard code the data but currently not working
+
+            //var result = Client
+            //    .From<FavoriteQuiz>()
+            //    .Where(q => q.UserId == UserId)
+            //    .Get().Result;
+
+            //List<FavoriteQuiz> favQuizzes = result.Models;
+            //ObservableCollection<Quiz> quizzes = new ObservableCollection<Quiz>();
+
+            //foreach (FavoriteQuiz favQuiz in favQuizzes) {
+            //    quizzes.Add(GetQuizById(favQuiz.QuizId).Result);
+            //}
+
+            //return quizzes;
         } catch (Exception e) {
             Console.Write("ERRORRRRR" + e);
             return null;
         }
+    }
+
+    public async Task<long?> AddFavoriteQuiz(long quizId) {
+        try {
+            FavoriteQuiz f = new FavoriteQuiz();
+            f.QuizId = quizId;
+            f.UserId = UserId;
+            f.CreatedAt = DateTime.Now;
+            var result = await Client
+                .From<FavoriteQuiz>()
+                .Insert(f);
+
+            if (result == null || result.Model == null) {
+                return null;
+            }
+
+            return result.Model.QuizId;
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
+            return null;
+        }
+    }
+
+    public async Task<bool> DeleteFavoriteQuiz(long quizId) {
+        try {
+            await Client
+            .From<FavoriteQuiz>()
+            .Where(q => q.QuizId == quizId)
+            .Delete();
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
+            return false;
+        }
+        return true;
     }
     #endregion
 }
