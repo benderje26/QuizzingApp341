@@ -16,6 +16,12 @@ public partial class EditQuiz : ContentPage {
     }
 
     private async void QuestionClicked(Question question) {
-        
+        // If the question is a multiple choice question
+        if (question.QuestionType == 0) {
+            //await Navigation.PushAsync(new CreateMultipleChoiceQuiz(question));
+
+        } else { // If the question is a fill in the blank question
+            await Navigation.PushAsync(new CreateFillBlank(question));
+        }
     }
 }

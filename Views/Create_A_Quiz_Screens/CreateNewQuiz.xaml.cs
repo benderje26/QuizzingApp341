@@ -29,7 +29,7 @@ namespace QuizzingApp341.Views {
                 } else if (questionType == "FillInBlank") {
 
                     await Task.Delay(100); // delay time
-                    await Navigation.PushAsync(new CreateFillBlank());
+                    await Navigation.PushAsync(new CreateFillBlank(null)); // Passing in null here because you're creating a new question
                 }
             };
 
