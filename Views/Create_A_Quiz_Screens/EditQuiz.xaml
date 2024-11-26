@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:QuizzingApp341.Models"
              x:Class="QuizzingApp341.Views.EditQuiz"
+             xmlns:local="clr-namespace:QuizzingApp341.Views"
              Padding="7"
              Title="Edit Quiz">
 
@@ -43,29 +44,34 @@
         </StackLayout>
 
         <CollectionView Grid.Row="2"
-                ItemsSource="{Binding Questions}">
+                        ItemsSource="{Binding Questions}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <StackLayout Padding="10">
                         <HorizontalStackLayout>
                             <ImageButton
-                                Source ="drag.png"
+                                Source="drag.png"
                                 HeightRequest="20"
                                 WidthRequest="15"
                                 VerticalOptions="Start"/>
-                            <Label Text ="Question "
-                                VerticalOptions="Start"/>
+                            <Label Text="Question "
+                                   VerticalOptions="Start"/>
                             <Label Grid.Row="0"
-                               Text="{Binding QuestionNum}"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Start"
-                               Margin="0,0,0,5"/>
+                                   Text="{Binding QuestionNum}"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Start"
+                                   Margin="0,0,0,5"/>
                         </HorizontalStackLayout>
                         <Frame Grid.Row="1"
                                BorderColor="Black"
                                CornerRadius="5"
                                Padding="5"
                                HorizontalOptions="Fill">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type local:EditQuiz}}, Path=QuestionClickedCommand}"
+                                    CommandParameter="{Binding Id}"/>
+                            </Frame.GestureRecognizers>
                             <Label
                                 Text="{Binding QuestionText}"
                                 FontSize="18"
