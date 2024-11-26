@@ -1,5 +1,7 @@
 using Supabase.Gotrue;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace QuizzingApp341.Models;
@@ -25,6 +27,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
         AccountCreationResult result = await database.CreateNewUser(emailAddress, username, password);
 
+        NotifyPropertyChanged(nameof(UserInfo));
+
         string? s = result switch {
             AccountCreationResult.Success => null,
             AccountCreationResult.DuplicateEmail => "Email already used on another account.",
@@ -40,6 +44,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public async Task<(LoginResult, string?)> Login(string emailAddress, string password) {
         LoginResult result = await database.Login(emailAddress, password);
 
+        NotifyPropertyChanged(nameof(UserInfo));
+
         string? s = result switch {
             LoginResult.Success => null,
             LoginResult.BadCredentials => "The username or password are incorrect.",
@@ -54,10 +60,14 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     // TODO DELETE THIS WHEN LOGIN WORKS
     public async Task SkipLogin() {
         await database.SkipLogin();
+
+        NotifyPropertyChanged(nameof(UserInfo));
     }
 
     public async Task<(LogoutResult, string?)> Logout() {
         LogoutResult result = await database.Logout();
+
+        NotifyPropertyChanged(nameof(UserInfo));
 
         string? s = result switch {
             LogoutResult.Success => null,
@@ -127,6 +137,13 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return result;
     }
     #endregion
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
 }
 
 partial class Regexes {

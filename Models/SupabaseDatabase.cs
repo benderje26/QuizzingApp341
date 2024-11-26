@@ -37,25 +37,21 @@ public class SupabaseDatabase : IDatabase {
     }
 
     private User? User {
-        get => _user; 
+        get => _user;
     }
     private User? _user;
 
     private Guid UserId { get; set; }
 
     private async Task GenerateUserInfo() {
-        if (User == null) {
-            userInfo = null;
-        }
-        UserInfo info = new(UserId) {
-            CreatedQuizzes = new ObservableCollection<Quiz>(await GetUserCreatedQuizzes(UserId) ?? []),
-            FavoriteQuizzes = new ObservableCollection<Quiz>(await GetFavoriteQuizzes() ?? [])
+        userInfo = new(UserId, User != null) {
+            CreatedQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetUserCreatedQuizzes(UserId)) ?? []),
+            FavoriteQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetFavoriteQuizzes()) ?? [])
         };
-        userInfo = info;
     }
 
     public async Task SkipLogin() {
-        await GenerateUserInfo(); // TODO DELETE THIS METHOD WHEN LOGIN WORKS
+        await SetSession(null);
     }
 
     public UserInfo? GetUserInfo() {
@@ -106,7 +102,7 @@ public class SupabaseDatabase : IDatabase {
         }
         try {
             await Client.Auth.SignOut();
-            await SetUser(null);
+            await SetSession(null);
             return LogoutResult.Success;
         } catch (Exception) {
             return LogoutResult.NetworkError;
