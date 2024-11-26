@@ -11,11 +11,11 @@ public partial class EditQuiz : ContentPage {
         InitializeComponent();
         QuizTitle = (quizManager.Quiz?.Title != null) ? quizManager.Quiz.Title: "";
         Questions = quizManager.Questions;
-        QuestionClickedCommand = new Command<long>(QuestionClicked);
+        QuestionClickedCommand = new Command<Question>(QuestionClicked);
         BindingContext = this;
     }
 
-    private async void QuestionClicked(long questionId) {
+    private async void QuestionClicked(Question question) {
         
     }
 }
