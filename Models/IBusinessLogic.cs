@@ -124,8 +124,6 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns></returns>
     Task GiveFillBlankQuestionAnswer(ActiveQuestion question, string response);
 
-    delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);
-
     /// <summary>
     /// Joins an active quiz, awaiting active questions to come in.
     /// </summary>
@@ -133,4 +131,6 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="handler">The handler for when a new active question comes in</param>
     /// <returns></returns>
     Task JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
-}   
+}
+
+public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);

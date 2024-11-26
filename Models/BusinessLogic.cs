@@ -136,18 +136,33 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var result = await database.DeleteFavoriteQuiz(quizId);
         return result;
     }
+
+    #region Active Quizzes
+    public async Task<ActiveQuiz> GetActiveQuiz(string accessCode) {
+        return await database.GetActiveQuiz(accessCode);
+    }
+
+    public async Task GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
+        await database.SubmitMultipleChoiceQuestionAnswer(question, choice);
+    }
+
+    public async Task GiveFillBlankQuestionAnswer(ActiveQuestion question, string response) {
+        await database.SubmitFillBlankQuestionAnswer(question, response);
+    }
+
+    public async Task JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
+        await database.JoinActiveQuiz(quiz, handler);
+    }
+    #endregion
     #endregion
 
+    #region INotifyPropertyChanged Stuff
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
-    public async Task<ActiveQuiz> GetActiveQuiz(string accessCode) {
-        await database.GetActiveQuiz(accessCode);
-        return new ActiveQuiz();
-    }
+    #endregion
 }
 
 partial class Regexes {

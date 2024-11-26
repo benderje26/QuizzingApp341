@@ -208,6 +208,8 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+        try {
+            var result = await Client
     #endregion
 
     #region Favorite Quizzes
