@@ -30,6 +30,4 @@ namespace QuizzingApp341.Models;
 
         [Column("end_time")]
         public DateTime endTime {get; set;}
-
-        public bool IsStudying {get; set;}
     }
