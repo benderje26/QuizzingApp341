@@ -34,15 +34,15 @@ Sprint 4 Changes
 
 Zafeer: I have worked on the search screen that the user is navigated to from home screen, the search screen would show the quizzes available in the database and also the user should be able to search up any quiz title and find one to study.
 
-Peter S: I worked mainly on the favorites tab this sprint. User can add a favorite through a button on the search screen. Once the user navigates to the search screen they can study the quiz from the screen, or remove the favorite.
+Peter S: I worked mainly on the favorites tab this sprint. User can add a favorite through a button on the search screen. Once the user navigates to the search screen they can study the quiz from the screen, or remove the favorite. Both adding and deleting are fully functional and refresh the data so user always sees the current data. Study doesn't currently work as due to the refactoring done during this sprint acivating a quiz is being redone and is incomplete as of now.
 
 Sprint 4 Tasks:
 
 Favorites tab ✅
 
-Fix bug with starting the quiz ✅? (The bug that was seen during the demo was not able to be replecated, and not irrelavent since Pachia's refactoring)
+Fix bug with starting the quiz ✅ (The bug that was seen during the demo was not able to be replecated, and now irrelavent since Pachia's refactoring)
 
-Create a users table and create the user data object in the project ✅ (This already existed and handled by supabase :) )
+Create a users table and create the user data object in the project ✅ (Users table already existed and handled by supabase :) )
 
 User Name and Password:
 benderje26@uwosh.edu
