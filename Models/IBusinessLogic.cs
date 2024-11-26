@@ -114,7 +114,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="question">The question you are submitting to</param>
     /// <param name="choice">The index of the choice the student selected</param>
     /// <returns></returns>
-    Task GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice);
+    Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice);
 
     /// <summary>
     /// Submits a fill blank question with its answer.
@@ -122,7 +122,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="question">The question you are submitting to</param>
     /// <param name="response">The answer the student typed</param>
     /// <returns></returns>
-    Task GiveFillBlankQuestionAnswer(ActiveQuestion question, string response);
+    Task<bool> GiveFillBlankQuestionAnswer(ActiveQuestion question, string response);
 
     /// <summary>
     /// Joins an active quiz, awaiting active questions to come in.
@@ -130,7 +130,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="quiz">The quiz the student is joining</param>
     /// <param name="handler">The handler for when a new active question comes in</param>
     /// <returns></returns>
-    Task JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
+    Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);

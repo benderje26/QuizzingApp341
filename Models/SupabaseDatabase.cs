@@ -11,6 +11,7 @@ using Supabase.Postgrest.Responses;
 using CommunityToolkit.Maui.Core.Extensions;
 using Supabase.Realtime.PostgresChanges;
 using Supabase.Realtime.Interfaces;
+using Supabase.Postgrest;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -62,7 +63,7 @@ public class SupabaseDatabase : IDatabase {
 
     public SupabaseDatabase() {
         Client = new(REST_URL, API_KEY, new SupabaseOptions {
-            AutoConnectRealtime = false // may need to be changed
+            AutoConnectRealtime = true
         });
         _ = Initialize();
     }
@@ -213,31 +214,73 @@ public class SupabaseDatabase : IDatabase {
     #region Active Quizzes
     public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
         try {
-            var result = await Client
-            .From<ActiveQuiz>()
-            .Where(q => q.AccessCode == accessCode)
-            .Get();
-
-        } catch (Exception e) {
-            Console.WriteLine("Error: " + e.Message);
+            return await Client
+                .From<ActiveQuiz>()
+                .Where(q => q.AccessCode == accessCode)
+                .Single();
+        } catch (Exception) {
+            return null;
         }
-        return null;
     }
 
-    public async Task SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
-        throw new NotImplementedException();
+    public async Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
+        try {
+            await Client
+                .From<Response>()
+                .Upsert(new Response() {
+                    ActiveQuizId = question.ActiveQuizId,
+                    UserId = UserId,
+                    QuestionNo = question.QuestionNo,
+                    MultipleChoiceResponse = [choice],
+                    FillBlankResponse = null
+                }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
+            return true;
+        } catch (Exception) {
+            return false;
+        }
     }
 
-    public async Task SubmitFillBlankQuestionAnswer(ActiveQuestion question, string response) {
-        throw new NotImplementedException();
+    public async Task<bool> SubmitFillBlankQuestionAnswer(ActiveQuestion question, string response) {
+        try {
+            await Client
+                .From<Response>()
+                .Upsert(new Response() {
+                    ActiveQuizId = question.ActiveQuizId,
+                    UserId = UserId,
+                    QuestionNo = question.QuestionNo,
+                    MultipleChoiceResponse = null,
+                    FillBlankResponse = response
+                }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
+            return true;
+        } catch (Exception) {
+            return false;
+        }
     }
 
-    public async Task JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
-        var realtime = await Client.Realtime.ConnectAsync();
-        //realtime.Channel("active_question-" + quiz.Id).AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates, OnReceiveActiveQuestion, );
+    public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
+        try {
+            // TODO update participants table that we participated!
+            // TODO get current question if it exists
+            Client.Realtime.Channel("active_question-" + quiz.Id)
+                .AddMessageReceivedHandler((channel, response) => {
+                    // TODO check if message REALLY came from quiz activator
+
+                    // TODO get actual data lol
+                    ActiveQuestion q = new() {
+                        Id = 5,
+                        QuestionType = QuestionType.FillBlank,
+                        Question = "Test test test",
+                        ActiveQuizId = quiz.Id,
+                        IsStudying = false,
+                        QuestionNo = new Random().Next(5)
+                    };
+                    handler(q);
+                });
+            return true;
+        } catch (Exception) {
+            return false;
+        }
     }
-
-
 
     #endregion 
     #endregion

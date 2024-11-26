@@ -138,20 +138,20 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
 
     #region Active Quizzes
-    public async Task<ActiveQuiz> GetActiveQuiz(string accessCode) {
+    public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
         return await database.GetActiveQuiz(accessCode);
     }
 
-    public async Task GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
-        await database.SubmitMultipleChoiceQuestionAnswer(question, choice);
+    public async Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
+        return await database.SubmitMultipleChoiceQuestionAnswer(question, choice);
     }
 
-    public async Task GiveFillBlankQuestionAnswer(ActiveQuestion question, string response) {
-        await database.SubmitFillBlankQuestionAnswer(question, response);
+    public async Task<bool> GiveFillBlankQuestionAnswer(ActiveQuestion question, string response) {
+        return await database.SubmitFillBlankQuestionAnswer(question, response);
     }
 
-    public async Task JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
-        await database.JoinActiveQuiz(quiz, handler);
+    public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
+        return await database.JoinActiveQuiz(quiz, handler);
     }
     #endregion
     #endregion
