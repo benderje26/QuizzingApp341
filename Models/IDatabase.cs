@@ -3,7 +3,7 @@
 namespace QuizzingApp341.Models;
 
 public interface IDatabase {
-    Task SkipLogin(); // TODO DELETE THIS WHEN LOGIN WORKS
+    Task SkipLogin();
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>

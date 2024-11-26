@@ -4,10 +4,11 @@ namespace QuizzingApp341.Views {
             InitializeComponent();
         }
 
-        private void OnSignOutClicked(object sender, EventArgs e) {
+        private async void OnSignOutClicked(object sender, EventArgs e) {
 
             // Navigate back to the Login screen, and hide the TabBar
-            Shell.Current.GoToAsync("//Login");
+            await Shell.Current.GoToAsync("//Login", true);
+            Shell.SetTabBarIsVisible(this, false);
         }
 
     }

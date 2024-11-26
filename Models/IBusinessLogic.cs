@@ -1,7 +1,10 @@
 ﻿namespace QuizzingApp341.Models;
 using System.Collections.ObjectModel;
-public interface IBusinessLogic {
-    Task SkipLogin(); // TODO DELETE THIS WHEN LOGIN WORKS
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+public interface IBusinessLogic : INotifyPropertyChanged {
+    Task SkipLogin();
     /// <summary>
     /// Gets the info for the current user.
     /// </summary>
