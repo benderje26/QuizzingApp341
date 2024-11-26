@@ -13,7 +13,7 @@ public partial class HomeScreen : ContentPage {
 
     private async void OnStartClicked(object sender, EventArgs e)
     {
-        long activeQuizId = long.Parse(quizIdEntry.Text);
+        string accessCode = quizIdEntry.Text;
 
         // if (await MauiProgram.BusinessLogic.GetQuiz(quizId) is Quiz quiz) {
         //     MauiProgram.BusinessLogic.SetQuiz(quiz);
@@ -28,6 +28,6 @@ public partial class HomeScreen : ContentPage {
         // }
         //TODO
 
-        await MauiProgram.BusinessLogic.GetActiveQuiz(activeQuizId);
+        await MauiProgram.BusinessLogic.GetActiveQuiz(accessCode);
     }
 }

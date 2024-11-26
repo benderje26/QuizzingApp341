@@ -286,11 +286,11 @@ public class SupabaseDatabase : IDatabase {
 
     #region Active Quizzes
 
-    public async Task<Quiz> GetActiveQuiz(long activeQuizId) {
+    public async Task<ActiveQuiz> GetActiveQuiz(string accessCode) {
         try {
             var result = await Client
             .From<ActiveQuiz>()
-            .Where(q => q.Id == activeQuizId)
+            .Where(q => q.AccessCode == accessCode)
             .Get();
 
         } catch (Exception e) {

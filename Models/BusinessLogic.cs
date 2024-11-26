@@ -144,9 +144,9 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public async Task<Quiz> GetActiveQuiz(long activeQuizId) {
-        await database.GetActiveQuiz(activeQuizId);
-        return new Quiz();
+    public async Task<ActiveQuiz> GetActiveQuiz(string accessCode) {
+        await database.GetActiveQuiz(accessCode);
+        return new ActiveQuiz();
     }
 }
 
