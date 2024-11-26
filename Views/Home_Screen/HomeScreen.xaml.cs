@@ -13,7 +13,7 @@ public partial class HomeScreen : ContentPage {
 
     private async void OnStartClicked(object sender, EventArgs e)
     {
-        string quizId = quizIdEntry.Text;
+        long activeQuizId = long.Parse(quizIdEntry.Text);
 
         // if (await MauiProgram.BusinessLogic.GetQuiz(quizId) is Quiz quiz) {
         //     MauiProgram.BusinessLogic.SetQuiz(quiz);
@@ -27,5 +27,7 @@ public partial class HomeScreen : ContentPage {
         //     await DisplayAlert("Invalid Quiz ID", "Please enter a valid Quiz ID.", "OK");
         // }
         //TODO
+
+        await MauiProgram.BusinessLogic.GetActiveQuiz(activeQuizId);
     }
 }
