@@ -36,6 +36,8 @@ Zafeer: I have worked on the search screen that the user is navigated to from ho
 
 Peter S: I worked mainly on the favorites tab this sprint. User can add a favorite through a button on the search screen. Once the user navigates to the search screen they can study the quiz from the screen, or remove the favorite. Both adding and deleting are fully functional and refresh the data so user always sees the current data. Study doesn't currently work as due to the refactoring done during this sprint acivating a quiz is being redone and is incomplete as of now.
 
+Jeremiah: I worked on a few things, but the main one was updating the database. I used the notes that mainly Pachia made to make the tables and the RLS policies. I also fixed some log-in and log-out bugs, although there may still be some that I haven't seen yet. Pachia and I made the guest log in button. I also just fixed some bugs that had to do with Supabase and async functions.
+
 Sprint 4 Tasks:
 
 Favorites tab ✅
@@ -44,6 +46,6 @@ Fix bug with starting the quiz ✅ (The bug that was seen during the demo was no
 
 Create a users table and create the user data object in the project ✅ (Users table already existed and handled by supabase :) )
 
-User Name and Password:
+Example User Name and Password:
 benderje26@uwosh.edu
 abc123_-
