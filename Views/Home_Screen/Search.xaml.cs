@@ -27,7 +27,7 @@ public partial class Search : ContentPage {
             if (quizzes != null) {
                 _allQuizzes.Clear();
                 foreach (var quiz in quizzes) {
-                    _allQuizzes.Add(new QuizSearch(quiz.Title, $"Created by {quiz.CreatorId}"));
+                    _allQuizzes.Add(new QuizSearch(quiz.Id, quiz.Title, $"Created by {quiz.CreatorId}"));
                 }
                 FilterQuizzes(string.Empty); // Load all initially
             }
@@ -57,13 +57,21 @@ public partial class Search : ContentPage {
         await DisplayAlert("Study", $"Start studying {quiz.Title}?", "OK");
         // Navigate to the study page here if needed
     });
+
+    // Command for Favorite button
+    public Command<QuizSearch> FavoriteCommand => new Command<QuizSearch>(async (quiz) => {
+        await _businessLogic.AddFavoriteQuiz(quiz.Id);
+        // Navigate to the study page here if needed
+    });
 }
 
 public class QuizSearch {
+    public long Id { get; set; }
     public string? Title { get; set; }
     public string? Creator { get; set; }
 
-    public QuizSearch(string title, string creator) {
+    public QuizSearch(long id, string title, string creator) {
+        Id = id;
         Title = title;
         Creator = creator;
     }
