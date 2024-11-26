@@ -101,5 +101,5 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// </returns>
     Task<bool> DeleteFavoriteQuiz(long quizId);
 
-    Task<Quiz> GetActiveQuiz(long activeQuizId);
+    Task<ActiveQuiz> GetActiveQuiz(string accessCode);
 }   
