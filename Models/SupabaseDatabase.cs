@@ -283,4 +283,20 @@ public class SupabaseDatabase : IDatabase {
         return true;
     }
     #endregion
+
+    #region Active Quizzes
+
+    public async Task<Quiz> GetActiveQuiz(long activeQuizId) {
+        try {
+            var result = await Client
+            .From<ActiveQuiz>()
+            .Where(q => q.Id == activeQuizId)
+            .Get();
+
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+        }
+    }
+
+    #endregion 
 }

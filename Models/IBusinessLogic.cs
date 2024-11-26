@@ -100,4 +100,6 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// Returns whether or not the favorite quiz was successfully deleted
     /// </returns>
     Task<bool> DeleteFavoriteQuiz(long quizId);
+
+    Task<Quiz> GetActiveQuiz(long activeQuizId);
 }   

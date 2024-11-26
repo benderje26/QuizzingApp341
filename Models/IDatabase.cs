@@ -102,4 +102,6 @@ public interface IDatabase {
     /// Returns whether the favorite quiz was successfully deleted
     /// </returns>
     Task<bool> DeleteFavoriteQuiz(long quizId);
+
+    Task<Quiz> GetActiveQuiz(long activeQuizId);
 }
