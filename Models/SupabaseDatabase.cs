@@ -279,8 +279,8 @@ public class SupabaseDatabase : IDatabase {
             return false;
         }
 
-        userInfo.FavoriteQuizzes.Clear();
         ObservableCollection<Quiz> favQuizzess = await GetFavoriteQuizzes();
+        userInfo.FavoriteQuizzes.Clear();
         foreach (Quiz quiz in favQuizzess) {
             userInfo.FavoriteQuizzes.Add(quiz);
         }
