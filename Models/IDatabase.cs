@@ -81,4 +81,9 @@ public interface IDatabase {
     /// </summary>
     /// <returns>The user's info, or null if there is no logged in user</returns>
     UserInfo? GetUserInfo();
+
+    Task<List<long?>> GetActiveQuizIdsByUserId();
+
+
+    Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long?> activeQuizIds);
 }

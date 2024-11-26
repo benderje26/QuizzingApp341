@@ -79,4 +79,19 @@ public interface IBusinessLogic {
     /// Returns an Observable Collection of all the quizzes the user has created
     /// </returns>
     Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userId);
-}   
+
+    /// <summary>
+    /// Gets quiz IDs based on a list of active quiz IDs.
+    /// </summary>
+    /// <param name="activeQuizIds">List of active quiz IDs</param>
+    /// <returns>List of quiz IDs if found, otherwise null</returns>
+    
+    Task<List<(long QuizId, DateTime StartTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long?> activeQuizIds);
+    /// <summary>
+    /// Gets the active quiz IDs for a given user from participants tables
+    /// </summary>
+    /// <param name="userId">The ID of the user</param>
+    /// <returns>List of active quiz IDs</returns>
+    Task<List<long?>?> GetActiveQuizIdsForUser();
+
+}
