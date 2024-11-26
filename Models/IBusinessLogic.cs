@@ -101,5 +101,36 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// </returns>
     Task<bool> DeleteFavoriteQuiz(long quizId);
 
+    /// <summary>
+    /// Gets an active quiz based off of an access code.
+    /// </summary>
+    /// <param name="accessCode">The code of the quiz</param>
+    /// <returns></returns>
     Task<ActiveQuiz> GetActiveQuiz(string accessCode);
+
+    /// <summary>
+    /// Submits a multiple choice question with its choice.
+    /// </summary>
+    /// <param name="question">The question you are submitting to</param>
+    /// <param name="choice">The index of the choice the student selected</param>
+    /// <returns></returns>
+    Task GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice);
+
+    /// <summary>
+    /// Submits a fill blank question with its answer.
+    /// </summary>
+    /// <param name="question">The question you are submitting to</param>
+    /// <param name="response">The answer the student typed</param>
+    /// <returns></returns>
+    Task GiveFillBlankQuestionAnswer(ActiveQuestion question, string response);
+
+    delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);
+
+    /// <summary>
+    /// Joins an active quiz, awaiting active questions to come in.
+    /// </summary>
+    /// <param name="quiz">The quiz the student is joining</param>
+    /// <param name="handler">The handler for when a new active question comes in</param>
+    /// <returns></returns>
+    Task JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
 }   
