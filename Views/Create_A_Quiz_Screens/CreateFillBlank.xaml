@@ -28,7 +28,7 @@
                             </Label.FormattedText>
                      </Label>
                      
-              <Label Text="Please fill in the box below if you would like to change your current question:"
+              <Label Text="Please make your changes in the box below if you would like to change your current question:"
                    HorizontalOptions="Center"
                    VerticalOptions="Start"
                    FontSize="15" 
@@ -46,7 +46,8 @@
                             x:Name="QuestionFillBlank"
                         HeightRequest="200"
                         WidthRequest="300"
-                        FontSize="20"/>
+                        FontSize="20"
+                        Text="{Binding QuestionText}"/>
             </Frame>
 
             <Label Text="Answer:"
@@ -71,7 +72,7 @@
                                    </FormattedString>
                             </Label.FormattedText>
                      </Label>
-              <Label Text="Please fill in the box below if you would like to change your answers (separate each acceptable answer with a comma):"
+              <Label Text="Please make your changes in the box below if you would like to change your answers (separate each acceptable answer with a comma):"
                    HorizontalOptions="Center"
                    VerticalOptions="Start"
                    FontSize="15" 
@@ -89,7 +90,8 @@
                         HeightRequest="200"
                         WidthRequest="300"
                         FontSize="20"
-                        x:Name="AnswerFillBlank"/>
+                        x:Name="AnswerFillBlank"
+                        Text="{Binding Answers}"/>
             </Frame>
 
             <!-- Save Button -->

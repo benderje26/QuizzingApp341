@@ -24,7 +24,7 @@ namespace QuizzingApp341.Views {
                 if (questionType == "MultipleChoice") {
 
                     await Task.Delay(100); // delay time
-                    await Navigation.PushAsync(new CreateMultipleChoiceQuiz());
+                    await Navigation.PushAsync(new CreateMultipleChoiceQuiz(null)); // Null here because you are creating a quiz
 
                 } else if (questionType == "FillInBlank") {
 

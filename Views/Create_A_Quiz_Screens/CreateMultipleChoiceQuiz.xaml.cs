@@ -1,5 +1,6 @@
 namespace QuizzingApp341.Views;
 using System;
+using System.Runtime.InteropServices;
 #if ANDROID
 using Android.Print;
 #endif
@@ -8,13 +9,57 @@ using QuizzingApp341.Models;
 
 public partial class CreateMultipleChoiceQuiz : ContentPage {
     static int questionNumber = 0;
-    public CreateMultipleChoiceQuiz() {
+    public Question? MultipleChoiceQuestionToChange { get; set; } // This is for editing a current question only if there is one to edit
+    public bool? QuestionPresent { get; set; } = false;
+    public bool? NoQuestionPresent { get; set; } = false;
+    public bool? AnswerPresent { get; set; } = false;
+    public string? Answers { get; set; }
+    public string? OptionA {get; set;}
+    public string? OptionB {get; set;}
+    public string? OptionC {get; set;}
+    public string? OptionD {get; set;}
+
+    public int? CorrectOption {get; set;}
+
+    public string? QuestionText { get; set; }
+    public CreateMultipleChoiceQuiz(Question? question) {
+        MultipleChoiceQuestionToChange = question;
+        Console.WriteLine(question.QuestionText);
+
+        // If there is a question present to edit
+        if (MultipleChoiceQuestionToChange != null) {
+            try {
+                NoQuestionPresent = false;
+                QuestionPresent = true;
+                QuestionText = question?.QuestionText;
+
+                if (question?.acceptableAnswers != null) { // If there are any answers
+                    Answers = string.Join(", ", question.acceptableAnswers);
+                    AnswerPresent = true;
+                }
+
+                // Set all the options with the question's current answer options
+                OptionA = question?.MultipleChoiceOptions?[0];
+                OptionB = question?.MultipleChoiceOptions?[1];
+                OptionC = question?.MultipleChoiceOptions?[2];
+                OptionD = question?.MultipleChoiceOptions?[3];
+                CorrectOption = int.Parse(question.MultipleChoiceAnswers[0]);
+            } catch (Exception e) {
+                Console.WriteLine("******************************");
+                Console.WriteLine("Error: " + e.Message);
+            }
+
+        } else {
+            NoQuestionPresent = true;
+        }
+
         InitializeComponent();
+        BindingContext = this;
     }
 
-    private int getCorrectQuestion(string correctAnswer) {
+    private int getCorrectAnswerNumber(string correctAnswer) {
         correctAnswer = correctAnswer.Substring(correctAnswer.Length - 1);
-        switch(correctAnswer) {
+        switch (correctAnswer) {
             case "A":
                 return 1;
             case "B":
@@ -27,7 +72,6 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
         }
         return 0;
     }
-
     private void OnSaveClicked(object sender, EventArgs e) {
         // Retrieve data from user input
         //check for null, if null - replace with empty string
@@ -65,9 +109,9 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
         // MessagingCenter.Send(this, "AddQuestion", thisQuestion);
 
         // Navigate back to the CreateNewQuiz page
-        Navigation.PopAsync();  
+        Navigation.PopAsync();
     }
 
 
-   
+
 }

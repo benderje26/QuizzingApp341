@@ -11,7 +11,6 @@ public partial class QuizHistory : ContentPage {
         Quizzes = new List<QuizManager>
         {
         };
-
         BindingContext = this;
     }
 
