@@ -9,8 +9,7 @@ namespace QuizzingApp341.Models;
         public long Id { get; set; }
 
         [Column("creator_id")]
-
-        public string? CreatorId { get; set; }
+        public Guid? CreatorId { get; set; }
 
         [Column("title")]
         public string? Title { get; set; }

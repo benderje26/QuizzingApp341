@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:QuizzingApp341.Models"
+             x:Class="QuizzingApp341.Views.EditQuiz"
+             Padding="7"
+             Title="Edit Quiz">
+
+    <Grid Padding="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- For the Label -->
+            <RowDefinition Height="Auto"/>
+            <!-- For the Frame and Entry -->
+            <RowDefinition Height="*"/>
+            <!-- For any additional content -->
+        </Grid.RowDefinitions>
+
+        <!-- Label -->
+        <Label Grid.Row="0"
+               Text="Quiz Title:"
+               FontSize="18"
+               VerticalOptions="Center"
+               HorizontalOptions="Start"
+               Margin="0,0,0,5"/>
+
+        <!-- Frame with Entry -->
+        <Frame Grid.Row="1"
+               BorderColor="Black"
+               CornerRadius="5"
+               Padding="5"
+               HorizontalOptions="Fill">
+            <Entry
+                Text="{Binding QuizTitle}"
+                x:Name="NewQuizTitle"
+                HeightRequest="50"
+                FontSize="18"
+                HorizontalOptions="Fill"
+                BackgroundColor="Transparent"/>
+        </Frame>
+
+        <CollectionView ItemsSource="{Binding Questions}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Grid.Row="1"
+                           BorderColor="Black"
+                           CornerRadius="5"
+                           Padding="5"
+                           HorizontalOptions="Fill">
+                        <Label
+                            Text="{Binding QuestionText}"
+                            FontSize="18"
+                            HorizontalOptions="Fill"
+                            BackgroundColor="Transparent"/>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

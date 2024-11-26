@@ -9,10 +9,10 @@ namespace QuizzingApp341.Views {
             InitializeComponent();
 
             // Subscribe to the message and add the question to the collection
-            MessagingCenter.Subscribe<CreateMultipleChoiceQuiz, MultipleChoiceQuestion>(this, "AddQuestion", (sender, question) => {
-                Questions.Add(question);
-                Console.WriteLine($"Question added: {question.Text}");
-            });
+            // MessagingCenter.Subscribe<CreateMultipleChoiceQuiz, MultipleChoiceQuestion>(this, "AddQuestion", (sender, question) => {
+            //     Questions.Add(question);
+            //     Console.WriteLine($"Question added: {question.Text}");
+            // });
 
             BindingContext = this;
         }

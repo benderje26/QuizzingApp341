@@ -1,18 +1,20 @@
 using Supabase.Gotrue;
 using System.Collections.ObjectModel;
-using System.Net.Mail;
 using System.Text.RegularExpressions;
 
 namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
-   
-    // FOR AUTHENTICATION
-    public UserInfo UserInfo() {
-        return new UserInfo("ba08579e-8e08-43c5-bffc-612393113c28"); // Hardcoded for now..
-    }
+  
+    #region User and Auth
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
     private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
+
+    private UserInfo? userInfo;
+
+    public UserInfo? UserInfo() {
+        return database.GetUserInfo();
+    }
 
     public async Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password) {
         if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
@@ -36,7 +38,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             _ => OTHER_ERROR_MESSAGE
         };
 
-        return (result, s);
+        return (result, s); 
     }
 
     public async Task<(LoginResult, string?)> Login(string emailAddress, string password) {
@@ -53,6 +55,11 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return (result, s);
     }
 
+    // TODO DELETE THIS WHEN LOGIN WORKS
+    public async Task SkipLogin() {
+        await database.SkipLogin();
+    }
+
     public async Task<(LogoutResult, string?)> Logout() {
         LogoutResult result = await database.Logout();
 
@@ -65,10 +72,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
         return (result, s);
     }
+    #endregion
 
 
-    // FOR QUIZ LOGIC
-
+    #region Quizzes
     public async Task<Quiz?> GetQuiz(long id) {
         return await database.GetQuizById(id);
     }
@@ -95,10 +102,15 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return await database.EditQuestion(question);
     }
 
-    public async Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(string userID) {
-        var result = await database.GetUserCreatedQuizzes(userID);
+    public async Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userId) {
+        var result = await database.GetUserCreatedQuizzes(userId);
         if (result != null) {
             List<Quiz> quizzes = result;
+            Console.WriteLine("**************************************************************************User Quizzes: **************************************************************************");
+           
+            foreach (Quiz quiz in quizzes) {
+            Console.WriteLine(quiz.Title);
+            }
             return new ObservableCollection<Quiz>(quizzes);
         }
         return null;
@@ -108,6 +120,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var result = await database.GetAllQuizzesAsync();
         return result == null ? null : new ObservableCollection<Quiz>(result);
     }
+    #endregion
 }
 
 partial class Regexes {
