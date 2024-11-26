@@ -96,4 +96,6 @@ public interface IBusinessLogic {
     /// Returns whether or not the favorite quiz was successfully deleted
     /// </returns>
     Task<bool> DeleteFavoriteQuiz(long quizId);
+
+    Task<ObservableCollection<Quiz>?> GetAllQuizzes();
 }   
