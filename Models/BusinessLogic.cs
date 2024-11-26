@@ -10,11 +10,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
     private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
 
-    private UserInfo? userInfo;
-
-    public UserInfo? UserInfo() {
-        return database.GetUserInfo();
-    }
+    public UserInfo? UserInfo => database.GetUserInfo();
 
     public async Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password) {
         if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
@@ -84,7 +80,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var result = await database.GetQuestions(id);
         if (result != null) {
             List<Question> questions = result;
-            return new ObservableCollection<Question>(questions);
+            return new ObservableCollection<Question>(questions.OrderBy(q => q.QuestionNum));
         }
         return null;
     }
@@ -119,10 +115,6 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public async Task<ObservableCollection<Quiz>?> GetAllQuizzes() {
         var result = await database.GetAllQuizzesAsync();
         return result == null ? null : new ObservableCollection<Quiz>(result);
-    }
-
-    public ObservableCollection<Quiz> FavoriteQuizzes {
-        get { return database.GetFavoriteQuizzess().Result; }
     }
 
     public async Task<long?> AddFavoriteQuiz(long quizId) {

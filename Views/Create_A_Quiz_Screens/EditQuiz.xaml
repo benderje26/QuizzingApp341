@@ -17,42 +17,62 @@
         </Grid.RowDefinitions>
 
         <!-- Label -->
-        <Label Grid.Row="0"
-               Text="Quiz Title:"
-               FontSize="18"
-               VerticalOptions="Center"
-               HorizontalOptions="Start"
-               Margin="0,0,0,5"/>
+        <StackLayout Padding="10">
+            <Label Grid.Row="0"
+                   Text="Quiz Title:"
+                   FontSize="18"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"
+                   Margin="0,0,0,5"/>
 
-        <!-- Frame with Entry -->
-        <Frame Grid.Row="1"
-               BorderColor="Black"
-               CornerRadius="5"
-               Padding="5"
-               HorizontalOptions="Fill">
-            <Entry
-                Text="{Binding QuizTitle}"
-                x:Name="NewQuizTitle"
-                HeightRequest="50"
-                FontSize="18"
-                HorizontalOptions="Fill"
-                BackgroundColor="Transparent"/>
-        </Frame>
+            <!-- Frame with Entry -->
 
-        <CollectionView ItemsSource="{Binding Questions}">
+            <Frame Grid.Row="1"
+                   BorderColor="Black"
+                   CornerRadius="5"
+                   Padding="5"
+                   HorizontalOptions="Fill">
+                <Entry
+                    Text="{Binding QuizTitle}"
+                    x:Name="NewQuizTitle"
+                    HeightRequest="50"
+                    FontSize="18"
+                    HorizontalOptions="Fill"
+                    BackgroundColor="Transparent"/>
+            </Frame>
+        </StackLayout>
+
+        <CollectionView Grid.Row="2"
+                ItemsSource="{Binding Questions}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Grid.Row="1"
-                           BorderColor="Black"
-                           CornerRadius="5"
-                           Padding="5"
-                           HorizontalOptions="Fill">
-                        <Label
-                            Text="{Binding QuestionText}"
-                            FontSize="18"
-                            HorizontalOptions="Fill"
-                            BackgroundColor="Transparent"/>
-                    </Frame>
+                    <StackLayout Padding="10">
+                        <HorizontalStackLayout>
+                            <ImageButton
+                                Source ="drag.png"
+                                HeightRequest="20"
+                                WidthRequest="15"
+                                VerticalOptions="Start"/>
+                            <Label Text ="Question "
+                                VerticalOptions="Start"/>
+                            <Label Grid.Row="0"
+                               Text="{Binding QuestionNum}"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Start"
+                               Margin="0,0,0,5"/>
+                        </HorizontalStackLayout>
+                        <Frame Grid.Row="1"
+                               BorderColor="Black"
+                               CornerRadius="5"
+                               Padding="5"
+                               HorizontalOptions="Fill">
+                            <Label
+                                Text="{Binding QuestionText}"
+                                FontSize="18"
+                                HorizontalOptions="Fill"
+                                BackgroundColor="Transparent"/>
+                        </Frame>
+                    </StackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

@@ -8,7 +8,7 @@ public partial class QuizStudio : ContentPage {
     public ObservableCollection<Quiz> CreatedQuizzes {get; set;}
     public QuizStudio() {
         InitializeComponent();
-        CreatedQuizzes = MauiProgram.BusinessLogic.UserInfo().CreatedQuizzes;
+        CreatedQuizzes = MauiProgram.BusinessLogic.UserInfo?.CreatedQuizzes ?? [];
         EditQuizCommand = new Command<Quiz>(EditQuiz);
         BindingContext = this;
     }
