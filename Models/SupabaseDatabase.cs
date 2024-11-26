@@ -5,6 +5,10 @@ using Client = Supabase.Client;
 using Supabase.Gotrue.Exceptions;
 //using AndroidX.Activity;
 using System.Collections.ObjectModel;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
+using Supabase.Postgrest.Responses;
+using CommunityToolkit.Maui.Core.Extensions;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -37,14 +41,15 @@ public class SupabaseDatabase : IDatabase {
     }
     private User? _user;
 
-    private Guid UserId { get; set; } = Guid.Parse("ba08579e-8e08-43c5-bffc-612393113c28");
+    private Guid UserId { get; set; }
 
     private async Task GenerateUserInfo() {
         if (User == null) {
             userInfo = null;
         }
         UserInfo info = new(UserId) {
-            CreatedQuizzes = new ObservableCollection<Quiz>(await GetUserCreatedQuizzes(UserId) ?? [])
+            CreatedQuizzes = new ObservableCollection<Quiz>(await GetUserCreatedQuizzes(UserId) ?? []),
+            FavoriteQuizzes = new ObservableCollection<Quiz>(await GetFavoriteQuizzes() ?? [])
         };
         userInfo = info;
     }
@@ -204,6 +209,77 @@ public class SupabaseDatabase : IDatabase {
             Console.Write("ERRORRRRR" + e);
             return null;
         }
+    }
+
+    public async Task<ObservableCollection<Quiz>> GetFavoriteQuizzes() {
+        try {
+            //Quiz first = new Quiz();
+            //first.Title = "first";
+            //first.Id = 0;
+            //Quiz two = new Quiz();
+            //two.Title = "two";
+            //two.Id = 1;
+            //ObservableCollection<Quiz> fq = new ObservableCollection<Quiz>();
+            //fq.Add(first);
+            //fq.Add(two);
+            //return fq;
+
+            //This is the code that will be used to no longer hard code the data but currently not working
+
+            ModeledResponse<FavoriteQuiz> result = await Client
+                .From<FavoriteQuiz>()
+                .Where(q => q.UserId == UserId)
+                .Get();
+
+            List<FavoriteQuiz> favQuizzes = result.Models;
+            ObservableCollection<Quiz> quizzes = [];
+
+            foreach (FavoriteQuiz favQuiz in favQuizzes) {
+                Quiz? q = await GetQuizById(favQuiz.QuizId);
+                if (q != null) {
+                    quizzes.Add(q);
+                }
+            }
+
+            return quizzes;
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
+            return [];
+        }
+    }
+
+    public async Task<long?> AddFavoriteQuiz(long quizId) {
+        try {
+            FavoriteQuiz f = new FavoriteQuiz();
+            f.QuizId = quizId;
+            f.UserId = UserId;
+            f.CreatedAt = DateTime.Now;
+            var result = await Client
+                .From<FavoriteQuiz>()
+                .Insert(f);
+
+            if (result == null || result.Model == null) {
+                return null;
+            }
+
+            return result.Model.QuizId;
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
+            return null;
+        }
+    }
+
+    public async Task<bool> DeleteFavoriteQuiz(long quizId) {
+        try {
+            await Client
+            .From<FavoriteQuiz>()
+            .Where(q => q.QuizId == quizId)
+            .Delete();
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
+            return false;
+        }
+        return true;
     }
     #endregion
 }

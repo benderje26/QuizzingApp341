@@ -5,8 +5,7 @@ public interface IBusinessLogic {
     /// <summary>
     /// Gets the info for the current user.
     /// </summary>
-    /// <returns>The current user's info, or null if there is no logged in user</returns>
-    UserInfo UserInfo();
+    UserInfo? UserInfo { get; }
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>
@@ -78,6 +77,25 @@ public interface IBusinessLogic {
     /// <returns>
     /// Returns an Observable Collection of all the quizzes the user has created
     /// </returns>
-    Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userID);
+    Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userId);
+
+    /// <summary>
+    /// Adds a favorite quiz to the questions table 
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns the id to that favorite quiz after it gets added to the db otherwise null
+    /// </returns>
+    Task<long?> AddFavoriteQuiz(long quizId);
+
+    /// <summary>
+    /// Deletes a favorite quiz from the questions table 
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns whether or not the favorite quiz was successfully deleted
+    /// </returns>
+    Task<bool> DeleteFavoriteQuiz(long quizId);
+
     Task<ObservableCollection<Quiz>?> GetAllQuizzes();
-}
+}   
