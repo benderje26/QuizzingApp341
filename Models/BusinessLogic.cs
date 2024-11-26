@@ -1,9 +1,11 @@
+using Supabase.Gotrue;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
+  
     #region User and Auth
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
     private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
@@ -84,9 +86,9 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             List<Question> questions = result;
             return new ObservableCollection<Question>(questions);
         }
-        return null; 
+        return null;
     }
-    
+
     public async Task<long?> AddQuestion(Question question) {
         var result = await database.AddQuestion(question);
         return result;
@@ -111,7 +113,12 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             }
             return new ObservableCollection<Quiz>(quizzes);
         }
-        return null; 
+        return null;
+    }
+
+    public async Task<ObservableCollection<Quiz>?> GetAllQuizzes() {
+        var result = await database.GetAllQuizzesAsync();
+        return result == null ? null : new ObservableCollection<Quiz>(result);
     }
 
     public ObservableCollection<Quiz> FavoriteQuizzes {

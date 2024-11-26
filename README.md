@@ -29,3 +29,7 @@ Pachia:
 Jason W: I added more functionality to the create new quiz, and changed the original one to "My quiz", when the user clicks on the + sign, it brings the user to createNewQuiz screen, and if the user clicks on "+ new question", a pop-up will show and ask for the question types, and each question type with bring the user to corresponding screens.  
 
 Jeremiah: I did a good chunk of the backend with the database and made it work with the UI code the rest of the team was working on. I also integrated the business logic to access information from the database, and I redid the API for the business logic so that it was more versatile.
+
+Sprint 4 Changes
+
+Zafeer: I have worked on the search screen that the user is navigated to from home screen, the search screen would show the quizzes available in the database and also the user should be able to search up any quiz title and find one to study.
