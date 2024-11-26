@@ -111,6 +111,8 @@ public class SupabaseDatabase : IDatabase {
 
     #endregion
 
+    #region Quizzes 
+
     public async Task<List<Quiz>?> GetAllQuizzesAsync() {
         try {
             var result = await Client.From<Quiz>().Get();
@@ -120,7 +122,6 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    #region Quizzes
     public async Task<Quiz?> GetQuizById(long id) {
         try {
             Quiz? quiz = await Client
@@ -207,20 +208,13 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    #endregion
+
+    #region Favorite Quizzes
+
     public async Task<ObservableCollection<Quiz>> GetFavoriteQuizzes() {
         try {
-            //Quiz first = new Quiz();
-            //first.Title = "first";
-            //first.Id = 0;
-            //Quiz two = new Quiz();
-            //two.Title = "two";
-            //two.Id = 1;
-            //ObservableCollection<Quiz> fq = new ObservableCollection<Quiz>();
-            //fq.Add(first);
-            //fq.Add(two);
-            //return fq;
 
-            //This is the code that will be used to no longer hard code the data but currently not working
 
             ModeledResponse<FavoriteQuiz> result = await Client
                 .From<FavoriteQuiz>()
@@ -246,18 +240,23 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<long?> AddFavoriteQuiz(long quizId) {
         try {
-            FavoriteQuiz f = new FavoriteQuiz();
-            f.QuizId = quizId;
-            f.UserId = UserId;
-            f.CreatedAt = DateTime.Now;
+            FavoriteQuiz f = new FavoriteQuiz {
+                QuizId = quizId,
+                UserId = UserId,
+                CreatedAt = DateTime.Now
+            };
+
             var result = await Client
                 .From<FavoriteQuiz>()
                 .Insert(f);
+
 
             if (result == null || result.Model == null) {
                 return null;
             }
 
+            var newQuiz = await GetQuizById(quizId);
+            userInfo.FavoriteQuizzes.Add(newQuiz);
             return result.Model.QuizId;
         } catch (Exception e) {
             Console.Write("ERRORRRRR" + e);
@@ -274,6 +273,12 @@ public class SupabaseDatabase : IDatabase {
         } catch (Exception e) {
             Console.Write("ERRORRRRR" + e);
             return false;
+        }
+
+        ObservableCollection<Quiz> favQuizzess = await GetFavoriteQuizzes();
+        userInfo.FavoriteQuizzes.Clear();
+        foreach (Quiz quiz in favQuizzess) {
+            userInfo.FavoriteQuizzes.Add(quiz);
         }
         return true;
     }

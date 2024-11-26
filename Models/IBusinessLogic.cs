@@ -81,6 +81,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// Returns an Observable Collection of all the quizzes the user has created
     /// </returns>
     Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userId);
+    Task<ObservableCollection<Quiz>?> GetAllQuizzes();
 
     /// <summary>
     /// Adds a favorite quiz to the questions table 
@@ -99,6 +100,4 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// Returns whether or not the favorite quiz was successfully deleted
     /// </returns>
     Task<bool> DeleteFavoriteQuiz(long quizId);
-
-    Task<ObservableCollection<Quiz>?> GetAllQuizzes();
 }   
