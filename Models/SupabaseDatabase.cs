@@ -9,6 +9,8 @@ using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Responses;
 using CommunityToolkit.Maui.Core.Extensions;
+using Supabase.Realtime.PostgresChanges;
+using Supabase.Realtime.Interfaces;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -207,10 +209,40 @@ public class SupabaseDatabase : IDatabase {
             return null;
         }
     }
+
+    #region Active Quizzes
+    public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
+        try {
+            var result = await Client
+            .From<ActiveQuiz>()
+            .Where(q => q.AccessCode == accessCode)
+            .Get();
+
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+        }
+        return null;
+    }
+
+    public async Task SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
+        throw new NotImplementedException();
+    }
+
+    public async Task SubmitFillBlankQuestionAnswer(ActiveQuestion question, string response) {
+        throw new NotImplementedException();
+    }
+
+    public async Task JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
+        var realtime = await Client.Realtime.ConnectAsync();
+        //realtime.Channel("active_question-" + quiz.Id).AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates, OnReceiveActiveQuestion, );
+    }
+
+
+
+    #endregion 
     #endregion
 
     #region Favorite Quizzes
-
     public async Task<ObservableCollection<Quiz>> GetFavoriteQuizzes() {
         try {
 
@@ -283,25 +315,4 @@ public class SupabaseDatabase : IDatabase {
     }
     #endregion
 
-    #region Active Quizzes
-
-    public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
-        try {
-            var result = await Client
-            .From<ActiveQuiz>()
-            .Where(q => q.AccessCode == accessCode)
-            .Get();
-
-            return result.Models[0];
-
-        } catch (Exception e) {
-            Console.WriteLine("Error: " + e.Message);
-            return null;
-        }
-    }
-
-    
-
-
-    #endregion 
 }
