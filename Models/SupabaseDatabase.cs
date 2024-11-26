@@ -207,9 +207,6 @@ public class SupabaseDatabase : IDatabase {
             return null;
         }
     }
-
-        try {
-            var result = await Client
     #endregion
 
     #region Favorite Quizzes
@@ -288,17 +285,23 @@ public class SupabaseDatabase : IDatabase {
 
     #region Active Quizzes
 
-    public async Task<ActiveQuiz> GetActiveQuiz(string accessCode) {
+    public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
         try {
             var result = await Client
             .From<ActiveQuiz>()
             .Where(q => q.AccessCode == accessCode)
             .Get();
 
+            return result.Models[0];
+
         } catch (Exception e) {
             Console.WriteLine("Error: " + e.Message);
+            return null;
         }
     }
+
+    
+
 
     #endregion 
 }

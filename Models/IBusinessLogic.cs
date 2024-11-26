@@ -106,7 +106,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// </summary>
     /// <param name="accessCode">The code of the quiz</param>
     /// <returns></returns>
-    Task<ActiveQuiz> GetActiveQuiz(string accessCode);
+    Task<ActiveQuiz?> GetActiveQuiz(string accessCode);
 
     /// <summary>
     /// Submits a multiple choice question with its choice.
