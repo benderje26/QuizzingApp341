@@ -85,12 +85,6 @@ public interface IDatabase {
     UserInfo? GetUserInfo();
 
     /// <summary>
-    /// Gets the favorited quizzess for the user
-    /// </summary>
-    /// <returns>The user's favorited quizess</returns>
-    Task<ObservableCollection<Quiz>> GetFavoriteQuizzess();
-
-    /// <summary>
     /// Adds a favorite quiz to the database.
     /// </summary>
     /// <param name="quizId"></param>

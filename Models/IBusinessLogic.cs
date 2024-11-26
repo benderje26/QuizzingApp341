@@ -5,8 +5,7 @@ public interface IBusinessLogic {
     /// <summary>
     /// Gets the info for the current user.
     /// </summary>
-    /// <returns>The current user's info, or null if there is no logged in user</returns>
-    UserInfo UserInfo();
+    UserInfo? UserInfo { get; }
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>

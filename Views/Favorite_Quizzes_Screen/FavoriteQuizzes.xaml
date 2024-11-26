@@ -101,23 +101,23 @@
         VerticalOptions="Start">
 
             <!--This line says that the ItemsSource of the CollectionView is the Airports property of the Domain object (an ObservableCollection)--> 
-                <CollectionView x:Name="CV" ItemsSource="{Binding FavoriteQuizzes}" SelectionMode="Single">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="model:Quiz">
-                             <!--Create CollectionView with 4 columns for City, Date, Rating, and Delete button--> 
-                            <Grid RowDefinitions="*" ColumnDefinitions="*">
-                                <Label Grid.Column="0" Text="{Binding Title}" VerticalTextAlignment="Center" FontSize="30"/>
-                            </Grid>
-                        </DataTemplate>
+            <CollectionView x:Name="CV" ItemsSource="{Binding UserInfo.FavoriteQuizzes}" SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Quiz">
+                            <!--Create CollectionView with 4 columns for City, Date, Rating, and Delete button--> 
+                        <Grid RowDefinitions="*" ColumnDefinitions="*">
+                            <Label Grid.Column="0" Text="{Binding Title}" VerticalTextAlignment="Center" FontSize="30"/>
+                        </Grid>
+                    </DataTemplate>
 
-                    </CollectionView.ItemTemplate>
+                </CollectionView.ItemTemplate>
 
-                </CollectionView>
-                 <!--Create Study Quiz Button--> 
-                <Button TextColor="White" Text="Study Quiz" Clicked="StudyQuiz_Clicked"/>
-                 <!--Create Remove Favorite Button--> 
-                <Button TextColor="White" Text="Remove Favorite" Clicked="RemoveFavorite_Clicked"/>
-            </VerticalStackLayout>
+            </CollectionView>
+                <!--Create Study Quiz Button--> 
+            <Button TextColor="White" Text="Study Quiz" Clicked="StudyQuiz_Clicked"/>
+                <!--Create Remove Favorite Button--> 
+            <Button TextColor="White" Text="Remove Favorite" Clicked="RemoveFavorite_Clicked"/>
+        </VerticalStackLayout>
 
     </StackLayout>
 </ContentPage>
