@@ -78,6 +78,6 @@ public interface IBusinessLogic {
     /// <returns>
     /// Returns an Observable Collection of all the quizzes the user has created
     /// </returns>
-    Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(string userID);
+    Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userID);
     Task<ObservableCollection<Quiz>?> GetAllQuizzes();
 }
