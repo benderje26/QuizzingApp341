@@ -145,8 +145,9 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
 
     public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
-        await database.GetActiveQuiz(accessCode);
-        return new ActiveQuiz();
+        ActiveQuiz activeQuiz = await database.GetActiveQuiz(accessCode);
+        activeQuiz.IsStudying = false; // Because with an accessCode, the user isn't studying on their own
+        return activeQuiz;
     }
 }
 

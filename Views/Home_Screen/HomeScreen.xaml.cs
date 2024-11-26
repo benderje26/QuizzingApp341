@@ -28,6 +28,8 @@ public partial class HomeScreen : ContentPage {
         // }
         //TODO
 
-        await MauiProgram.BusinessLogic.GetActiveQuiz(accessCode);
+        ActiveQuiz activeQuiz = await MauiProgram.BusinessLogic.GetActiveQuiz(accessCode);
+        
+
     }
 }
