@@ -17,6 +17,7 @@ using Supabase.Realtime.PostgresChanges;
 using Supabase.Realtime.Interfaces;
 using Supabase.Postgrest;
 using Newtonsoft.Json.Linq;
+using Constants = Supabase.Postgrest.Constants;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -325,17 +326,18 @@ public class SupabaseDatabase : IDatabase {
         try {
             // TODO update participants table that we participated!
             // TODO get current question if it exists
-            Client.Realtime.Channel("realtime", "public", "active_quizzes", null, "id=eq." + quiz.Id)
-                .AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates, async (channel, response) => {
-                    ActiveQuiz? quiz = response.Model<ActiveQuiz>();
-                    ActiveQuestion? question = quiz == null ? null : await GetCurrentActiveQuestion(quiz);
+            var channel = Client.Realtime.Channel("realtime", "public", "active_quizzes", null, "id=eq." + quiz.Id);
+            channel.AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates, async (channel, response) => {
+                ActiveQuiz? quiz = response.Model<ActiveQuiz>();
+                ActiveQuestion? question = quiz == null ? null : await GetCurrentActiveQuestion(quiz);
 
-                    if (question == null) {
-                        return;
-                    }
+                if (question == null) {
+                    return;
+                }
 
-                    handler(question);
-                });
+                handler(question);
+            });
+            await channel.Subscribe();
             return true;
         } catch (Exception) {
             return false;
@@ -343,11 +345,11 @@ public class SupabaseDatabase : IDatabase {
     }
 
     public async Task<ActiveQuestion?> GetCurrentActiveQuestion(ActiveQuiz quiz) {
+        long activeQuizId = quiz.Id ?? 0;
+        int questionNo = quiz.CurrentQuestionNo ?? -1;
         if (!quiz.IsActive ?? true || quiz.CurrentQuestionNo < 0) {
             return null;
         }
-        long activeQuizId = quiz.Id ?? 0;
-        int questionNo = quiz.CurrentQuestionNo;
         try {
             return await Client
                 .From<ActiveQuestion>()
@@ -360,15 +362,14 @@ public class SupabaseDatabase : IDatabase {
     }
     public async Task<bool> ValidateAccessCode(string accessCode) {
         try {
-            var result = await Client
+            int count = await Client
                 .From<ActiveQuiz>()
                 .Where(a => a.AccessCode == accessCode)
-                .Single();
+                .Where(a => a.IsActive == true)
+                .Limit(1)
+                .Count(Constants.CountType.Exact);
 
-            Console.WriteLine("****************************");
-            Console.WriteLine(result?.IsActive ?? false);
-
-            return result?.IsActive ?? false;
+            return count > 0;
         } catch (Exception e) {
             Console.WriteLine("Error: " + e.Message);
             return false;

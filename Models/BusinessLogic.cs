@@ -157,7 +157,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
                 return null;
             }
 
-            var quizList = activeQuizzes.Select(q => (q.QuizId, q.startTime)).ToList();
+            var quizList = activeQuizzes.Select(q => (q.QuizId, q.StartTime)).ToList();
 
             return quizList;
         } catch (Exception ex) {

@@ -20,14 +20,14 @@ namespace QuizzingApp341.Models;
         public bool? IsActive{get; set;}
 
         [Column("current_question_no")]
-        public int CurrentQuestionNo {get; set;}
+        public int? CurrentQuestionNo {get; set;}
 
         [Column("activator")]
         public Guid? Activator {get; set;}  
 
         [Column("start_time")]
-        public DateTime startTime {get; set;}
+        public DateTime StartTime {get; set;}
 
         [Column("end_time")]
-        public DateTime endTime {get; set;}
+        public DateTime EndTime {get; set;}
     }
