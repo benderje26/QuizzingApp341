@@ -14,7 +14,7 @@
                    TextChanged="OnSearchTextChanged" />
 
         <!-- Quizzes CollectionView -->
-        <CollectionView ItemsSource="{Binding Quizzes}" SelectionMode="None">
+        <CollectionView x:Name="CV" ItemsSource="{Binding Quizzes}" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame Padding="10"
@@ -42,14 +42,27 @@
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.StudyCommand}"
                                     CommandParameter="{Binding .}"
                                     />
-                            <Button Text="Favorite"
+                            <Button 
+                                    ImageSource="pink_heart.png"
                                     Grid.Column="2"
                                     BackgroundColor="DarkBlue"
-                                    TextColor="White"
-                                    FontAttributes="Bold"
                                     Padding="5"
+                                    WidthRequest="60"
+                                    HeightRequest="60"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.FavoriteCommand}"
-                                    CommandParameter="{Binding .}" />
+                                    CommandParameter="{Binding .}" 
+                                    IsVisible="{Binding Favorite}"/>
+
+                            <Button 
+                                    ImageSource="black_heart.png"
+                                    Grid.Column="2"
+                                    BackgroundColor="DarkBlue"
+                                    Padding="5"
+                                    WidthRequest="60"
+                                    HeightRequest="60"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.FavoriteCommand}"
+                                    CommandParameter="{Binding .}" 
+                                    IsVisible="{Binding NotFavorite}"/>            
                         </Grid>
                     </Frame>
                 </DataTemplate>
