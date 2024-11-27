@@ -282,6 +282,25 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    public async Task<bool> ValidateAccessCode(string accessCode) {
+        try {
+            var result = await Client
+                .From<ActiveQuiz>()
+                .Select(x => new object[] {x.IsActive})
+                .Where(a => a.AccessCode == accessCode)
+                .Get();
+
+            Console.WriteLine("****************************");
+            Console.WriteLine(result.Models[0].IsActive);
+
+            return result.Models[0].IsActive;
+
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+            return false;
+        }
+    }
+
     #endregion 
     #endregion
 

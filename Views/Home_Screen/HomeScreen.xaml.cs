@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Views;
 using QuizzingApp341.Models;
 
 namespace QuizzingApp341.Views;
@@ -11,25 +12,26 @@ public partial class HomeScreen : ContentPage {
         Navigation.PushAsync(new Search(MauiProgram.BusinessLogic));
     }
 
-    private async void OnStartClicked(object sender, EventArgs e)
-    {
+    private async void OnStartClicked(object sender, EventArgs e) {
         string accessCode = quizIdEntry.Text;
-
-        // if (await MauiProgram.BusinessLogic.GetQuiz(quizId) is Quiz quiz) {
-        //     MauiProgram.BusinessLogic.SetQuiz(quiz);
-        //     bool multipleChoice = MauiProgram.BusinessLogic.CurrentQuestion?.Type == Models.QuestionType.MultipleChoice;
-        //     if (multipleChoice) {
-        //         await Navigation.PushModalAsync(new MultipleChoice());
-        //     } else {
-        //         await Navigation.PushModalAsync(new FillBlank());
-        //     }
-        // } else {
-        //     await DisplayAlert("Invalid Quiz ID", "Please enter a valid Quiz ID.", "OK");
-        // }
         //TODO
 
-        ActiveQuiz activeQuiz = await MauiProgram.BusinessLogic.GetActiveQuiz(accessCode);
-        
+        // If the accessCode is a valid access code
+        bool valid = await MauiProgram.BusinessLogic.ValidateAccessCode(accessCode);
 
+        if (valid) {
+            // Display wait
+            this.ShowPopup(new WaitScreen());
+
+            // Join Quiz
+            ActiveQuiz activeQuiz = await MauiProgram.BusinessLogic.GetActiveQuiz(accessCode);
+            await MauiProgram.BusinessLogic.JoinActiveQuiz(activeQuiz, activeQuestion => {
+                // Pop off screen
+                
+                // Display current active question
+            });
+        } else {
+            DisplayAlert("Error", "Invalid access code.", "OK");
+        }
     }
 }
