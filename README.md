@@ -38,6 +38,8 @@ Peter S: I worked mainly on the favorites tab this sprint. User can add a favori
 
 Jeremiah: I worked on a few things, but the main one was updating the database. I used the notes that mainly Pachia made to make the tables and the RLS policies. I also fixed some log-in and log-out bugs, although there may still be some that I haven't seen yet. Pachia and I made the guest log in button. I also just fixed some bugs that had to do with Supabase and async functions.
 
+Jason: I worked on the History screen to display the quizzes by pass in userId to Participants and ActiveQuiz tables, if datas shown on both tables, return that data and display the data on the History screen by date from most recent to lastest. Thinks to Pachia for helping me understand why before I can't retrieve the data back from SupaBase, because I keep skip login. 
+
 Sprint 4 Tasks:
 
 Favorites tab ✅
