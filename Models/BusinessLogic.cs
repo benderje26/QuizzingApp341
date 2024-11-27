@@ -38,7 +38,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             _ => OTHER_ERROR_MESSAGE
         };
 
-        return (result, s); 
+        return (result, s);
     }
 
     public async Task<(LoginResult, string?)> Login(string emailAddress, string password) {
@@ -113,13 +113,59 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         if (result != null) {
             List<Quiz> quizzes = result;
             Console.WriteLine("**************************************************************************User Quizzes: **************************************************************************");
-           
+
             foreach (Quiz quiz in quizzes) {
-            Console.WriteLine(quiz.Title);
+                Console.WriteLine(quiz.Title);
             }
             return new ObservableCollection<Quiz>(quizzes);
         }
         return null;
+    }
+
+    // Get active quiz IDs for a user from participants table
+    //Fetch the active_quiz_ids for a user by querying the participants table.
+    public async Task<List<long?>?> GetActiveQuizIdsForUser() {
+        try {
+            var activeQuizIds = await database.GetActiveQuizIdsByUserId(); // Get from participants table
+
+            if (activeQuizIds == null || !activeQuizIds.Any()) {
+
+                return null;
+            }
+
+            return activeQuizIds;
+        } catch (Exception ex) {
+            Console.WriteLine($"Error in business logic: {ex.Message}");
+            return null;
+        }
+    }
+
+
+
+    // Get quiz IDs from active quiz IDs
+    //Fetch the quiz_id for each active_quiz_id.
+    public async Task<List<(long QuizId, DateTime StartTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long?> activeQuizIds) {
+        try {
+            Console.WriteLine($"Fetching quiz data for activeQuizIds: {string.Join(", ", activeQuizIds)}");
+
+            // Fetch the active quizzes based on the provided IDs
+            var activeQuizzes = await database.GetQuizIdsByActiveQuizIds(activeQuizIds);
+
+            // Check if there are no active quizzes
+            if (activeQuizzes == null || !activeQuizzes.Any()) {
+                Console.WriteLine("No active quizzes found.");
+                return null;
+            }
+
+            var quizList = activeQuizzes.Select(q => (q.QuizId, q.startTime)).ToList();
+
+            return quizList;
+        } catch (Exception ex) {
+            Console.WriteLine($"Error fetching active quizzes: {ex.Message}");
+            return null;
+        }
+    }
+
     }
 
     public async Task<ObservableCollection<Quiz>?> GetAllQuizzes() {
