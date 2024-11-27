@@ -358,6 +358,24 @@ public class SupabaseDatabase : IDatabase {
             return null;
         }
     }
+    public async Task<bool> ValidateAccessCode(string accessCode) {
+        try {
+            var result = await Client
+                .From<ActiveQuiz>()
+                .Select(x => new object[] {x.IsActive})
+                .Where(a => a.AccessCode == accessCode)
+                .Get();
+
+            Console.WriteLine("****************************");
+            Console.WriteLine(result.Models[0].IsActive);
+
+            return result.Models[0].IsActive;
+
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+            return false;
+        }
+    }
 
     #endregion
     #endregion
@@ -365,8 +383,6 @@ public class SupabaseDatabase : IDatabase {
     #region Favorite Quizzes
     public async Task<ObservableCollection<Quiz>> GetFavoriteQuizzes() {
         try {
-
-
             ModeledResponse<FavoriteQuiz> result = await Client
                 .From<FavoriteQuiz>()
                 .Where(q => q.UserId == UserId)

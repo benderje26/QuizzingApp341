@@ -1,7 +1,6 @@
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using QuizzingApp341.Models;
-using System.Windows;
 
 namespace QuizzingApp341;
 public static class MauiProgram {

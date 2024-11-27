@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace QuizzingApp341.Models;
 
@@ -133,4 +133,6 @@ public interface IDatabase {
     /// <param name="handler">The handler for when a new active question comes in</param>
     /// <returns></returns>
     Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
+
+    Task<bool> ValidateAccessCode(string accessCode);
 }
