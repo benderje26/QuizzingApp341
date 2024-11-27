@@ -8,7 +8,7 @@ namespace QuizzingApp341.Models;
 [Table ("active_quizzes")]
     public class ActiveQuiz : BaseModel {
         [PrimaryKey("id")]
-        public long Id {get; set;}
+        public long? Id {get; set;}
 
         [Column("quiz_id")]
         public long QuizId {get; set;}
@@ -17,13 +17,13 @@ namespace QuizzingApp341.Models;
         public string? AccessCode {get; set;}
 
         [Column("is_active")]
-        public bool IsActive{get; set;}
+        public bool? IsActive{get; set;}
 
         [Column("current_question_no")]
-        public int CurrentQuestionNum {get; set;}
+        public int? CurrentQuestionNum {get; set;}
 
         [Column("activator")]
-        public string? Activator {get; set;}
+        public Guid? Activator {get; set;}  
 
         [Column("start_time")]
         public DateTime startTime {get; set;}

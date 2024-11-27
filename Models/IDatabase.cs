@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 
 namespace QuizzingApp341.Models;
 
@@ -85,6 +85,11 @@ public interface IDatabase {
     /// <returns>The user's info, or null if there is no logged in user</returns>
     UserInfo? GetUserInfo();
 
+    Task<List<long?>> GetActiveQuizIdsByUserId();
+
+
+    Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long?> activeQuizIds);
+  
     /// <summary>
     /// Adds a favorite quiz to the database.
     /// </summary>
