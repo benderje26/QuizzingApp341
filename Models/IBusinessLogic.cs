@@ -1,4 +1,4 @@
-namespace QuizzingApp341.Models;
+﻿namespace QuizzingApp341.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -92,7 +92,6 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <summary>
     /// Gets the active quiz IDs for a given user from participants tables
     /// </summary>
-    /// <param name="userId">The ID of the user</param>
     /// <returns>List of active quiz IDs</returns>
     Task<List<long?>?> GetActiveQuizIdsForUser();
 

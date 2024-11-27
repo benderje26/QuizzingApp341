@@ -1,18 +1,22 @@
 using QuizzingApp341.Models;
-
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Views;
 namespace QuizzingApp341.Views;
 
 /*
  * Name: Peter Skogman
  */
-public partial class MultipleChoice : ContentPage
-{
+public partial class MultipleChoice : Popup {
     int? selectedIndex;
+    public string QuestionText {get; set;}
+    public string[]? Options {get; set;}
 
-	public MultipleChoice()
-	{
-		InitializeComponent();
-        BindingContext = MauiProgram.BusinessLogic;
+    public MultipleChoice(ActiveQuestion activeQuestion) {
+        InitializeComponent();
+        QuestionText = activeQuestion.Question;
+        Options = activeQuestion.MultipleChoiceOptions;
+
+        BindingContext = this;
     }
 
     /*

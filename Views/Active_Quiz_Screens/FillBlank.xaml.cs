@@ -1,13 +1,16 @@
+using QuizzingApp341.Models;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Views;
 namespace QuizzingApp341.Views;
 
 /*
  * Name: Peter Skogman
  */
-public partial class FillBlank : ContentPage
-{
-	public FillBlank()
-	{
-		InitializeComponent();
+public partial class FillBlank : Popup {
+    public string QuestionText {get; set;}
+    public FillBlank(ActiveQuestion activeQuestion) {
+        QuestionText = activeQuestion.Question;
+        InitializeComponent();
         BindingContext = MauiProgram.BusinessLogic;
     }
 
@@ -28,7 +31,7 @@ public partial class FillBlank : ContentPage
         // }
 
         // TODO
-        
+
     }
 
 

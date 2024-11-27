@@ -21,14 +21,21 @@ public partial class HomeScreen : ContentPage {
 
         if (valid) {
             // Display wait
-            this.ShowPopup(new WaitScreen());
+            WaitScreen waitScreen = new WaitScreen();
+            this.ShowPopup(waitScreen);
 
             // Join Quiz
             ActiveQuiz activeQuiz = await MauiProgram.BusinessLogic.GetActiveQuiz(accessCode);
             await MauiProgram.BusinessLogic.JoinActiveQuiz(activeQuiz, activeQuestion => {
                 // Pop off screen
-                
-                // Display current active question
+                waitScreen.Close();
+
+                // Display current active question according to its question type
+                if(activeQuestion.QuestionType == QuestionType.MultipleChoice) {
+                    this.ShowPopup(new MultipleChoice(activeQuestion));
+                } else {
+                    this.ShowPopup(new FillBlank(activeQuestion));
+                }
             });
         } else {
             DisplayAlert("Error", "Invalid access code.", "OK");

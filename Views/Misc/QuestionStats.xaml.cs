@@ -17,6 +17,6 @@ public partial class QuestionStats : ContentPage
     private void OnNextQuestionClicked(object sender, EventArgs e)
     {
         // Navigate to Create account
-        Navigation.PushAsync(new FillBlank());
+        // Navigation.PushAsync(new FillBlank(new ActiveQuestion));
     }
 }

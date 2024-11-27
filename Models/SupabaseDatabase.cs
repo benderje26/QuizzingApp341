@@ -333,7 +333,7 @@ public class SupabaseDatabase : IDatabase {
                         Id = 5,
                         QuestionType = QuestionType.FillBlank,
                         Question = "Test test test",
-                        ActiveQuizId = quiz.Id,
+                        ActiveQuizId = (long)quiz.Id,
                         IsStudying = false,
                         QuestionNo = new Random().Next(5)
                     };
@@ -356,7 +356,7 @@ public class SupabaseDatabase : IDatabase {
             Console.WriteLine("****************************");
             Console.WriteLine(result.Models[0].IsActive);
 
-            return result.Models[0].IsActive;
+            return (bool)result.Models[0].IsActive;
 
         } catch (Exception e) {
             Console.WriteLine("Error: " + e.Message);
@@ -442,5 +442,4 @@ public class SupabaseDatabase : IDatabase {
     #endregion
 
 }
-#endregion
 

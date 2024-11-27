@@ -72,7 +72,7 @@ public interface IDatabase {
     /// <summary>
     /// Gets all the quizzes the current user has created from the quizzes table in the database.
     /// </summary>
-    /// <param name="userId"></param>
+    /// <param name="userID"></param>
     /// <returns>
     /// Returns a list of all the quizzes the user has created
     /// </returns>
