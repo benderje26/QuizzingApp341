@@ -16,6 +16,7 @@ using CommunityToolkit.Maui.Core.Extensions;
 using Supabase.Realtime.PostgresChanges;
 using Supabase.Realtime.Interfaces;
 using Supabase.Postgrest;
+using Newtonsoft.Json.Linq;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -215,6 +216,18 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    #region Active Quizzes
+    public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
+        try {
+            return await Client
+                .From<ActiveQuiz>()
+                .Where(q => q.AccessCode == accessCode)
+                .Single();
+        } catch (Exception) {
+            return null;
+        }
+    }
+
     // Get active_quiz_id by pass in user_id to participants table
     public async Task<List<long?>> GetActiveQuizIdsByUserId() {
         try {
@@ -255,8 +268,8 @@ public class SupabaseDatabase : IDatabase {
             }
             var result = await Client
                 .From<ActiveQuiz>()
-                .Where(x => x.Activator == UserId)  
-                .Filter(x => x.Id, Supabase.Postgrest.Constants.Operator.In, activeQuizIds)  
+                .Where(x => x.Activator == UserId)
+                .Filter(x => x.Id, Supabase.Postgrest.Constants.Operator.In, activeQuizIds)
                 .Get();
 
             Console.WriteLine($"Total records matching Activator == UserId: {result?.Models?.Count ?? 0}");
@@ -270,18 +283,6 @@ public class SupabaseDatabase : IDatabase {
             return result.Models;
         } catch (Exception ex) {
             Console.WriteLine($"Error fetching active quizzes: {ex.Message}");
-            return null;
-        }
-    }
-
-    #region Active Quizzes
-    public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
-        try {
-            return await Client
-                .From<ActiveQuiz>()
-                .Where(q => q.AccessCode == accessCode)
-                .Single();
-        } catch (Exception) {
             return null;
         }
     }
@@ -324,20 +325,16 @@ public class SupabaseDatabase : IDatabase {
         try {
             // TODO update participants table that we participated!
             // TODO get current question if it exists
-            Client.Realtime.Channel("active_question-" + quiz.Id)
-                .AddMessageReceivedHandler((channel, response) => {
-                    // TODO check if message REALLY came from quiz activator
+            Client.Realtime.Channel("realtime", "public", "active_quizzes", null, "id=eq." + quiz.Id)
+                .AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates, async (channel, response) => {
+                    ActiveQuiz? quiz = response.Model<ActiveQuiz>();
+                    ActiveQuestion? question = quiz == null ? null : await GetCurrentActiveQuestion(quiz);
 
-                    // TODO get actual data lol
-                    ActiveQuestion q = new() {
-                        Id = 5,
-                        QuestionType = QuestionType.FillBlank,
-                        Question = "Test test test",
-                        ActiveQuizId = (long)quiz.Id,
-                        IsStudying = false,
-                        QuestionNo = new Random().Next(5)
-                    };
-                    handler(q);
+                    if (question == null) {
+                        return;
+                    }
+
+                    handler(question);
                 });
             return true;
         } catch (Exception) {
@@ -345,33 +342,45 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    public async Task<ActiveQuestion?> GetCurrentActiveQuestion(ActiveQuiz quiz) {
+        if (!quiz.IsActive ?? true || quiz.CurrentQuestionNo < 0) {
+            return null;
+        }
+        long activeQuizId = quiz.Id ?? 0;
+        int questionNo = quiz.CurrentQuestionNo;
+        try {
+            return await Client
+                .From<ActiveQuestion>()
+                .Where(x => x.ActiveQuizId == activeQuizId)
+                .Where(x => x.QuestionNo == questionNo)
+                .Single();
+        } catch (Exception) {
+            return null;
+        }
+    }
     public async Task<bool> ValidateAccessCode(string accessCode) {
         try {
             var result = await Client
                 .From<ActiveQuiz>()
-                .Select(x => new object[] {x.IsActive})
                 .Where(a => a.AccessCode == accessCode)
-                .Get();
+                .Single();
 
             Console.WriteLine("****************************");
-            Console.WriteLine(result.Models[0].IsActive);
+            Console.WriteLine(result?.IsActive ?? false);
 
-            return (bool)result.Models[0].IsActive;
-
+            return result?.IsActive ?? false;
         } catch (Exception e) {
             Console.WriteLine("Error: " + e.Message);
             return false;
         }
     }
 
-    #endregion 
+    #endregion
     #endregion
 
     #region Favorite Quizzes
     public async Task<ObservableCollection<Quiz>> GetFavoriteQuizzes() {
         try {
-
-
             ModeledResponse<FavoriteQuiz> result = await Client
                 .From<FavoriteQuiz>()
                 .Where(q => q.UserId == UserId)
@@ -442,4 +451,3 @@ public class SupabaseDatabase : IDatabase {
     #endregion
 
 }
-

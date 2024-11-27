@@ -20,7 +20,7 @@ namespace QuizzingApp341.Models;
         public bool? IsActive{get; set;}
 
         [Column("current_question_no")]
-        public int? CurrentQuestionNum {get; set;}
+        public int CurrentQuestionNo {get; set;}
 
         [Column("activator")]
         public Guid? Activator {get; set;}  

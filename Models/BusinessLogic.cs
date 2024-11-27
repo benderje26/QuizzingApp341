@@ -202,6 +202,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return await database.ValidateAccessCode(accessCode);
     }
     #endregion
+    #endregion
 
     #region INotifyPropertyChanged Stuff
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -211,8 +212,6 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
     #endregion
 }
-#endregion
-
 
 partial class Regexes {
     // must be a@b.c where a, b, and c are alphanumeric/underscore/"." but a little more complex
