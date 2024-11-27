@@ -362,15 +362,13 @@ public class SupabaseDatabase : IDatabase {
         try {
             var result = await Client
                 .From<ActiveQuiz>()
-                .Select(x => new object[] {x.IsActive})
                 .Where(a => a.AccessCode == accessCode)
-                .Get();
+                .Single();
 
             Console.WriteLine("****************************");
-            Console.WriteLine(result.Models[0].IsActive);
+            Console.WriteLine(result?.IsActive ?? false);
 
-            return result.Models[0].IsActive;
-
+            return result?.IsActive ?? false;
         } catch (Exception e) {
             Console.WriteLine("Error: " + e.Message);
             return false;

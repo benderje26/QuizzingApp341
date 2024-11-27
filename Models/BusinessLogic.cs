@@ -202,6 +202,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return await database.ValidateAccessCode(accessCode);
     }
     #endregion
+    #endregion
 
     #region INotifyPropertyChanged Stuff
     public event PropertyChangedEventHandler? PropertyChanged;
