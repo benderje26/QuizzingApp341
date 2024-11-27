@@ -203,7 +203,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
 
     public async Task<bool> AddResponse(Response response) {
-        return database.AddResponse(response);
+        return await database.AddResponse(response);
     }
     #endregion
     #endregion
