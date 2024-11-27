@@ -166,8 +166,6 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         }
     }
 
-    }
-
     public async Task<ObservableCollection<Quiz>?> GetAllQuizzes() {
         var result = await database.GetAllQuizzesAsync();
         return result == null ? null : new ObservableCollection<Quiz>(result);

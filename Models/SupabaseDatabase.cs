@@ -16,6 +16,7 @@ using CommunityToolkit.Maui.Core.Extensions;
 using Supabase.Realtime.PostgresChanges;
 using Supabase.Realtime.Interfaces;
 using Supabase.Postgrest;
+using Newtonsoft.Json.Linq;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -324,20 +325,16 @@ public class SupabaseDatabase : IDatabase {
         try {
             // TODO update participants table that we participated!
             // TODO get current question if it exists
-            Client.Realtime.Channel("active_question-" + quiz.Id)
-                .AddMessageReceivedHandler((channel, response) => {
-                    // TODO check if message REALLY came from quiz activator
+            Client.Realtime.Channel("realtime", "public", "active_quizzes", null, "id=eq." + quiz.Id)
+                .AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates, async (channel, response) => {
+                    ActiveQuiz? quiz = response.Model<ActiveQuiz>();
+                    ActiveQuestion? question = quiz == null ? null : await GetCurrentActiveQuestion(quiz);
 
-                    // TODO get actual data lol
-                    ActiveQuestion q = new() {
-                        Id = 5,
-                        QuestionType = QuestionType.FillBlank,
-                        Question = "Test test test",
-                        ActiveQuizId = quiz.Id,
-                        IsStudying = false,
-                        QuestionNo = new Random().Next(5)
-                    };
-                    handler(q);
+                    if (question == null) {
+                        return;
+                    }
+
+                    handler(question);
                 });
             return true;
         } catch (Exception) {
@@ -345,7 +342,24 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    #endregion 
+    public async Task<ActiveQuestion?> GetCurrentActiveQuestion(ActiveQuiz quiz) {
+        if (!quiz.IsActive ?? true || quiz.CurrentQuestionNo < 0) {
+            return null;
+        }
+        long activeQuizId = quiz.Id ?? 0;
+        int questionNo = quiz.CurrentQuestionNo;
+        try {
+            return await Client
+                .From<ActiveQuestion>()
+                .Where(x => x.ActiveQuizId == activeQuizId)
+                .Where(x => x.QuestionNo == questionNo)
+                .Single();
+        } catch (Exception) {
+            return null;
+        }
+    }
+
+    #endregion
     #endregion
 
     #region Favorite Quizzes
@@ -423,5 +437,3 @@ public class SupabaseDatabase : IDatabase {
     #endregion
 
 }
-#endregion
-
