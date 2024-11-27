@@ -10,12 +10,21 @@ public partial class MultipleChoice : Popup {
     int? selectedIndex;
     public string QuestionText {get; set;}
     public string[]? Options {get; set;}
+    public bool UserIsActivator {get; set;}
+    public bool UserIsParticipant {get; set;}
 
-    public MultipleChoice(ActiveQuestion activeQuestion) {
+    public static int UserAnswer {get; set;}
+
+    private ActiveQuestion currentQuestion;
+
+    public MultipleChoice(ActiveQuestion activeQuestion, bool isUserActivator) {
         InitializeComponent();
         QuestionText = activeQuestion.Question;
         Options = activeQuestion.MultipleChoiceOptions;
-
+        UserIsActivator = isUserActivator;
+        UserIsParticipant = !UserIsActivator;
+        currentQuestion = activeQuestion;
+        UserAnswer = -1;
         BindingContext = this;
     }
 
@@ -80,10 +89,21 @@ public partial class MultipleChoice : Popup {
         if (e.Value) {
             RadioButton? rb = sender as RadioButton;
 
-            // if (rb?.BindingContext is IndexValuePair value) {
-            //     selectedIndex = value.Index;
-            // }
+            if (rb != null) {
+                //TODO get the index of the selected radio button and set it equal to UserAnswer
+            }
         }
+    }
+
+    private void OnAnswerSubmitClicked(object sender, EventArgs e) {
+        // Make a response
+        Response response = new Response();
+        response.ActiveQuizId = currentQuestion.ActiveQuizId;
+        response.QuestionNo = currentQuestion.QuestionNo;
+        response.MultipleChoiceResponse = [UserAnswer];
+
+        // Send response to db
+        MauiProgram.BusinessLogic.AddResponse(response);
     }
 
 }

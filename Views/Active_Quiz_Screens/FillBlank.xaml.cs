@@ -8,8 +8,12 @@ namespace QuizzingApp341.Views;
  */
 public partial class FillBlank : Popup {
     public string QuestionText {get; set;}
-    public FillBlank(ActiveQuestion activeQuestion) {
+    public bool UserIsActivator {get; set;}
+    public bool UserIsParticipant {get; set;}
+    public FillBlank(ActiveQuestion activeQuestion, bool isUserActivator) {
         QuestionText = activeQuestion.Question;
+        UserIsActivator = isUserActivator;
+        UserIsParticipant = !UserIsActivator;
         InitializeComponent();
         BindingContext = MauiProgram.BusinessLogic;
     }
@@ -32,6 +36,10 @@ public partial class FillBlank : Popup {
 
         // TODO
 
+    }
+
+    private void OnAnswerSubmitClicked(object sender, EventArgs e) {
+        
     }
 
 

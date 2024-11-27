@@ -14,7 +14,6 @@ public partial class HomeScreen : ContentPage {
 
     private async void OnStartClicked(object sender, EventArgs e) {
         string accessCode = quizIdEntry.Text;
-        //TODO
 
         // If the accessCode is a valid access code
         bool valid = await MauiProgram.BusinessLogic.ValidateAccessCode(accessCode);
@@ -32,9 +31,9 @@ public partial class HomeScreen : ContentPage {
 
                 // Display current active question according to its question type
                 if(activeQuestion.QuestionType == QuestionType.MultipleChoice) {
-                    this.ShowPopup(new MultipleChoice(activeQuestion));
+                    this.ShowPopup(new MultipleChoice(activeQuestion, false));
                 } else {
-                    this.ShowPopup(new FillBlank(activeQuestion));
+                    this.ShowPopup(new FillBlank(activeQuestion, false));
                 }
             });
         } else {
