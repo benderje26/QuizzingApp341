@@ -376,6 +376,23 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    public async Task<bool> AddResponse(Response response) {
+        // Correlate the response to the current user
+        response.UserId = UserId;
+
+        // Put it in db
+        try {
+            var result = await Client
+            .From<Response>()
+            .Upsert(response);
+
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+            return false;
+        }
+        return true;
+    }
+
     #endregion
     #endregion
 

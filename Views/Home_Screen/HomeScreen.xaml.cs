@@ -14,21 +14,27 @@ public partial class HomeScreen : ContentPage {
 
     private async void OnStartClicked(object sender, EventArgs e) {
         string accessCode = quizIdEntry.Text;
-        //TODO
 
         // If the accessCode is a valid access code
         bool valid = await MauiProgram.BusinessLogic.ValidateAccessCode(accessCode);
 
         if (valid) {
             // Display wait
-            this.ShowPopup(new WaitScreen());
+            WaitScreen waitScreen = new WaitScreen();
+            this.ShowPopup(waitScreen);
 
             // Join Quiz
             ActiveQuiz activeQuiz = await MauiProgram.BusinessLogic.GetActiveQuiz(accessCode);
             await MauiProgram.BusinessLogic.JoinActiveQuiz(activeQuiz, activeQuestion => {
                 // Pop off screen
-                
-                // Display current active question
+                waitScreen.Close();
+
+                // Display current active question according to its question type
+                if(activeQuestion.QuestionType == QuestionType.MultipleChoice) {
+                    this.ShowPopup(new MultipleChoice(activeQuestion, false));
+                } else {
+                    this.ShowPopup(new FillBlank(activeQuestion, false));
+                }
             });
         } else {
             DisplayAlert("Error", "Invalid access code.", "OK");

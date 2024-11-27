@@ -201,6 +201,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public async Task<bool> ValidateAccessCode(string accessCode) {
         return await database.ValidateAccessCode(accessCode);
     }
+
+    public async Task<bool> AddResponse(Response response) {
+        return await database.AddResponse(response);
+    }
     #endregion
     #endregion
 

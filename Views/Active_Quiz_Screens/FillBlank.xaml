@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:model="clr-namespace:QuizzingApp341.Models"
-             x:DataType="model:IBusinessLogic" 
-             x:Class="QuizzingApp341.Views.FillBlank"
-             Padding="7">
+<mct:Popup  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:model="clr-namespace:QuizzingApp341.Models"
+            xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+            xmlns:local="clr-namespace:QuizzingApp341.Views"
+            x:Class="QuizzingApp341.Views.FillBlank">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
@@ -17,17 +17,32 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <VerticalStackLayout Grid.Row="1" Grid.Column="1">
-            <Grid RowDefinitions="*,2*,*" ColumnDefinitions="*,*,*">
+        <VerticalStackLayout Grid.Row="1"
+                Grid.Column="1">
+            <Grid RowDefinitions="*,2*,*"
+                    ColumnDefinitions="*,*,*">
                 <!-- TODO  -->
-                <!-- <Label Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding CurrentQuestion.Text}" HorizontalOptions="Center" FontSize="32" Margin="0,40,0,0"/> -->
-                <Entry x:Name="textEntry" Grid.Row="1" Grid.ColumnSpan="3" Placeholder="Type Answer Here" WidthRequest="250" HorizontalOptions="Center" FontSize="24" Margin="0,30,0,0"/>
+                <Label Grid.Row="0"
+                        Grid.ColumnSpan="3"
+                        Text="{Binding QuestionText}"
+                        HorizontalOptions="Center"
+                        FontSize="32"
+                        Margin="0,40,0,0"/>
+                <Entry x:Name="textEntry"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="3"
+                        Placeholder="Type Answer Here"
+                        WidthRequest="250"
+                        HorizontalOptions="Center"
+                        FontSize="24"
+                        Margin="0,30,0,0"/>
                 <!-- TODO -->
+                <Button Grid.Row="2" Grid.Column="2" x:Name="answerSubmit" Text="Submit" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnAnswerSubmitClicked" IsVisible="{Binding UserIsParticipant}"/> 
                 <!-- <Button Grid.Row="2" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="16" Margin="0,30,5,0" Clicked="OnPreviousClicked" IsVisible="{Binding CurrentQuestion.NotFirst}"/> -->
-                <!-- <Button Grid.Row="2" Grid.Column="2" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="16" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding CurrentQuestion.NotFinal}"/> -->
-                <!-- <Button Grid.Row="2" Grid.Column="2" x:Name="submit" Text="Submit" MaximumWidthRequest="150" FontSize="16" Margin="5,30,0,0" Clicked="OnSubmitClicked" IsVisible="{Binding CurrentQuestion.Final}"/> -->
+                <Button Grid.Row="2" Grid.Column="2" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="16" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding UserIsActivator}"/>
+                <Button Grid.Row="2" Grid.Column="2" x:Name="submit" Text="Submit" MaximumWidthRequest="150" FontSize="16" Margin="5,30,0,0" Clicked="OnSubmitClicked" IsVisible="{Binding UserIsActivator}"/> <!-- TODO binding should be UserIsActivator && if its the last question..-->
             </Grid>
         </VerticalStackLayout>
 
     </Grid>
-</ContentPage>
+</mct:Popup>
