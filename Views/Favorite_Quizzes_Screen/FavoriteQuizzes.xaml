@@ -1,97 +1,35 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:QuizzingApp341.Models"
+             x:DataType="model:BusinessLogic" 
              x:Class="QuizzingApp341.Views.FavoriteQuizzes" 
              Padding="7">
 
     <StackLayout Padding="20" VerticalOptions="FillAndExpand">
 
-        <ScrollView VerticalOptions="FillAndExpand">
-            <StackLayout Padding="0,10">
-                <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                    <Label Text="Quiz Title 1" FontSize="18" VerticalOptions="Center" />
-                    <Button Text="study"
-                            FontSize="18"
-                            BackgroundColor="DarkBlue"
-                            TextColor="White"
-                            CornerRadius="5"
-                            HorizontalOptions="End"
-                            Clicked="StudyButtonClicked" />
-                </Grid>
+        <VerticalStackLayout
+        Padding="30,0"
+        Spacing="25"
+        VerticalOptions="Start">
 
-                <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                    <Label Text="Quiz Title 2" FontSize="18" VerticalOptions="Center" />
-                    <Button Text="study"
-                            FontSize="18"
-                            BackgroundColor="DarkBlue"
-                            TextColor="White"
-                            CornerRadius="5"
-                            HorizontalOptions="End"
-                            Clicked="StudyButtonClicked" />
-                </Grid>
-
-                <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                    <Label Text="Quiz Title 3" FontSize="18" VerticalOptions="Center" />
-                    <Button Text="study"
-                            FontSize="18"
-                            BackgroundColor="DarkBlue"
-                            TextColor="White"
-                            CornerRadius="5"
-                            HorizontalOptions="End"
-                            Clicked="StudyButtonClicked" />
-                </Grid>
-
-                <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                    <Label Text="Quiz Title 4" FontSize="18" VerticalOptions="Center" />
-                    <Button Text="study"
-                            FontSize="18"
-                            BackgroundColor="DarkBlue"
-                            TextColor="White"
-                            CornerRadius="5"
-                            HorizontalOptions="End"
-                            Clicked="StudyButtonClicked" />
-                </Grid>
-
-                <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                    <Label Text="Quiz Title 5" FontSize="18" VerticalOptions="Center" />
-                    <Button Text="study"
-                            FontSize="18"
-                            BackgroundColor="DarkBlue"
-                            TextColor="White"
-                            CornerRadius="5"
-                            HorizontalOptions="End"
-                            Clicked="StudyButtonClicked" />
-                </Grid>
-            </StackLayout>
-        </ScrollView>
-
-        <!-- CollectionView to display favorite quizzes dynamically 
-        <CollectionView x:Name="QuizzesCollectionView"
-                        ItemsSource="{Binding FavoriteQuizzes}"
-                        IsVisible="{Binding HasFavorites}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="model:Quizzes">
-                    <SwipeView>
-                        <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Delete"
-                                           BackgroundColor="Red" />
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-
-                        <Grid ColumnDefinitions="*, Auto" Padding="0, 10">
-                            <Label Text="{Binding Title}" FontSize="18" VerticalOptions="Center" />
-                            <Button Text="study"
-                                    FontSize="18"
-                                    BackgroundColor="DarkBlue"
-                                    TextColor="White"
-                                    CornerRadius="5"
-                                    HorizontalOptions="End"
-                                    Clicked="StudyButtonClicked" />
+            <!--This line says that the ItemsSource of the CollectionView is the Airports property of the Domain object (an ObservableCollection)--> 
+            <CollectionView x:Name="CV" ItemsSource="{Binding UserInfo.FavoriteQuizzes}" SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Quiz">
+                            <!--Create CollectionView with 4 columns for City, Date, Rating, and Delete button--> 
+                        <Grid RowDefinitions="*" ColumnDefinitions="*">
+                            <Label Grid.Column="0" Text="{Binding Title}" VerticalTextAlignment="Center" FontSize="30"/>
                         </Grid>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-        -->
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+                <!--Create Study Quiz Button--> 
+            <Button TextColor="White" Text="Study Quiz" Clicked="StudyQuiz_Clicked"/>
+                <!--Create Remove Favorite Button--> 
+            <Button TextColor="White" Text="Remove Favorite" Clicked="RemoveFavorite_Clicked"/>
+        </VerticalStackLayout>
+
     </StackLayout>
 </ContentPage>

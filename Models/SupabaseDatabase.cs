@@ -9,6 +9,10 @@ using System.Collections.ObjectModel;
 using QuizzingApp341.Views;
 using System.Linq;
 using System.Diagnostics;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
+using Supabase.Postgrest.Responses;
+using CommunityToolkit.Maui.Core.Extensions;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -41,20 +45,17 @@ public class SupabaseDatabase : IDatabase {
     }
     private User? _user;
 
-    private Guid UserId { get; set; } = Guid.Parse("4910bba5-28c7-4929-a24b-ac495235e7e4");
+    private Guid UserId { get; set; }
 
     private async Task GenerateUserInfo() {
-        if (User == null) {
-            userInfo = null;
-        }
-        UserInfo info = new(UserId) {
-            CreatedQuizzes = new ObservableCollection<Quiz>(await GetUserCreatedQuizzes(UserId) ?? [])
+        userInfo = new(UserId, User != null) {
+            CreatedQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetUserCreatedQuizzes(UserId)) ?? []),
+            FavoriteQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetFavoriteQuizzes()) ?? [])
         };
-        userInfo = info;
     }
 
     public async Task SkipLogin() {
-        await GenerateUserInfo(); // TODO DELETE THIS METHOD WHEN LOGIN WORKS
+        await SetSession(null);
     }
 
     public UserInfo? GetUserInfo() {
@@ -105,7 +106,7 @@ public class SupabaseDatabase : IDatabase {
         }
         try {
             await Client.Auth.SignOut();
-            await SetUser(null);
+            await SetSession(null);
             return LogoutResult.Success;
         } catch (Exception) {
             return LogoutResult.NetworkError;
@@ -114,8 +115,17 @@ public class SupabaseDatabase : IDatabase {
 
     #endregion
 
+    #region Quizzes 
 
-    #region Quizzes
+    public async Task<List<Quiz>?> GetAllQuizzesAsync() {
+        try {
+            var result = await Client.From<Quiz>().Get();
+            return result?.Models;
+        } catch {
+            return null;
+        }
+    }
+
     public async Task<Quiz?> GetQuizById(long id) {
         try {
             Quiz? quiz = await Client
@@ -136,8 +146,9 @@ public class SupabaseDatabase : IDatabase {
         try {
             var result = await Client
                 .From<Question>()
-                .Where(q => q.Id == id).Get();
-
+                .Where(q => q.QuizId == id)
+                .Get();
+                
             if (result == null) {
                 return null;
             }
@@ -201,7 +212,6 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-
     // Get active_quiz_id by pass in user_id to participants table
     public async Task<List<long?>> GetActiveQuizIdsByUserId() {
         try {
@@ -257,13 +267,82 @@ public class SupabaseDatabase : IDatabase {
             return result.Models;
         } catch (Exception ex) {
             Console.WriteLine($"Error fetching active quizzes: {ex.Message}");
+    #endregion
+
+    #region Favorite Quizzes
+
+    public async Task<ObservableCollection<Quiz>> GetFavoriteQuizzes() {
+        try {
+
+
+            ModeledResponse<FavoriteQuiz> result = await Client
+                .From<FavoriteQuiz>()
+                .Where(q => q.UserId == UserId)
+                .Get();
+
+            List<FavoriteQuiz> favQuizzes = result.Models;
+            ObservableCollection<Quiz> quizzes = [];
+
+            foreach (FavoriteQuiz favQuiz in favQuizzes) {
+                Quiz? q = await GetQuizById(favQuiz.QuizId);
+                if (q != null) {
+                    quizzes.Add(q);
+                }
+            }
+
+            return quizzes;
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
+            return [];
+        }
+    }
+
+    public async Task<long?> AddFavoriteQuiz(long quizId) {
+        try {
+            FavoriteQuiz f = new FavoriteQuiz {
+                QuizId = quizId,
+                UserId = UserId,
+                CreatedAt = DateTime.Now
+            };
+
+            var result = await Client
+                .From<FavoriteQuiz>()
+                .Insert(f);
+
+
+            if (result == null || result.Model == null) {
+                return null;
+            }
+
+            var newQuiz = await GetQuizById(quizId);
+            userInfo.FavoriteQuizzes.Add(newQuiz);
+            return result.Model.QuizId;
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
+
             return null;
         }
     }
 
+    public async Task<bool> DeleteFavoriteQuiz(long quizId) {
+        try {
+            await Client
+            .From<FavoriteQuiz>()
+            .Where(q => q.QuizId == quizId)
+            .Delete();
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
+            return false;
+        }
+
+        ObservableCollection<Quiz> favQuizzess = await GetFavoriteQuizzes();
+        userInfo.FavoriteQuizzes.Clear();
+        foreach (Quiz quiz in favQuizzess) {
+            userInfo.FavoriteQuizzes.Add(quiz);
+        }
+        return true;
+    }
+    #endregion
 }
-
-
-
 #endregion
 

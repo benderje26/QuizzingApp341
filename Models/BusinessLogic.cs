@@ -1,18 +1,18 @@
+using Supabase.Gotrue;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
+  
     #region User and Auth
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
     private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
 
-    private UserInfo? userInfo;
-
-    public UserInfo? UserInfo() {
-        return database.GetUserInfo();
-    }
+    public UserInfo? UserInfo => database.GetUserInfo();
 
     public async Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password) {
         if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
@@ -26,6 +26,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         }
 
         AccountCreationResult result = await database.CreateNewUser(emailAddress, username, password);
+
+        NotifyPropertyChanged(nameof(UserInfo));
 
         string? s = result switch {
             AccountCreationResult.Success => null,
@@ -42,6 +44,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public async Task<(LoginResult, string?)> Login(string emailAddress, string password) {
         LoginResult result = await database.Login(emailAddress, password);
 
+        NotifyPropertyChanged(nameof(UserInfo));
+
         string? s = result switch {
             LoginResult.Success => null,
             LoginResult.BadCredentials => "The username or password are incorrect.",
@@ -56,10 +60,14 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     // TODO DELETE THIS WHEN LOGIN WORKS
     public async Task SkipLogin() {
         await database.SkipLogin();
+
+        NotifyPropertyChanged(nameof(UserInfo));
     }
 
     public async Task<(LogoutResult, string?)> Logout() {
         LogoutResult result = await database.Logout();
+
+        NotifyPropertyChanged(nameof(UserInfo));
 
         string? s = result switch {
             LogoutResult.Success => null,
@@ -82,7 +90,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var result = await database.GetQuestions(id);
         if (result != null) {
             List<Question> questions = result;
-            return new ObservableCollection<Question>(questions);
+            return new ObservableCollection<Question>(questions.OrderBy(q => q.QuestionNum));
         }
         return null;
     }
@@ -158,7 +166,29 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         }
     }
 
+    }
 
+    public async Task<ObservableCollection<Quiz>?> GetAllQuizzes() {
+        var result = await database.GetAllQuizzesAsync();
+        return result == null ? null : new ObservableCollection<Quiz>(result);
+    }
+
+    public async Task<long?> AddFavoriteQuiz(long quizId) {
+        var result = await database.AddFavoriteQuiz(quizId);
+        return result;
+    }
+
+    public async Task<bool> DeleteFavoriteQuiz(long quizId) {
+        var result = await database.DeleteFavoriteQuiz(quizId);
+        return result;
+    }
+    #endregion
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }
 #endregion
 

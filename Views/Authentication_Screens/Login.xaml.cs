@@ -10,6 +10,7 @@ using QuizzingApp341.Models;
 public partial class Login : ContentPage {
     public Login() {
         InitializeComponent();
+        Shell.SetTabBarIsVisible(this, false);
     }
 
     private void OnCreateClicked(object sender, EventArgs e) {
@@ -30,8 +31,7 @@ public partial class Login : ContentPage {
         if (result == LoginResult.Success) {
             // Set variables for user ahead of time
             // Navigate to HomeScreen and make TabBar visible
-            await Shell.Current.GoToAsync("//HomeScreen");  //TODO: change HomeScreen to UserHome once UserHome got proved 
-            Shell.SetTabBarIsVisible(this, true);
+            await Shell.Current.GoToAsync("//HomeScreen", true);  //TODO: change HomeScreen to UserHome once UserHome got proved 
         } else {
             await DisplayAlert("Login Failed", errorMessage, "OK");
         }

@@ -8,9 +8,9 @@ public partial class HomeScreen : ContentPage {
     }
     private void OnSearchClicked(object sender, EventArgs e) {
         // Navigate to SearchResultsPage
-        Navigation.PushAsync(new Search());
+        Navigation.PushAsync(new Search(MauiProgram.BusinessLogic));
     }
-   
+
     private async void OnStartClicked(object sender, EventArgs e)
     {
         string quizId = quizIdEntry.Text;
@@ -26,6 +26,6 @@ public partial class HomeScreen : ContentPage {
         // } else {
         //     await DisplayAlert("Invalid Quiz ID", "Please enter a valid Quiz ID.", "OK");
         // }
-        // TODO
+        //TODO
     }
 }

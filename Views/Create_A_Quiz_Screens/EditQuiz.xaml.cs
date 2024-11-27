@@ -1,7 +1,7 @@
 namespace QuizzingApp341.Views;
 using QuizzingApp341.Models;
 using System.Collections.ObjectModel;
-public partial class EditQuiz {
+public partial class EditQuiz : ContentPage {
     public string QuizTitle {get; set;}
     public ObservableCollection<Question> Questions {get; set;}
 

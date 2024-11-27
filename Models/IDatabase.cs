@@ -1,7 +1,9 @@
-﻿namespace QuizzingApp341.Models;
+using System.Collections.ObjectModel;
+
+namespace QuizzingApp341.Models;
 
 public interface IDatabase {
-    Task SkipLogin(); // TODO DELETE THIS WHEN LOGIN WORKS
+    Task SkipLogin();
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>
@@ -73,7 +75,8 @@ public interface IDatabase {
     /// <returns>
     /// Returns a list of all the quizzes the user has created
     /// </returns>
-    Task<List<Quiz>?> GetUserCreatedQuizzes(Guid? userId);
+    Task<List<Quiz>?> GetUserCreatedQuizzes(Guid? userID);
+    Task<List<Quiz>?> GetAllQuizzesAsync();
 
     /// <summary>
     /// Gets the user's info for the currently logged in user. This should not request any data from the database,
@@ -86,4 +89,22 @@ public interface IDatabase {
 
 
     Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long?> activeQuizIds);
+  
+    /// <summary>
+    /// Adds a favorite quiz to the database.
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns the id to that favorite quiz after it gets added to the db otherwise null
+    /// </returns>
+    Task<long?> AddFavoriteQuiz(long quizId);
+
+    /// <summary>
+    /// Deletes a favorite quiz from the database.
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns whether the favorite quiz was successfully deleted
+    /// </returns>
+    Task<bool> DeleteFavoriteQuiz(long quizId);
 }

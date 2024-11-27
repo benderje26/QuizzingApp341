@@ -1,12 +1,14 @@
-﻿namespace QuizzingApp341.Models;
+namespace QuizzingApp341.Models;
 using System.Collections.ObjectModel;
-public interface IBusinessLogic {
-    Task SkipLogin(); // TODO DELETE THIS WHEN LOGIN WORKS
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+public interface IBusinessLogic : INotifyPropertyChanged {
+    Task SkipLogin();
     /// <summary>
     /// Gets the info for the current user.
     /// </summary>
-    /// <returns>The current user's info, or null if there is no logged in user</returns>
-    UserInfo UserInfo();
+    UserInfo? UserInfo { get; }
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>
@@ -94,4 +96,23 @@ public interface IBusinessLogic {
     /// <returns>List of active quiz IDs</returns>
     Task<List<long?>?> GetActiveQuizIdsForUser();
 
-}
+    Task<ObservableCollection<Quiz>?> GetAllQuizzes();
+
+    /// <summary>
+    /// Adds a favorite quiz to the questions table 
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns the id to that favorite quiz after it gets added to the db otherwise null
+    /// </returns>
+    Task<long?> AddFavoriteQuiz(long quizId);
+
+    /// <summary>
+    /// Deletes a favorite quiz from the questions table 
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns whether or not the favorite quiz was successfully deleted
+    /// </returns>
+    Task<bool> DeleteFavoriteQuiz(long quizId);
+}   
