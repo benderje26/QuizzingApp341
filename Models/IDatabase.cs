@@ -135,5 +135,4 @@ public interface IDatabase {
     Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
 
     Task<bool> ValidateAccessCode(string accessCode);
-    Task<bool> AddResponse(Response response);
 }

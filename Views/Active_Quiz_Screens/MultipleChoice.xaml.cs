@@ -1,31 +1,36 @@
 using QuizzingApp341.Models;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Views;
+using System.Net.NetworkInformation;
+using CommunityToolkit.Maui.Core.Extensions;
+using System.Collections.ObjectModel;
 namespace QuizzingApp341.Views;
 
 /*
  * Name: Peter Skogman
  */
-public partial class MultipleChoice : Popup {
-    int? selectedIndex;
+public partial class MultipleChoice : ContentPage {
     public string QuestionText {get; set;}
-    public string[]? Options {get; set;}
+    public ObservableCollection<IndexValuePair> Options {get; set;}
     public bool UserIsActivator {get; set;}
     public bool UserIsParticipant {get; set;}
+    public bool CanSubmit => SelectedIndex != null;
+    public int? SelectedIndex {get; set;}
+    public bool ShowSubmitAnswerButton => UserIsParticipant;
+    public bool ShowNextButton => UserIsActivator; // TODO also needs to not be final question
+    public bool ShowFinishButton => UserIsActivator; // TODO also needs to be final question
 
-    public static int UserAnswer {get; set;}
+    private readonly ActiveQuestion currentQuestion;
 
-    private ActiveQuestion currentQuestion;
-
-    public MultipleChoice(ActiveQuestion activeQuestion, bool isUserActivator) {
-        InitializeComponent();
-        QuestionText = activeQuestion.Question;
-        Options = activeQuestion.MultipleChoiceOptions;
+    public MultipleChoice(ActiveQuestion activeQuestion, bool isUserActivator, bool isUserParticipant) {
+        QuestionText = activeQuestion.Question ?? string.Empty;
+        Options = (activeQuestion.MultipleChoiceOptions ?? []).Select((x, ind) => new IndexValuePair(ind, x)).ToObservableCollection();
         UserIsActivator = isUserActivator;
-        UserIsParticipant = !UserIsActivator;
+        UserIsParticipant = isUserParticipant;
         currentQuestion = activeQuestion;
-        UserAnswer = -1;
+        SelectedIndex = null;
         BindingContext = this;
+        InitializeComponent();
     }
 
     /*
@@ -70,40 +75,27 @@ public partial class MultipleChoice : Popup {
         //TODO
     }
 
-    /*
-     * Submit button hit so close the quiz by going to the homescreen
-     */
-    private async void OnSubmitClicked(object sender, EventArgs e) {
-        // int? selected = selectedIndex;
-        // if (selected == null) {
-        //     return;
-        // }
-        // MauiProgram.BusinessLogic.SetCurrentMultipleChoiceAnswer(selected.Value);
-        // (int correct, int total) = MauiProgram.BusinessLogic.GetScore();
-        // await DisplayAlert("Quiz Over", "Congratulations! You got " + correct + " out of " + total + " correct", "OK");
-        // await Navigation.PushModalAsync(new HomeScreen());
-        // TODO
+    private void OnFinishClicked(object sender, EventArgs e) {
+        // Finish button hit so close the quiz by going to the homescreen
     }
 
     private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e) {
         if (e.Value) {
             RadioButton? rb = sender as RadioButton;
 
-            if (rb != null) {
-                //TODO get the index of the selected radio button and set it equal to UserAnswer
+            if (rb?.BindingContext is IndexValuePair value) {
+                SelectedIndex = value.Index;
             }
+
+            OnPropertyChanged(nameof(CanSubmit));
         }
     }
-
-    private void OnAnswerSubmitClicked(object sender, EventArgs e) {
-        // Make a response
-        Response response = new Response();
-        response.ActiveQuizId = currentQuestion.ActiveQuizId;
-        response.QuestionNo = currentQuestion.QuestionNo;
-        response.MultipleChoiceResponse = [UserAnswer];
-
-        // Send response to db
-        MauiProgram.BusinessLogic.AddResponse(response);
+    
+    private async void OnSubmitAnswerClicked(object sender, EventArgs e) {
+        if (SelectedIndex == null) {
+            return;
+        }
+        bool success = await MauiProgram.BusinessLogic.GiveMultipleChoiceQuestionAnswer(currentQuestion, SelectedIndex ?? 0);
+        await UserInterfaceUtil.ProcessResponseResult(success, this);
     }
-
 }

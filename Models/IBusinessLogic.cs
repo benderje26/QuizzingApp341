@@ -154,8 +154,6 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// True if the access code is valid otherwise false
     /// </returns>
     Task<bool> ValidateAccessCode(string accessCode);
-
-    Task<bool> AddResponse(Response response);
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);

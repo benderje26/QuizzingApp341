@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-           xmlns:model="clr-namespace:QuizzingApp341.Models"
-           xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
-           xmlns:local="clr-namespace:QuizzingApp341.Views"
-           x:Class="QuizzingApp341.Views.WaitScreen">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:QuizzingApp341.Models"
+             xmlns:local="clr-namespace:QuizzingApp341.Views"
+             x:DataType="local:WaitScreen"
+             x:Class="QuizzingApp341.Views.WaitScreen">
 
     <Grid
-        WidthRequest="{Binding ScreenWidth}"
-        HeightRequest="{Binding ScreenHeight}"
         VerticalOptions="FillAndExpand"
         HorizontalOptions="FillAndExpand"
-        BackgroundColor="Transparent"> <!-- Optional for debugging layout -->
-        
-        <!-- Centering the Label -->
-        <Label 
-            Text="Please Wait..."
-            VerticalOptions="Center"
-            HorizontalOptions="Center"
+        BackgroundColor="#EEE"
+        ColumnDefinitions="*"
+        RowDefinitions="*">
+
+        <Label
+            Grid.Row="0"
+            Grid.Column="0"
+            Text="{Binding Text}"
+            HorizontalTextAlignment="Center"
+            VerticalTextAlignment="Center"
             FontSize="18"
-            TextColor="Black" /> <!-- Customize as needed -->
+            TextColor="Black" />
     </Grid>
-</mct:Popup>
+</ContentPage>

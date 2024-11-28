@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<mct:Popup  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            xmlns:model="clr-namespace:QuizzingApp341.Models"
-            xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
-            xmlns:local="clr-namespace:QuizzingApp341.Views"
-            x:Class="QuizzingApp341.Views.FillBlank">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:QuizzingApp341.Models"
+             xmlns:local="clr-namespace:QuizzingApp341.Views"
+             x:DataType="local:FillBlank"
+             x:Class="QuizzingApp341.Views.FillBlank">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
@@ -36,13 +36,13 @@
                         HorizontalOptions="Center"
                         FontSize="24"
                         Margin="0,30,0,0"/>
-                <!-- TODO -->
-                <Button Grid.Row="2" Grid.Column="2" x:Name="answerSubmit" Text="Submit" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnAnswerSubmitClicked" IsVisible="{Binding UserIsParticipant}"/> 
-                <!-- <Button Grid.Row="2" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="16" Margin="0,30,5,0" Clicked="OnPreviousClicked" IsVisible="{Binding CurrentQuestion.NotFirst}"/> -->
-                <Button Grid.Row="2" Grid.Column="2" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="16" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding UserIsActivator}"/>
-                <Button Grid.Row="2" Grid.Column="2" x:Name="submit" Text="Submit" MaximumWidthRequest="150" FontSize="16" Margin="5,30,0,0" Clicked="OnSubmitClicked" IsVisible="{Binding UserIsActivator}"/> <!-- TODO binding should be UserIsActivator && if its the last question..-->
+                <!-- TODO talk about if we should include previous button for activator -->
+                <!-- <Button Grid.Row="2" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnPreviousClicked" IsVisible="{Binding CurrentQuestion.NotFirst}"/> -->
+                <Button Grid.Row="2" Grid.Column="1" Text="Submit Answer" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnSubmitAnswerClicked" IsVisible="{Binding ShowSubmitAnswerButton}" IsEnabled="{Binding CanSubmit}"/>
+                <Button Grid.Row="2" Grid.Column="2" Text="Next" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding ShowNextButton}"/>
+                <Button Grid.Row="2" Grid.Column="2" Text="Finish" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnFinishClicked" IsVisible="{Binding ShowFinishButton}"/>
             </Grid>
         </VerticalStackLayout>
 
     </Grid>
-</mct:Popup>
+</ContentPage>

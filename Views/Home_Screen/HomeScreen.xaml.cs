@@ -19,25 +19,32 @@ public partial class HomeScreen : ContentPage {
         bool valid = await MauiProgram.BusinessLogic.ValidateAccessCode(accessCode);
 
         if (valid) {
+            ActiveQuiz? activeQuiz = await MauiProgram.BusinessLogic.GetActiveQuiz(accessCode);
+
+            if (activeQuiz == null) {
+                await DisplayAlert("Error", "Something went wrong, try again.", "OK");
+                return;
+            }
+            WaitScreen blankScreen = new(string.Empty);
+            await Navigation.PushAsync(blankScreen, false);
             // Display wait
-            WaitScreen waitScreen = new WaitScreen();
-            this.ShowPopup(waitScreen);
+            WaitScreen waitScreen = new("Waiting for quiz to be started...");
+            await Navigation.PushAsync(waitScreen, false);
 
             // Join Quiz
-            ActiveQuiz activeQuiz = await MauiProgram.BusinessLogic.GetActiveQuiz(accessCode);
-            await MauiProgram.BusinessLogic.JoinActiveQuiz(activeQuiz, activeQuestion => {
+            await MauiProgram.BusinessLogic.JoinActiveQuiz(activeQuiz, async activeQuestion => {
                 // Pop off screen
-                waitScreen.Close();
+                await MainThread.InvokeOnMainThreadAsync(async () => await Navigation.PopAsync(false));
 
                 // Display current active question according to its question type
-                if(activeQuestion.QuestionType == QuestionType.MultipleChoice) {
-                    this.ShowPopup(new MultipleChoice(activeQuestion, false));
+                if (activeQuestion.QuestionType == QuestionType.MultipleChoice) {
+                    await MainThread.InvokeOnMainThreadAsync(async () => await Navigation.PushAsync(new MultipleChoice(activeQuestion, false, true), false));
                 } else {
-                    this.ShowPopup(new FillBlank(activeQuestion, false));
+                    await MainThread.InvokeOnMainThreadAsync(async () => await Navigation.PushAsync(new FillBlank(activeQuestion, false, true), false));
                 }
             });
         } else {
-            DisplayAlert("Error", "Invalid access code.", "OK");
+            await DisplayAlert("Error", "Invalid access code.", "OK");
         }
     }
 }

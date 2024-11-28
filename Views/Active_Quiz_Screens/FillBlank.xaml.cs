@@ -6,16 +6,22 @@ namespace QuizzingApp341.Views;
 /*
  * Name: Peter Skogman
  */
-public partial class FillBlank : Popup {
+public partial class FillBlank : ContentPage {
     public string QuestionText {get; set;}
-    public bool UserIsActivator {get; set;}
-    public bool UserIsParticipant {get; set;}
-    public FillBlank(ActiveQuestion activeQuestion, bool isUserActivator) {
-        QuestionText = activeQuestion.Question;
+    public bool UserIsActivator { get; set; }
+    public bool UserIsParticipant { get; set; }
+    public bool CanSubmit => true;
+    public bool ShowSubmitAnswerButton => UserIsParticipant;
+    public bool ShowNextButton => UserIsActivator; // TODO also needs to not be final question
+    public bool ShowFinishButton => UserIsActivator; // TODO also needs to be final question
+    private readonly ActiveQuestion currentQuestion;
+    public FillBlank(ActiveQuestion activeQuestion, bool isUserActivator, bool isUserParticipant) {
+        QuestionText = activeQuestion.Question ?? string.Empty;
         UserIsActivator = isUserActivator;
         UserIsParticipant = !UserIsActivator;
+        currentQuestion = activeQuestion;
+        BindingContext = this;
         InitializeComponent();
-        BindingContext = MauiProgram.BusinessLogic;
     }
 
     /*
@@ -38,12 +44,6 @@ public partial class FillBlank : Popup {
 
     }
 
-    private void OnAnswerSubmitClicked(object sender, EventArgs e) {
-        
-    }
-
-
-
 
     /*
     * Previous button clicked so move to the previous question in the quiz 
@@ -64,15 +64,13 @@ public partial class FillBlank : Popup {
         // TODO
     }
 
-    /*
-     * Submit button hit so close the quiz by going to the homescreen
-     */
-    private async void OnSubmitClicked(object sender, EventArgs e) {
-        // string givenAnswer = textEntry.Text ?? string.Empty;
-        // MauiProgram.BusinessLogic.SetCurrentFillBlankAnswer(givenAnswer);
-        // (int correct, int total) = MauiProgram.BusinessLogic.GetScore();
-        // await DisplayAlert("Quiz Over", "Congratulations! You got " + correct + " out of " + total + " correct", "OK");
-        // Navigation.PushModalAsync(new HomeScreen());
-        // TODO
+    private void OnFinishClicked(object sender, EventArgs e) {
+        // Finish button hit so close the quiz by going to the homescreen
+    }
+
+    private async void OnSubmitAnswerClicked(object sender, EventArgs e) {
+        string answerGiven = textEntry.Text;
+        bool success = await MauiProgram.BusinessLogic.GiveFillBlankQuestionAnswer(currentQuestion, answerGiven);
+        await UserInterfaceUtil.ProcessResponseResult(success, this);
     }
 }

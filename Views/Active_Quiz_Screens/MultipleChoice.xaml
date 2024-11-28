@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<mct:Popup  xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:QuizzingApp341.Models"
              xmlns:local="clr-namespace:QuizzingApp341.Views"
-             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+             x:DataType="local:MultipleChoice"
              x:Class="QuizzingApp341.Views.MultipleChoice">
     <Grid>
         <Grid.RowDefinitions>
@@ -17,23 +17,23 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <VerticalStackLayout Grid.Row="1" Grid.Column="1">
-            <Grid RowDefinitions="*,2*,*" ColumnDefinitions="2*,*,2*">
+            <Grid RowDefinitions="*,2*,*" ColumnDefinitions="2*,2*,2*">
                 <Label Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding QuestionText}" HorizontalOptions="Center" FontSize="32" Margin="0,40,0,0"/>
                 <VerticalStackLayout Grid.Row="1" Grid.ColumnSpan="3">
                     <CollectionView x:Name="options" ItemsSource="{Binding Options}" >
                         <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <RadioButton GroupName="optionsButtons" Content="{Binding .}" FontSize="24" Margin="0,10,0,0" HorizontalOptions="FillAndExpand" CheckedChanged="OnRadioButtonCheckedChanged"/>
+                            <DataTemplate x:DataType="model:IndexValuePair">
+                                <RadioButton GroupName="optionsButtons" Content="{Binding Value}" FontSize="24" Margin="0,10,0,0" HorizontalOptions="FillAndExpand" CheckedChanged="OnRadioButtonCheckedChanged"/>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </VerticalStackLayout>
-                <!-- TODO -->
+                <!-- TODO talk about if we should include previous button for activator -->
                 <!-- <Button Grid.Row="2" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnPreviousClicked" IsVisible="{Binding CurrentQuestion.NotFirst}"/> -->
-                <Button Grid.Row="2" Grid.Column="2" x:Name="answerSubmit" Text="Submit" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnAnswerSubmitClicked" IsVisible="{Binding UserIsParticipant}"/> 
-                <Button Grid.Row="2" Grid.Column="2" x:Name="next" Text="Next" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding UserIsActivator}"/>
-                <Button Grid.Row="2" Grid.Column="2" x:Name="submit" Text="Submit" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnSubmitClicked" IsVisible="{Binding UserIsActivator}"/> <!-- TODO binding should be UserIsActivator && if its the last question..-->
+                <Button Grid.Row="2" Grid.Column="1" Text="Submit Answer" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnSubmitAnswerClicked" IsVisible="{Binding ShowSubmitAnswerButton}" IsEnabled="{Binding CanSubmit}"/> 
+                <Button Grid.Row="2" Grid.Column="2" Text="Next" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding ShowNextButton}"/>
+                <Button Grid.Row="2" Grid.Column="2" Text="Finish" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnFinishClicked" IsVisible="{Binding ShowFinishButton}"/>
             </Grid>
         </VerticalStackLayout>
     </Grid>
-</mct:Popup>
+</ContentPage>

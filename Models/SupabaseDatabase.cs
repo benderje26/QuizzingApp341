@@ -292,7 +292,7 @@ public class SupabaseDatabase : IDatabase {
         try {
             await Client
                 .From<Response>()
-                .Upsert(new Response() {
+                .Insert(new Response() {
                     ActiveQuizId = question.ActiveQuizId,
                     UserId = UserId,
                     QuestionNo = question.QuestionNo,
@@ -300,7 +300,7 @@ public class SupabaseDatabase : IDatabase {
                     FillBlankResponse = null
                 }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
             return true;
-        } catch (Exception) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -309,7 +309,7 @@ public class SupabaseDatabase : IDatabase {
         try {
             await Client
                 .From<Response>()
-                .Upsert(new Response() {
+                .Insert(new Response() {
                     ActiveQuizId = question.ActiveQuizId,
                     UserId = UserId,
                     QuestionNo = question.QuestionNo,
@@ -317,7 +317,7 @@ public class SupabaseDatabase : IDatabase {
                     FillBlankResponse = response
                 }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
             return true;
-        } catch (Exception) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -375,24 +375,6 @@ public class SupabaseDatabase : IDatabase {
             return false;
         }
     }
-
-    public async Task<bool> AddResponse(Response response) {
-        // Correlate the response to the current user
-        response.UserId = UserId;
-
-        // Put it in db
-        try {
-            var result = await Client
-            .From<Response>()
-            .Upsert(response);
-
-        } catch (Exception e) {
-            Console.WriteLine("Error: " + e.Message);
-            return false;
-        }
-        return true;
-    }
-
     #endregion
     #endregion
 
