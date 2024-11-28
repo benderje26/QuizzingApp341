@@ -21,8 +21,8 @@
                Margin="0,10">
                 <Editor 
                     x:Name="questionMultipleChoice"   
+                    Text ="{Binding QuestionText}"
                     Placeholder="Type your question here..."
-                    HorizontalOptions="FillAndExpand" 
                     HeightRequest="150"
                     FontSize="18"/>
             </Frame>
@@ -35,10 +35,10 @@
                Margin="0,20,0,5"/>
 
             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                <Entry x:Name="optionAEntry" Placeholder="Option A" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
-                <Entry x:Name="optionBEntry" Placeholder="Option B" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
-                <Entry x:Name="optionCEntry" Placeholder="Option C" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
-                <Entry x:Name="optionDEntry" Placeholder="Option D" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
+                <Entry x:Name="optionAEntry" Text="{Binding OptionA}" Placeholder="Option A" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
+                <Entry x:Name="optionBEntry" Text="{Binding OptionB}" Placeholder="Option B" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
+                <Entry x:Name="optionCEntry" Text="{Binding OptionC}" Placeholder="Option C" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
+                <Entry x:Name="optionDEntry" Text="{Binding OptionD}" Placeholder="Option D" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
             </StackLayout>
 
             <Label Text="Correct Answer:"
@@ -52,7 +52,8 @@
                 HorizontalOptions="Center"
                  x:Name="correctAnswerFromUser"
                 WidthRequest="300"
-                Margin="0,10">
+                Margin="0,10"
+                SelectedIndex="{Binding CorrectOption}">
                 <Picker.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
                         <x:String>Option A</x:String>

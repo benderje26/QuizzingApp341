@@ -30,6 +30,9 @@ namespace QuizzingApp341.Models {
 
         [Column("quiz_id")]
         public long QuizId {get; set;}
+
+        [Column("multiple_choice_correct_answers")]
+        public List<string>? MultipleChoiceAnswers { get; set; }
     }
 
     public enum QuestionType : short {

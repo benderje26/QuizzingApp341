@@ -1,10 +1,38 @@
+using QuizzingApp341.Models;
+
 namespace QuizzingApp341.Views;
 
 public partial class CreateFillBlank : ContentPage
 {
-	public CreateFillBlank()
+    public Question? FillBlankQuestionToChange {get; set;} // This is for editing a current question only if there is one to edit
+    public bool? QuestionPresent {get; set;} = false;
+    public bool? NoQuestionPresent {get; set;} = false;
+    public bool? AnswerPresent {get; set;} = false;
+
+    public string? Answers {get; set;}
+
+    public string? QuestionText {get; set;}
+	public CreateFillBlank(Question? question)
 	{
+        FillBlankQuestionToChange = question;
+
+        // If there is a question present to edit
+        if (FillBlankQuestionToChange != null) {
+            NoQuestionPresent = false;
+            QuestionPresent = true;
+            QuestionText = question?.QuestionText;
+
+            if (question?.acceptableAnswers != null) { // If there are any answers
+                Answers = string.Join(", ", question.acceptableAnswers);
+                AnswerPresent = true;
+            }
+
+        } else {
+            NoQuestionPresent = true;
+        }
+
 		InitializeComponent();
+        BindingContext = this;
 	}
 
 

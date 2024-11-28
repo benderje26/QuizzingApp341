@@ -1,4 +1,4 @@
-namespace QuizzingApp341.Models;
+﻿namespace QuizzingApp341.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -92,7 +92,6 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <summary>
     /// Gets the active quiz IDs for a given user from participants tables
     /// </summary>
-    /// <param name="userId">The ID of the user</param>
     /// <returns>List of active quiz IDs</returns>
     Task<List<long?>?> GetActiveQuizIdsForUser();
 
@@ -115,4 +114,46 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// Returns whether or not the favorite quiz was successfully deleted
     /// </returns>
     Task<bool> DeleteFavoriteQuiz(long quizId);
-}   
+
+    /// <summary>
+    /// Gets an active quiz based off of an access code.
+    /// </summary>
+    /// <param name="accessCode">The code of the quiz</param>
+    /// <returns></returns>
+    Task<ActiveQuiz?> GetActiveQuiz(string accessCode);
+
+    /// <summary>
+    /// Submits a multiple choice question with its choice.
+    /// </summary>
+    /// <param name="question">The question you are submitting to</param>
+    /// <param name="choice">The index of the choice the student selected</param>
+    /// <returns></returns>
+    Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice);
+
+    /// <summary>
+    /// Submits a fill blank question with its answer.
+    /// </summary>
+    /// <param name="question">The question you are submitting to</param>
+    /// <param name="response">The answer the student typed</param>
+    /// <returns></returns>
+    Task<bool> GiveFillBlankQuestionAnswer(ActiveQuestion question, string response);
+
+    /// <summary>
+    /// Joins an active quiz, awaiting active questions to come in.
+    /// </summary>
+    /// <param name="quiz">The quiz the student is joining</param>
+    /// <param name="handler">The handler for when a new active question comes in</param>
+    /// <returns></returns>
+    Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
+
+    /// <summary>
+    /// This makes sure that an access code given by the user is a valid access code by checking the db
+    /// </summary>
+    /// <param name="accessCode"></param>
+    /// <returns>
+    /// True if the access code is valid otherwise false
+    /// </returns>
+    Task<bool> ValidateAccessCode(string accessCode);
+}
+
+public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);

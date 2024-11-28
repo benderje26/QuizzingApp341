@@ -157,15 +157,13 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
                 return null;
             }
 
-            var quizList = activeQuizzes.Select(q => (q.QuizId, q.startTime)).ToList();
+            var quizList = activeQuizzes.Select(q => (q.QuizId, q.StartTime)).ToList();
 
             return quizList;
         } catch (Exception ex) {
             Console.WriteLine($"Error fetching active quizzes: {ex.Message}");
             return null;
         }
-    }
-
     }
 
     public async Task<ObservableCollection<Quiz>?> GetAllQuizzes() {
@@ -182,16 +180,38 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var result = await database.DeleteFavoriteQuiz(quizId);
         return result;
     }
+
+    #region Active Quizzes
+    public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
+        return await database.GetActiveQuiz(accessCode);
+    }
+
+    public async Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
+        return await database.SubmitMultipleChoiceQuestionAnswer(question, choice);
+    }
+
+    public async Task<bool> GiveFillBlankQuestionAnswer(ActiveQuestion question, string response) {
+        return await database.SubmitFillBlankQuestionAnswer(question, response);
+    }
+
+    public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
+        return await database.JoinActiveQuiz(quiz, handler);
+    }
+
+    public async Task<bool> ValidateAccessCode(string accessCode) {
+        return await database.ValidateAccessCode(accessCode);
+    }
+    #endregion
     #endregion
 
+    #region INotifyPropertyChanged Stuff
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+    #endregion
 }
-#endregion
-
 
 partial class Regexes {
     // must be a@b.c where a, b, and c are alphanumeric/underscore/"." but a little more complex

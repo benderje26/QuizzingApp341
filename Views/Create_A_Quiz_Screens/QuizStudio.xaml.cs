@@ -6,10 +6,12 @@ using System.Windows.Input;
 public partial class QuizStudio : ContentPage {
     public ICommand EditQuizCommand {get; set;}
     public ObservableCollection<Quiz> CreatedQuizzes {get; set;}
+    Guid? userID {get; set;}
     public QuizStudio() {
         InitializeComponent();
         CreatedQuizzes = MauiProgram.BusinessLogic.UserInfo?.CreatedQuizzes ?? [];
         EditQuizCommand = new Command<Quiz>(EditQuiz);
+        userID = MauiProgram.BusinessLogic.UserInfo?.Id;
         BindingContext = this;
     }
 

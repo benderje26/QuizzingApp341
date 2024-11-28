@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Views;
 using QuizzingApp341.Models;
 
 namespace QuizzingApp341.Views;
@@ -11,21 +12,39 @@ public partial class HomeScreen : ContentPage {
         Navigation.PushAsync(new Search(MauiProgram.BusinessLogic));
     }
 
-    private async void OnStartClicked(object sender, EventArgs e)
-    {
-        string quizId = quizIdEntry.Text;
+    private async void OnStartClicked(object sender, EventArgs e) {
+        string accessCode = quizIdEntry.Text;
 
-        // if (await MauiProgram.BusinessLogic.GetQuiz(quizId) is Quiz quiz) {
-        //     MauiProgram.BusinessLogic.SetQuiz(quiz);
-        //     bool multipleChoice = MauiProgram.BusinessLogic.CurrentQuestion?.Type == Models.QuestionType.MultipleChoice;
-        //     if (multipleChoice) {
-        //         await Navigation.PushModalAsync(new MultipleChoice());
-        //     } else {
-        //         await Navigation.PushModalAsync(new FillBlank());
-        //     }
-        // } else {
-        //     await DisplayAlert("Invalid Quiz ID", "Please enter a valid Quiz ID.", "OK");
-        // }
-        //TODO
+        // If the accessCode is a valid access code
+        bool valid = await MauiProgram.BusinessLogic.ValidateAccessCode(accessCode);
+
+        if (valid) {
+            ActiveQuiz? activeQuiz = await MauiProgram.BusinessLogic.GetActiveQuiz(accessCode);
+
+            if (activeQuiz == null) {
+                await DisplayAlert("Error", "Something went wrong, try again.", "OK");
+                return;
+            }
+            WaitScreen blankScreen = new(string.Empty);
+            await Navigation.PushAsync(blankScreen, false);
+            // Display wait
+            WaitScreen waitScreen = new("Waiting for quiz to be started...");
+            await Navigation.PushAsync(waitScreen, false);
+
+            // Join Quiz
+            await MauiProgram.BusinessLogic.JoinActiveQuiz(activeQuiz, async activeQuestion => {
+                // Pop off screen
+                await MainThread.InvokeOnMainThreadAsync(async () => await Navigation.PopAsync(false));
+
+                // Display current active question according to its question type
+                if (activeQuestion.QuestionType == QuestionType.MultipleChoice) {
+                    await MainThread.InvokeOnMainThreadAsync(async () => await Navigation.PushAsync(new MultipleChoice(activeQuestion, false, true), false));
+                } else {
+                    await MainThread.InvokeOnMainThreadAsync(async () => await Navigation.PushAsync(new FillBlank(activeQuestion, false, true), false));
+                }
+            });
+        } else {
+            await DisplayAlert("Error", "Invalid access code.", "OK");
+        }
     }
 }

@@ -12,7 +12,30 @@
                    FontAttributes="Bold"
                    TextColor="DarkBlue"
                    Margin="0,30,0,15"
-                   Padding="10"/>
+                   Padding="10"
+                   IsVisible="{Binding NoQuestionPresent}"/>
+              <VerticalStackLayout Padding="10">
+                     <Label
+                            VerticalOptions="Start"
+                            FontSize="20" 
+                            TextColor="DarkBlue"
+                            IsVisible="{Binding QuestionPresent}">
+                            <Label.FormattedText>
+                                   <FormattedString>
+                                          <Span Text ="Question: " FontAttributes="Bold"></Span>
+                                          <Span Text ="{Binding QuestionText}"></Span>
+                                   </FormattedString>
+                            </Label.FormattedText>
+                     </Label>
+                     
+              <Label Text="Please make your changes in the box below if you would like to change your current question:"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Start"
+                   FontSize="15" 
+                   TextColor="DarkBlue"
+
+                   IsVisible="{Binding QuestionPresent}"/>
+              </VerticalStackLayout>
 
             <Frame BorderColor="Black"
                    CornerRadius="5"
@@ -20,21 +43,43 @@
                    Margin="0,10"
                    HorizontalOptions="Center">
                 <Editor Placeholder="Type your question here..."
-                         x:Name="QuestionFillBlank"
+                            x:Name="QuestionFillBlank"
                         HeightRequest="200"
                         WidthRequest="300"
-                        FontSize="20"/>
+                        FontSize="20"
+                        Text="{Binding QuestionText}"/>
             </Frame>
 
             <Label Text="Answer:"
-                   x:Name="AnswerFillBlank"
                    HorizontalOptions="Center"
                    VerticalOptions="Start"
                    FontSize="28" 
                    FontAttributes="Bold"
                    TextColor="DarkBlue"
                    Margin="0,30,0,15"
-                   Padding="10"/>
+                   Padding="10"
+                   IsVisible="{Binding NoQuestionPresent}"/>
+              <VerticalStackLayout Padding="10">
+                     <Label
+                            VerticalOptions="Start"
+                            FontSize="20" 
+                            TextColor="DarkBlue"
+                            IsVisible="{Binding AnswerPresent}">
+                            <Label.FormattedText>
+                                   <FormattedString>
+                                          <Span Text ="Acceptable Answers: " FontAttributes="Bold"></Span>
+                                          <Span Text ="{Binding Answers}"></Span>
+                                   </FormattedString>
+                            </Label.FormattedText>
+                     </Label>
+              <Label Text="Please make your changes in the box below if you would like to change your answers (separate each acceptable answer with a comma):"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Start"
+                   FontSize="15" 
+                   TextColor="DarkBlue"
+                   IsVisible="{Binding AnswerPresent}"/>
+              </VerticalStackLayout>
+              
 
             <Frame BorderColor="Black"
                    CornerRadius="5"
@@ -44,7 +89,9 @@
                 <Editor Placeholder="Type your answer here..."
                         HeightRequest="200"
                         WidthRequest="300"
-                        FontSize="20"/>
+                        FontSize="20"
+                        x:Name="AnswerFillBlank"
+                        Text="{Binding Answers}"/>
             </Frame>
 
             <!-- Save Button -->
