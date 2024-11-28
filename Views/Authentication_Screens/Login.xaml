@@ -54,7 +54,7 @@
 
             <Button
                 x:Name = "skipLogin"
-                Text="Skip Login"
+                Text="Login as Guest"
                 Clicked="SkipLogin"
                 BackgroundColor="#A9A9A9"/>
         </VerticalStackLayout>
