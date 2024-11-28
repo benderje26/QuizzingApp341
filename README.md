@@ -32,4 +32,6 @@ Jeremiah: I did a good chunk of the backend with the database and made it work w
 
 Sprint 4 Changes
 
+Pachia: I refactored our app and came up with important tables for our app. I also worked with Jeremiah on getting live quizzes to work. I also worked on the editing a quiz feature, it is still a working progress, it should be completed for next sprint. 
+
 Zafeer: I have worked on the search screen that the user is navigated to from home screen, the search screen would show the quizzes available in the database and also the user should be able to search up any quiz title and find one to study.
