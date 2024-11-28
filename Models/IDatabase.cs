@@ -3,7 +3,7 @@
 namespace QuizzingApp341.Models;
 
 public interface IDatabase {
-    Task SkipLogin(); // TODO DELETE THIS WHEN LOGIN WORKS
+    Task SkipLogin();
     /// <summary>
     /// Attempts to create a new user.
     /// </summary>
@@ -71,7 +71,7 @@ public interface IDatabase {
     /// <summary>
     /// Gets all the quizzes the current user has created from the quizzes table in the database.
     /// </summary>
-    /// <param name="userId"></param>
+    /// <param name="userID"></param>
     /// <returns>
     /// Returns a list of all the quizzes the user has created
     /// </returns>
@@ -85,6 +85,11 @@ public interface IDatabase {
     /// <returns>The user's info, or null if there is no logged in user</returns>
     UserInfo? GetUserInfo();
 
+    Task<List<long?>> GetActiveQuizIdsByUserId();
+
+
+    Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long?> activeQuizIds);
+  
     /// <summary>
     /// Adds a favorite quiz to the database.
     /// </summary>
@@ -102,4 +107,32 @@ public interface IDatabase {
     /// Returns whether the favorite quiz was successfully deleted
     /// </returns>
     Task<bool> DeleteFavoriteQuiz(long quizId);
+
+    Task<ActiveQuiz?> GetActiveQuiz(string accessCode);
+
+    /// <summary>
+    /// Submits a multiple choice question with its choice.
+    /// </summary>
+    /// <param name="question">The question you are submitting to</param>
+    /// <param name="choice">The index of the choice the student selected</param>
+    /// <returns></returns>
+    Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice);
+
+    /// <summary>
+    /// Submits a fill blank question with its answer.
+    /// </summary>
+    /// <param name="question">The question you are submitting to</param>
+    /// <param name="response">The answer the student typed</param>
+    /// <returns></returns>
+    Task<bool> SubmitFillBlankQuestionAnswer(ActiveQuestion question, string response);
+
+    /// <summary>
+    /// Joins an active quiz, awaiting active questions to come in.
+    /// </summary>
+    /// <param name="quiz">The quiz the student is joining</param>
+    /// <param name="handler">The handler for when a new active question comes in</param>
+    /// <returns></returns>
+    Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
+
+    Task<bool> ValidateAccessCode(string accessCode);
 }

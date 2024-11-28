@@ -5,10 +5,19 @@ using Client = Supabase.Client;
 using Supabase.Gotrue.Exceptions;
 //using AndroidX.Activity;
 using System.Collections.ObjectModel;
+//using AVFoundation;
+using QuizzingApp341.Views;
+using System.Linq;
+using System.Diagnostics;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Responses;
 using CommunityToolkit.Maui.Core.Extensions;
+using Supabase.Realtime.PostgresChanges;
+using Supabase.Realtime.Interfaces;
+using Supabase.Postgrest;
+using Newtonsoft.Json.Linq;
+using Constants = Supabase.Postgrest.Constants;
 
 public class SupabaseDatabase : IDatabase {
 
@@ -21,7 +30,7 @@ public class SupabaseDatabase : IDatabase {
     private UserInfo? userInfo;
 
     private Session? Session {
-        get => _session; 
+        get => _session;
     }
     private Session? _session;
 
@@ -37,25 +46,21 @@ public class SupabaseDatabase : IDatabase {
     }
 
     private User? User {
-        get => _user; 
+        get => _user;
     }
     private User? _user;
 
     private Guid UserId { get; set; }
 
     private async Task GenerateUserInfo() {
-        if (User == null) {
-            userInfo = null;
-        }
-        UserInfo info = new(UserId) {
-            CreatedQuizzes = new ObservableCollection<Quiz>(await GetUserCreatedQuizzes(UserId) ?? []),
-            FavoriteQuizzes = new ObservableCollection<Quiz>(await GetFavoriteQuizzes() ?? [])
+        userInfo = new(UserId, User != null) {
+            CreatedQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetUserCreatedQuizzes(UserId)) ?? []),
+            FavoriteQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetFavoriteQuizzes()) ?? [])
         };
-        userInfo = info;
     }
 
     public async Task SkipLogin() {
-        await GenerateUserInfo(); // TODO DELETE THIS METHOD WHEN LOGIN WORKS
+        await SetSession(null);
     }
 
     public UserInfo? GetUserInfo() {
@@ -64,7 +69,7 @@ public class SupabaseDatabase : IDatabase {
 
     public SupabaseDatabase() {
         Client = new(REST_URL, API_KEY, new SupabaseOptions {
-            AutoConnectRealtime = false // may need to be changed
+            AutoConnectRealtime = true
         });
         _ = Initialize();
     }
@@ -106,7 +111,7 @@ public class SupabaseDatabase : IDatabase {
         }
         try {
             await Client.Auth.SignOut();
-            await SetUser(null);
+            await SetSession(null);
             return LogoutResult.Success;
         } catch (Exception) {
             return LogoutResult.NetworkError;
@@ -114,6 +119,8 @@ public class SupabaseDatabase : IDatabase {
     }
 
     #endregion
+
+    #region Quizzes 
 
     public async Task<List<Quiz>?> GetAllQuizzesAsync() {
         try {
@@ -124,7 +131,6 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    #region Quizzes
     public async Task<Quiz?> GetQuizById(long id) {
         try {
             Quiz? quiz = await Client
@@ -163,11 +169,11 @@ public class SupabaseDatabase : IDatabase {
             var result = await Client
                 .From<Question>()
                 .Insert(question);
-            
+
             if (result == null || result.Model == null) {
                 return null;
             }
-            
+
             return result.Model.Id;
         } catch {
             return null;
@@ -203,29 +209,178 @@ public class SupabaseDatabase : IDatabase {
                 .From<Quiz>()
                 .Where(q => q.CreatorId == userId)
                 .Get();
-                
+
             return result?.Models;
-        } catch (Exception e){
+        } catch (Exception e) {
             Console.Write("ERRORRRRR" + e);
             return null;
         }
     }
 
+    #region Active Quizzes
+    public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
+        try {
+            return await Client
+                .From<ActiveQuiz>()
+                .Where(q => q.AccessCode == accessCode)
+                .Single();
+        } catch (Exception) {
+            return null;
+        }
+    }
+
+    // Get active_quiz_id by pass in user_id to participants table
+    public async Task<List<long?>> GetActiveQuizIdsByUserId() {
+        try {
+            // Log the userId being passed to the method
+            Console.WriteLine($"Fetching active quiz IDs for user: {UserId}");
+
+            // Query the participants table for the provided userId
+            var participants = await Client
+                .From<Participants>()
+                .Where(p => p.UserId == UserId)
+                .Get();
+
+            Console.WriteLine($"Supabase Response: {participants?.Models?.Count} records returned");
+            Console.WriteLine($"active_quiz_id:{participants?.Models}");
+            if (participants?.Models == null || !participants.Models.Any()) {
+                Console.WriteLine($"No participants found for user {UserId}");
+                return null; // No active quizzes found for the user
+            }
+
+            // Return the list of ActiveQuizIds
+            return participants.Models.Select(p => p.ActiveQuizId).ToList();
+        } catch (Exception ex) {
+            Console.WriteLine($"Error fetching active quiz ids for user {UserId}: {ex.Message}");
+            return null;
+        }
+    }
+
+
+    // Fetch quiz_id by use active_quiz_id from active_quizzes table
+    public async Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long?> activeQuizIds) {
+        try {
+            Console.WriteLine($"print user ID (GetActiveQuizzesByActiveQuizIds): {UserId}");
+            Console.WriteLine($"print input activeQuizIds (GetActiveQuizzesByActiveQuizIds): {string.Join(", ", activeQuizIds)}");
+
+            if (activeQuizIds == null || !activeQuizIds.Any()) {
+                Console.WriteLine("No quiz IDs provided.");
+                return null;
+            }
+            var result = await Client
+                .From<ActiveQuiz>()
+                .Where(x => x.Activator == UserId)
+                .Filter(x => x.Id, Supabase.Postgrest.Constants.Operator.In, activeQuizIds)
+                .Get();
+
+            Console.WriteLine($"Total records matching Activator == UserId: {result?.Models?.Count ?? 0}");
+            Console.WriteLine($"Fetched active quizzes (GetActiveQuizzesByActiveQuizIds): {result?.Models?.Count ?? 0} entries");
+
+            if (result?.Models == null || !result.Models.Any()) {
+                Console.WriteLine("No matching active quizzes found.");
+                return null;
+            }
+
+            return result.Models;
+        } catch (Exception ex) {
+            Console.WriteLine($"Error fetching active quizzes: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
+        try {
+            await Client
+                .From<Response>()
+                .Insert(new Response() {
+                    ActiveQuizId = question.ActiveQuizId,
+                    UserId = UserId,
+                    QuestionNo = question.QuestionNo,
+                    MultipleChoiceResponse = [choice],
+                    FillBlankResponse = null
+                }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public async Task<bool> SubmitFillBlankQuestionAnswer(ActiveQuestion question, string response) {
+        try {
+            await Client
+                .From<Response>()
+                .Insert(new Response() {
+                    ActiveQuizId = question.ActiveQuizId,
+                    UserId = UserId,
+                    QuestionNo = question.QuestionNo,
+                    MultipleChoiceResponse = null,
+                    FillBlankResponse = response
+                }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
+        try {
+            // TODO update participants table that we participated!
+            // TODO get current question if it exists
+            var channel = Client.Realtime.Channel("realtime", "public", "active_quizzes", null, "id=eq." + quiz.Id);
+            channel.AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates, async (channel, response) => {
+                ActiveQuiz? quiz = response.Model<ActiveQuiz>();
+                ActiveQuestion? question = quiz == null ? null : await GetCurrentActiveQuestion(quiz);
+
+                if (question == null) {
+                    return;
+                }
+
+                handler(question);
+            });
+            await channel.Subscribe();
+            return true;
+        } catch (Exception) {
+            return false;
+        }
+    }
+
+    public async Task<ActiveQuestion?> GetCurrentActiveQuestion(ActiveQuiz quiz) {
+        long activeQuizId = quiz.Id ?? 0;
+        int questionNo = quiz.CurrentQuestionNo ?? -1;
+        if (!quiz.IsActive ?? true || quiz.CurrentQuestionNo < 0) {
+            return null;
+        }
+        try {
+            return await Client
+                .From<ActiveQuestion>()
+                .Where(x => x.ActiveQuizId == activeQuizId)
+                .Where(x => x.QuestionNo == questionNo)
+                .Single();
+        } catch (Exception) {
+            return null;
+        }
+    }
+    public async Task<bool> ValidateAccessCode(string accessCode) {
+        try {
+            int count = await Client
+                .From<ActiveQuiz>()
+                .Where(a => a.AccessCode == accessCode)
+                .Where(a => a.IsActive == true)
+                .Limit(1)
+                .Count(Constants.CountType.Exact);
+
+            return count > 0;
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+            return false;
+        }
+    }
+    #endregion
+    #endregion
+
+    #region Favorite Quizzes
     public async Task<ObservableCollection<Quiz>> GetFavoriteQuizzes() {
         try {
-            //Quiz first = new Quiz();
-            //first.Title = "first";
-            //first.Id = 0;
-            //Quiz two = new Quiz();
-            //two.Title = "two";
-            //two.Id = 1;
-            //ObservableCollection<Quiz> fq = new ObservableCollection<Quiz>();
-            //fq.Add(first);
-            //fq.Add(two);
-            //return fq;
-
-            //This is the code that will be used to no longer hard code the data but currently not working
-
             ModeledResponse<FavoriteQuiz> result = await Client
                 .From<FavoriteQuiz>()
                 .Where(q => q.UserId == UserId)
@@ -250,21 +405,27 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<long?> AddFavoriteQuiz(long quizId) {
         try {
-            FavoriteQuiz f = new FavoriteQuiz();
-            f.QuizId = quizId;
-            f.UserId = UserId;
-            f.CreatedAt = DateTime.Now;
+            FavoriteQuiz f = new FavoriteQuiz {
+                QuizId = quizId,
+                UserId = UserId,
+                CreatedAt = DateTime.Now
+            };
+
             var result = await Client
                 .From<FavoriteQuiz>()
                 .Insert(f);
+
 
             if (result == null || result.Model == null) {
                 return null;
             }
 
+            var newQuiz = await GetQuizById(quizId);
+            userInfo.FavoriteQuizzes.Add(newQuiz);
             return result.Model.QuizId;
         } catch (Exception e) {
             Console.Write("ERRORRRRR" + e);
+
             return null;
         }
     }
@@ -279,7 +440,14 @@ public class SupabaseDatabase : IDatabase {
             Console.Write("ERRORRRRR" + e);
             return false;
         }
+
+        ObservableCollection<Quiz> favQuizzess = await GetFavoriteQuizzes();
+        userInfo.FavoriteQuizzes.Clear();
+        foreach (Quiz quiz in favQuizzess) {
+            userInfo.FavoriteQuizzes.Add(quiz);
+        }
         return true;
     }
     #endregion
+
 }

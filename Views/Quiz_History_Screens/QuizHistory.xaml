@@ -1,18 +1,14 @@
-<!-- This file defines UI elements for the Quiz History screen -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.QuizHistory"
              Padding="7">
 
-
-    <StackLayout Padding="10"
-                 Spacing="20">
+    <StackLayout Padding="10" Spacing="20">
 
         <!-- List of Quizzes in the history -->
         <ListView x:Name="QuizzesListView"
                   ItemsSource="{Binding Quizzes}"
-                  VerticalOptions="FillAndExpand"
-                  HorizontalOptions="FillAndExpand"
+            HorizontalOptions="FillAndExpand"
                   RowHeight="70"
                   SeparatorColor="#11017a">
 
@@ -20,18 +16,15 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Padding="10">
-                            <!-- Navigation for each quiz - Navigates to stats on that quiz -->
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Tapped="OnQuizTapped"
-                                    CommandParameter="{Binding .}"/>
-                            </StackLayout.GestureRecognizers>
-                            <Label Text="{Binding Title}"
-                                   FontAttributes="Bold"
-                                   FontSize="18"/>
-                            <Label Text="{Binding LastActivated, StringFormat='Last Activated: {0:yyyy-MM-dd}'}"
-                                   FontSize="14"
-                                   TextColor="Gray"/>
+                            <!-- Quiz Id Display -->
+                            <Label Text="{Binding QuizId}" 
+                                   FontAttributes="Bold" 
+                                   FontSize="18" />
+
+                            <!-- Start Time Display -->
+                            <Label Text="{Binding StartTime, StringFormat='Last Activated: {0:yyyy-MM-dd HH:mm}'}" 
+                                   FontSize="14" 
+                                   TextColor="Gray" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
