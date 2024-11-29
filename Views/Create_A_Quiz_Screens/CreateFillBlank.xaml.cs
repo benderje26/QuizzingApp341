@@ -20,8 +20,8 @@ public partial class CreateFillBlank : ContentPage {
             QuestionPresent = true;
             QuestionText = question?.QuestionText;
 
-            if (question?.acceptableAnswers != null) { // If there are any answers
-                Answers = string.Join(", ", question.acceptableAnswers);
+            if (question?.AcceptableAnswers != null) { // If there are any answers
+                Answers = string.Join(", ", question.AcceptableAnswers);
                 AnswerPresent = true;
             }
 
@@ -38,7 +38,7 @@ public partial class CreateFillBlank : ContentPage {
         // Retrieve data from user input
         //check for null, if null - replace with empty string
         string question = QuestionFillBlank.Text != null ? QuestionFillBlank.Text.Trim() : string.Empty;
-        String answer = AnswerFillBlank.Text != null ? AnswerFillBlank.Text.Trim() : string.Empty;
+        string answer = AnswerFillBlank.Text != null ? AnswerFillBlank.Text.Trim() : string.Empty;
 
 
         // Check for required fields not empty

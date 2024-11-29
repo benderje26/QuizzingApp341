@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 public interface IBusinessLogic : INotifyPropertyChanged {
-    Task SkipLogin();
     /// <summary>
     /// Gets the info for the current user.
     /// </summary>
@@ -16,6 +15,10 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="password">The password</param>
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password);
+    /// <summary>
+    /// Skips the login.
+    /// </summary>
+    Task SkipLogin();
     /// <summary>
     /// Attempts to log in.
     /// </summary>
@@ -87,7 +90,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="activeQuizIds">List of active quiz IDs</param>
     /// <returns>List of quiz IDs if found, otherwise null</returns>
 
-    Task<List<(long QuizId, DateTime StartTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long?> activeQuizIds);
+    Task<List<(long quizId, DateTime? startTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long> activeQuizIds);
     /// <summary>
     /// Gets the active quiz IDs for a given user from participants tables
     /// </summary>

@@ -1,27 +1,26 @@
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
-// This class corresponds to the questions table in db
 namespace QuizzingApp341.Models {
     [Table("questions")]
     public class Question : BaseModel {
         [PrimaryKey("id")]
-        public long? Id { get; set; }
+        public long Id { get; set; }
 
         [Column("question_no")]
-        public int QuestionNum { get; set; }
+        public int QuestionNo { get; set; }
 
         [Column("question_type")]
-        public QuestionType QuestionType { get; set; } // TODO Convert to QuestionType Enum?? It's coming in as a string from the table.. Or we can just use this without the QuestionType enum
+        public QuestionType QuestionType { get; set; }
 
         [Column("question")]
-        public string? QuestionText { get; set; }
+        public string? QuestionText { get; set; } = null;
 
         [Column("acceptable_answers")]
-        public List<string>? acceptableAnswers { get; set; }
+        public string[]? AcceptableAnswers { get; set; }
 
         [Column("multiple_choice_options")]
-        public List<string>? MultipleChoiceOptions { get; set; }
+        public string[]? MultipleChoiceOptions { get; set; }
 
         [Column("case_sensitive")]
         public bool? CaseSensitive { get; set; }
@@ -30,7 +29,7 @@ namespace QuizzingApp341.Models {
         public long QuizId { get; set; }
 
         [Column("multiple_choice_correct_answers")]
-        public List<string>? MultipleChoiceAnswers { get; set; }
+        public int[]? MultipleChoiceCorrectAnswers { get; set; }
     }
 
     public enum QuestionType : short {

@@ -5,9 +5,7 @@ using Supabase.Gotrue.Exceptions;
 using Supabase.Postgrest;
 using Supabase.Postgrest.Responses;
 using Supabase.Realtime.PostgresChanges;
-//using AndroidX.Activity;
 using System.Collections.ObjectModel;
-//using AVFoundation;
 using System.Linq;
 using Client = Supabase.Client;
 using Constants = Supabase.Postgrest.Constants;
@@ -251,7 +249,7 @@ public class SupabaseDatabase : IDatabase {
 
 
     // Fetch quiz_id by use active_quiz_id from active_quizzes table
-    public async Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long?> activeQuizIds) {
+    public async Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long> activeQuizIds) {
         try {
             Console.WriteLine($"print user ID (GetActiveQuizzesByActiveQuizIds): {UserId}");
             Console.WriteLine($"print input activeQuizIds (GetActiveQuizzesByActiveQuizIds): {string.Join(", ", activeQuizIds)}");
@@ -338,7 +336,7 @@ public class SupabaseDatabase : IDatabase {
     }
 
     public async Task<ActiveQuestion?> GetCurrentActiveQuestion(ActiveQuiz quiz) {
-        long activeQuizId = quiz.Id ?? 0;
+        long activeQuizId = quiz.Id;
         int questionNo = quiz.CurrentQuestionNo ?? -1;
         if (!quiz.IsActive ?? true || quiz.CurrentQuestionNo < 0) {
             return null;

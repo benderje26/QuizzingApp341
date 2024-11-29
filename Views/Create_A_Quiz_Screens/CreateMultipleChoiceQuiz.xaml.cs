@@ -32,8 +32,8 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
                 QuestionPresent = true;
                 QuestionText = question?.QuestionText;
 
-                if (question?.acceptableAnswers != null) { // If there are any answers
-                    Answers = string.Join(", ", question.acceptableAnswers);
+                if (question?.AcceptableAnswers != null) { // If there are any answers
+                    Answers = string.Join(", ", question.AcceptableAnswers);
                     AnswerPresent = true;
                 }
 
@@ -42,7 +42,7 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
                 OptionB = question?.MultipleChoiceOptions?[1];
                 OptionC = question?.MultipleChoiceOptions?[2];
                 OptionD = question?.MultipleChoiceOptions?[3];
-                CorrectOption = int.Parse(question.MultipleChoiceAnswers[0]);
+                CorrectOption = question?.MultipleChoiceCorrectAnswers?[0] ?? 0;
             } catch (Exception e) {
                 Console.WriteLine("******************************");
                 Console.WriteLine("Error: " + e.Message);
@@ -81,7 +81,7 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
         string optionD = optionDEntry.Text != null ? optionDEntry.Text.Trim() : string.Empty;
         // string correctOption = correctAnswerFromUser.SelectedItem != null ? correctAnswerFromUser.SelectedItem.ToString().Trim() : string.Empty;
         // int correctAnswer = getCorrectQuestion(correctOption);
-        // List<String> options = [optionA, optionB, optionC, optionD];
+        // List<string> options = [optionA, optionB, optionC, optionD];
 
         // // Make a multiple choice question
         // MultipleChoiceQuestion thisQuestion = new MultipleChoiceQuestion(questionNumber++, true, question, options, correctAnswer);

@@ -88,7 +88,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var result = await database.GetQuestions(id);
         if (result != null) {
             List<Question> questions = result;
-            return new ObservableCollection<Question>(questions.OrderBy(q => q.QuestionNum));
+            return new ObservableCollection<Question>(questions.OrderBy(q => q.QuestionNo));
         }
         return null;
     }
@@ -134,8 +134,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
 
     // Get quiz IDs from active quiz IDs
-    //Fetch the quiz_id for each active_quiz_id.
-    public async Task<List<(long QuizId, DateTime StartTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long?> activeQuizIds) {
+    // Fetch the quiz_id for each active_quiz_id.
+    public async Task<List<(long quizId, DateTime? startTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long> activeQuizIds) {
         try {
             Console.WriteLine($"Fetching quiz data for activeQuizIds: {string.Join(", ", activeQuizIds)}");
 

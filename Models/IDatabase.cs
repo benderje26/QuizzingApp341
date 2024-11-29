@@ -86,7 +86,7 @@ public interface IDatabase {
     Task<List<long>> GetActiveQuizIdsByUserId();
 
 
-    Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long?> activeQuizIds);
+    Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long> activeQuizIds);
 
     /// <summary>
     /// Adds a favorite quiz to the database.

@@ -3,17 +3,17 @@ public class Statistics {
     List<int> scores = [55, 50, 75, 69, 79, 45, 88, 90, 25, 34, 10, 45, 40, 66, 78, 95, 14];
 
     // Get the min
-    public double getMin() {
+    public double GetMin() {
         return scores.Min();
     }
 
     // Get the max
-    public double getMax() {
+    public double GetMax() {
         return scores.Max();
     }
 
     // Get the median
-    public double getMedian() {
+    public double GetMedian() {
         scores.Sort();
         // If there is an even number of scores
         if (scores.Count % 2 == 0) {
@@ -26,12 +26,12 @@ public class Statistics {
         }
     }
 
-    public double getLowerQuartile() {
+    public double GetLowerQuartile() {
         scores.Sort(); // Sort
         return scores[scores.Count / 4]; // Get the first quarter element
     }
 
-    public double getUpperQuartile() {
+    public double GetUpperQuartile() {
         scores.Sort(); // Sort
         return scores[scores.Count * 3 / 4]; // Get the third quarter element
     }

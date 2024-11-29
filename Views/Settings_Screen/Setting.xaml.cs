@@ -5,7 +5,6 @@ namespace QuizzingApp341.Views {
         }
 
         private async void OnSignOutClicked(object sender, EventArgs e) {
-
             // Navigate back to the Login screen, and hide the TabBar
             await Shell.Current.GoToAsync("//Login", true);
             Shell.SetTabBarIsVisible(this, false);

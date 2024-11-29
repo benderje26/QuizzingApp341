@@ -57,7 +57,7 @@ public class QuizManager {
     /// This starts a quiz for a user, which needs an id
     /// </summary>
     /// <param name="accessCode"></param>
-    public void StartQuiz(String accessCode) {// Can either take a LiveQuiz Id or an Access code
+    public void StartQuiz(string accessCode) {// Can either take a LiveQuiz Id or an Access code
         // ActiveQuiz = BusinessLogic.GetActiveQuizFromAccessCode(accessCode);
         // Get the Quiz with the quiz id
         // Get the supabasequestions with the quiz id
@@ -103,7 +103,7 @@ public class QuizManager {
             }
 
             // If the question was added to the db set the id of the question to the one returned from the db and add it to the questions list 
-            question.Id = id;
+            question.Id = id ?? 0;
             Questions.Add(question);
         } catch {
             return false;
