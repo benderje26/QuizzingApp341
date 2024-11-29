@@ -1,13 +1,11 @@
 using QuizzingApp341.Models;
-using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Views;
 namespace QuizzingApp341.Views;
 
 /*
  * Name: Peter Skogman
  */
 public partial class FillBlank : ContentPage {
-    public string QuestionText {get; set;}
+    public string QuestionText { get; set; }
     public bool UserIsActivator { get; set; }
     public bool UserIsParticipant { get; set; }
     public bool CanSubmit => true;

@@ -8,7 +8,7 @@ namespace QuizzingApp341.Models {
     public class Participants : BaseModel {
 
         [PrimaryKey("active_quiz_id")]
-        public long? ActiveQuizId { get; set; }
+        public long ActiveQuizId { get; set; }
 
 
         [PrimaryKey("user_id")]

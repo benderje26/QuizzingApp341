@@ -4,9 +4,8 @@ Description: This instantiates the statistics screen and draws the box plot
 Name: Pachia
 */
 namespace QuizzingApp341.Views;
-using System;
-using QuizzingApp341.Models;
 using Microsoft.Maui.Graphics;
+using System;
 
 public partial class StatisticsScreen : ContentPage {
     public StatisticsScreen() {

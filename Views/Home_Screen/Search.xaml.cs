@@ -1,8 +1,5 @@
-using System.Collections.ObjectModel;
 using QuizzingApp341.Models;
-using System.Linq;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
 
 namespace QuizzingApp341.Views;
 

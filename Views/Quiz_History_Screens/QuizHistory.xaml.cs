@@ -1,7 +1,6 @@
 namespace QuizzingApp341.Views;
 using QuizzingApp341.Models;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 

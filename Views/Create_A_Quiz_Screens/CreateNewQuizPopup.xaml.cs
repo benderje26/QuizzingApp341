@@ -10,12 +10,12 @@ namespace QuizzingApp341.Views {
 
         private void OnMultipleChoiceClicked(object sender, EventArgs e) {
             QuestionTypeSelected?.Invoke("MultipleChoice");
-            Close(); 
+            Close();
         }
 
         private void OnFillInBlankClicked(object sender, EventArgs e) {
             QuestionTypeSelected?.Invoke("FillInBlank");
-            Close(); 
+            Close();
         }
 
         private void Cancel_Clicked(object sender, EventArgs e) {

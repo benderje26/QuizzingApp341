@@ -1,8 +1,7 @@
 namespace QuizzingApp341.Views;
-using System;
-using System.Collections.ObjectModel;
 using Microsoft.Maui.Controls;
 using QuizzingApp341.Models;
+using System;
 
 /*
 * Name: Jeremiah Bender

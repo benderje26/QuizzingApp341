@@ -1,6 +1,5 @@
 namespace QuizzingApp341.Views;
 using System;
-using System.Runtime.InteropServices;
 #if ANDROID
 using Android.Print;
 #endif
@@ -14,12 +13,12 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
     public bool? NoQuestionPresent { get; set; } = false;
     public bool? AnswerPresent { get; set; } = false;
     public string? Answers { get; set; }
-    public string? OptionA {get; set;}
-    public string? OptionB {get; set;}
-    public string? OptionC {get; set;}
-    public string? OptionD {get; set;}
+    public string? OptionA { get; set; }
+    public string? OptionB { get; set; }
+    public string? OptionC { get; set; }
+    public string? OptionD { get; set; }
 
-    public int? CorrectOption {get; set;}
+    public int? CorrectOption { get; set; }
 
     public string? QuestionText { get; set; }
     public CreateMultipleChoiceQuiz(Question? question) {

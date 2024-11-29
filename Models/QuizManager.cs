@@ -9,9 +9,9 @@ public class QuizManager {
     public Quiz? Quiz { get; set; }
     public ObservableCollection<Question> Questions { get; set; } = [];
 
-    public  ActiveQuiz? ActiveQuiz { get; set; }
+    public ActiveQuiz? ActiveQuiz { get; set; }
 
-    static int CurrentQuestion {get; set;} = 0;
+    static int CurrentQuestion { get; set; } = 0;
 
     // Constructor for setting a quiz
     public QuizManager(Quiz quiz) {

@@ -1,8 +1,5 @@
-using QuizzingApp341.Models;
-using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Views;
-using System.Net.NetworkInformation;
 using CommunityToolkit.Maui.Core.Extensions;
+using QuizzingApp341.Models;
 using System.Collections.ObjectModel;
 namespace QuizzingApp341.Views;
 
@@ -10,12 +7,12 @@ namespace QuizzingApp341.Views;
  * Name: Peter Skogman
  */
 public partial class MultipleChoice : ContentPage {
-    public string QuestionText {get; set;}
-    public ObservableCollection<IndexValuePair> Options {get; set;}
-    public bool UserIsActivator {get; set;}
-    public bool UserIsParticipant {get; set;}
+    public string QuestionText { get; set; }
+    public ObservableCollection<IndexValuePair> Options { get; set; }
+    public bool UserIsActivator { get; set; }
+    public bool UserIsParticipant { get; set; }
     public bool CanSubmit => SelectedIndex != null;
-    public int? SelectedIndex {get; set;}
+    public int? SelectedIndex { get; set; }
     public bool ShowSubmitAnswerButton => UserIsParticipant;
     public bool ShowNextButton => UserIsActivator; // TODO also needs to not be final question
     public bool ShowFinishButton => UserIsActivator; // TODO also needs to be final question
@@ -90,7 +87,7 @@ public partial class MultipleChoice : ContentPage {
             OnPropertyChanged(nameof(CanSubmit));
         }
     }
-    
+
     private async void OnSubmitAnswerClicked(object sender, EventArgs e) {
         if (SelectedIndex == null) {
             return;
