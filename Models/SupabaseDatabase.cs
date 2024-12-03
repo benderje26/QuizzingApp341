@@ -312,6 +312,7 @@ public class SupabaseDatabase : IDatabase {
                 }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
             return true;
         } catch (Exception e) {
+            Console.WriteLine("ERRORRRR" + e.Message);
             return false;
         }
     }
