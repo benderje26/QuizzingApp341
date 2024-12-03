@@ -78,12 +78,9 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
         string optionB = optionBEntry.Text != null ? optionBEntry.Text.Trim() : string.Empty;
         string optionC = optionCEntry.Text != null ? optionCEntry.Text.Trim() : string.Empty;
         string optionD = optionDEntry.Text != null ? optionDEntry.Text.Trim() : string.Empty;
-        // string correctOption = correctAnswerFromUser.SelectedItem != null ? correctAnswerFromUser.SelectedItem.ToString().Trim() : string.Empty;
+        int correctOption = correctAnswerFromUser.SelectedIndex;
         // int correctAnswer = getCorrectQuestion(correctOption);
-        // List<string> options = [optionA, optionB, optionC, optionD];
-
-        // // Make a multiple choice question
-        // MultipleChoiceQuestion thisQuestion = new MultipleChoiceQuestion(questionNumber++, true, question, options, correctAnswer);
+        string[] options = [optionA, optionB, optionC, optionD];
 
         // Check for required fields not empty
         if (string.IsNullOrEmpty(question)) {
@@ -97,14 +94,11 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
             return;
         }
 
-        // if (string.IsNullOrEmpty(correctOption)) {
-        //     DisplayAlert("Error", "Please select the correct answer.", "OK");
-        //     return;
-        // }
+        MultipleChoiceQuestionToChange.QuestionText = question;
+        MultipleChoiceQuestionToChange.MultipleChoiceOptions = options;
+        MultipleChoiceQuestionToChange.MultipleChoiceCorrectAnswers = [correctOption];
 
-        Console.Write("before saving question");
-        // Send the question object using MessagingCenter
-        // MessagingCenter.Send(this, "AddQuestion", thisQuestion);
+        MauiProgram.BusinessLogic.EditQuestion(MultipleChoiceQuestionToChange);
 
         // Navigate back to the CreateNewQuiz page
         Navigation.PopAsync();
