@@ -1,4 +1,3 @@
-using CommunityToolkit.Maui.Views;
 using QuizzingApp341.Models;
 
 namespace QuizzingApp341.Views;

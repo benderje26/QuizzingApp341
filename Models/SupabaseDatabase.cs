@@ -1,22 +1,13 @@
 namespace QuizzingApp341.Models;
 using Supabase;
 using Supabase.Gotrue;
-using Client = Supabase.Client;
 using Supabase.Gotrue.Exceptions;
-//using AndroidX.Activity;
-using System.Collections.ObjectModel;
-//using AVFoundation;
-using QuizzingApp341.Views;
-using System.Linq;
-using System.Diagnostics;
-using Supabase.Postgrest.Attributes;
-using Supabase.Postgrest.Models;
-using Supabase.Postgrest.Responses;
-using CommunityToolkit.Maui.Core.Extensions;
-using Supabase.Realtime.PostgresChanges;
-using Supabase.Realtime.Interfaces;
 using Supabase.Postgrest;
-using Newtonsoft.Json.Linq;
+using Supabase.Postgrest.Responses;
+using Supabase.Realtime.PostgresChanges;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Client = Supabase.Client;
 using Constants = Supabase.Postgrest.Constants;
 
 public class SupabaseDatabase : IDatabase {
@@ -153,7 +144,7 @@ public class SupabaseDatabase : IDatabase {
                 .From<Question>()
                 .Where(q => q.QuizId == id)
                 .Get();
-                
+
             if (result == null) {
                 return null;
             }
@@ -230,7 +221,7 @@ public class SupabaseDatabase : IDatabase {
     }
 
     // Get active_quiz_id by pass in user_id to participants table
-    public async Task<List<long?>> GetActiveQuizIdsByUserId() {
+    public async Task<List<long>> GetActiveQuizIdsByUserId() {
         try {
             // Log the userId being passed to the method
             Console.WriteLine($"Fetching active quiz IDs for user: {UserId}");
@@ -245,7 +236,7 @@ public class SupabaseDatabase : IDatabase {
             Console.WriteLine($"active_quiz_id:{participants?.Models}");
             if (participants?.Models == null || !participants.Models.Any()) {
                 Console.WriteLine($"No participants found for user {UserId}");
-                return null; // No active quizzes found for the user
+                return []; // No active quizzes found for the user
             }
 
             // Return the list of ActiveQuizIds
@@ -258,7 +249,7 @@ public class SupabaseDatabase : IDatabase {
 
 
     // Fetch quiz_id by use active_quiz_id from active_quizzes table
-    public async Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long?> activeQuizIds) {
+    public async Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long> activeQuizIds) {
         try {
             Console.WriteLine($"print user ID (GetActiveQuizzesByActiveQuizIds): {UserId}");
             Console.WriteLine($"print input activeQuizIds (GetActiveQuizzesByActiveQuizIds): {string.Join(", ", activeQuizIds)}");
@@ -345,7 +336,7 @@ public class SupabaseDatabase : IDatabase {
     }
 
     public async Task<ActiveQuestion?> GetCurrentActiveQuestion(ActiveQuiz quiz) {
-        long activeQuizId = quiz.Id ?? 0;
+        long activeQuizId = quiz.Id;
         int questionNo = quiz.CurrentQuestionNo ?? -1;
         if (!quiz.IsActive ?? true || quiz.CurrentQuestionNo < 0) {
             return null;

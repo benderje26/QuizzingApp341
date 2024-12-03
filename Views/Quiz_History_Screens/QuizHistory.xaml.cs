@@ -1,7 +1,6 @@
 namespace QuizzingApp341.Views;
 using QuizzingApp341.Models;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,15 +26,15 @@ public partial class QuizHistory : ContentPage {
         }
     }
 
-    private async Task LoadQuizIdFromActiveQuiz(List<long?> activeQuizIds) {
+    private async Task LoadQuizIdFromActiveQuiz(List<long> activeQuizIds) {
         try {
             // Fetch QuizId and StartTime
             var quizIdAndTime = await MauiProgram.BusinessLogic.GetQuizIdsAndStartTimesByActiveQuizIds(activeQuizIds);
 
             // Check if data was found
-            if (quizIdAndTime != null && quizIdAndTime.Any()) {
+            if (quizIdAndTime != null && quizIdAndTime.Count() > 0) {
                 // Sort the quizzes by StartTime from most recent to oldest
-                var sortedQuizList = quizIdAndTime.OrderByDescending(q => q.StartTime).ToList();
+                var sortedQuizList = quizIdAndTime.OrderByDescending(q => q.startTime ?? DateTime.MinValue).ToList();
                 //Console.WriteLine("Fetched and Sorted Quiz IDs and Start Times (Most Recent First):");
                 //foreach (var quiz in sortedQuizList) {
                 //    Console.WriteLine($"QuizId: {quiz.QuizId}, StartTime: {quiz.StartTime}");
@@ -43,9 +42,9 @@ public partial class QuizHistory : ContentPage {
 
                 Quizzes.Clear();
 
-                foreach (var quiz in sortedQuizList) {
+                foreach (var (quizId, startTime) in sortedQuizList) {
                     // Create a new History object for each quiz - storing QuizId and StartTime
-                    Quizzes.Add(new History(quiz.QuizId, quiz.StartTime));
+                    Quizzes.Add(new History(quizId, startTime));
                 }
             } else {
                 await DisplayAlert("No Quizzes", "No quizzes found for the active quizzes.", "OK");
@@ -59,15 +58,8 @@ public partial class QuizHistory : ContentPage {
 
 
     // History class to store quiz information
-    public class History {
-        public DateTime StartTime { get; set; }
-        public long? QuizId { get; set; }
-
-        // Constructor for active quiz ID
-        public History(long? quizId, DateTime startTime) {
-            QuizId = quizId;
-            StartTime = startTime;
-        }
-
+    public class History(long quizId, DateTime? startTime) {
+        public DateTime? StartTime { get; set; } = startTime;
+        public long QuizId { get; set; } = quizId;
     }
 }

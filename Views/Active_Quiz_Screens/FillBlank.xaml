@@ -21,7 +21,6 @@
                 Grid.Column="1">
             <Grid RowDefinitions="*,2*,*"
                     ColumnDefinitions="*,*,*">
-                <!-- TODO  -->
                 <Label Grid.Row="0"
                         Grid.ColumnSpan="3"
                         Text="{Binding QuestionText}"

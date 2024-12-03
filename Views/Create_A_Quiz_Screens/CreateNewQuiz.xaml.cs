@@ -1,5 +1,4 @@
 using CommunityToolkit.Maui.Views;
-using QuizzingApp341.Models;
 using System.Collections.ObjectModel;
 
 namespace QuizzingApp341.Views {

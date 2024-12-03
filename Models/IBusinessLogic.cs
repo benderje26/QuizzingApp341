@@ -1,10 +1,8 @@
 ﻿namespace QuizzingApp341.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 public interface IBusinessLogic : INotifyPropertyChanged {
-    Task SkipLogin();
     /// <summary>
     /// Gets the info for the current user.
     /// </summary>
@@ -17,6 +15,10 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="password">The password</param>
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(AccountCreationResult, string?)> CreateNewUser(string emailAddress, string username, string password);
+    /// <summary>
+    /// Skips the login.
+    /// </summary>
+    Task SkipLogin();
     /// <summary>
     /// Attempts to log in.
     /// </summary>
@@ -36,7 +38,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="id">The given id of the quiz</param>
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
     Task<Quiz?> GetQuiz(long id);
-    
+
     /// <summary>
     /// Gets all of the questions from the questions table in db that matches the given id
     /// </summary>
@@ -87,13 +89,13 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// </summary>
     /// <param name="activeQuizIds">List of active quiz IDs</param>
     /// <returns>List of quiz IDs if found, otherwise null</returns>
-    
-    Task<List<(long QuizId, DateTime StartTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long?> activeQuizIds);
+
+    Task<List<(long quizId, DateTime? startTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long> activeQuizIds);
     /// <summary>
     /// Gets the active quiz IDs for a given user from participants tables
     /// </summary>
     /// <returns>List of active quiz IDs</returns>
-    Task<List<long?>?> GetActiveQuizIdsForUser();
+    Task<List<long>> GetActiveQuizIdsForUser();
 
     Task<ObservableCollection<Quiz>?> GetAllQuizzes();
 

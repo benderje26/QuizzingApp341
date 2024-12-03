@@ -20,9 +20,9 @@ public class ActiveQuestion : BaseModel {
     public QuestionType QuestionType { get; set; }
 
     [Column("question")]
-    public string? Question { get; set; }
+    public string Question { get; set; } = string.Empty;
 
     [Column("multiple_choice_options")]
     public string[]? MultipleChoiceOptions { get; set; }
-    public bool IsStudying {get; set;}
+    public bool IsStudying { get; set; }
 }

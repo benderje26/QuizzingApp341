@@ -4,6 +4,7 @@ namespace QuizzingApp341.Models;
 
 [Table("responses")]
 public class Response : BaseModel {
+
     [PrimaryKey("active_quiz_id", true)]
     public long ActiveQuizId { get; set; }
 

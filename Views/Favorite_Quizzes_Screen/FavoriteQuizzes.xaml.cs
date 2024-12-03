@@ -1,5 +1,4 @@
 using QuizzingApp341.Models;
-using Microsoft.Maui.Controls;
 
 namespace QuizzingApp341.Views;
 

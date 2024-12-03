@@ -1,4 +1,3 @@
-using Supabase.Gotrue;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -7,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace QuizzingApp341.Models;
 
 public class BusinessLogic(IDatabase database) : IBusinessLogic {
-  
+
     #region User and Auth
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
     private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
@@ -57,7 +56,6 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return (result, s);
     }
 
-    // TODO DELETE THIS WHEN LOGIN WORKS
     public async Task SkipLogin() {
         await database.SkipLogin();
 
@@ -90,7 +88,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var result = await database.GetQuestions(id);
         if (result != null) {
             List<Question> questions = result;
-            return new ObservableCollection<Question>(questions.OrderBy(q => q.QuestionNum));
+            return new ObservableCollection<Question>(questions.OrderBy(q => q.QuestionNo));
         }
         return null;
     }
@@ -111,26 +109,19 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public async Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userId) {
         var result = await database.GetUserCreatedQuizzes(userId);
         if (result != null) {
-            List<Quiz> quizzes = result;
-            Console.WriteLine("**************************************************************************User Quizzes: **************************************************************************");
-
-            foreach (Quiz quiz in quizzes) {
-                Console.WriteLine(quiz.Title);
-            }
-            return new ObservableCollection<Quiz>(quizzes);
+            return new ObservableCollection<Quiz>(result);
         }
         return null;
     }
 
     // Get active quiz IDs for a user from participants table
-    //Fetch the active_quiz_ids for a user by querying the participants table.
-    public async Task<List<long?>?> GetActiveQuizIdsForUser() {
+    // Fetch the active_quiz_ids for a user by querying the participants table.
+    public async Task<List<long>> GetActiveQuizIdsForUser() {
         try {
             var activeQuizIds = await database.GetActiveQuizIdsByUserId(); // Get from participants table
 
-            if (activeQuizIds == null || !activeQuizIds.Any()) {
-
-                return null;
+            if (activeQuizIds == null || activeQuizIds.Count() == 0) {
+                return [];
             }
 
             return activeQuizIds;
@@ -143,8 +134,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
 
     // Get quiz IDs from active quiz IDs
-    //Fetch the quiz_id for each active_quiz_id.
-    public async Task<List<(long QuizId, DateTime StartTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long?> activeQuizIds) {
+    // Fetch the quiz_id for each active_quiz_id.
+    public async Task<List<(long quizId, DateTime? startTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long> activeQuizIds) {
         try {
             Console.WriteLine($"Fetching quiz data for activeQuizIds: {string.Join(", ", activeQuizIds)}");
 
