@@ -122,6 +122,19 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    public async Task<bool> EditQuizTitle(Quiz quiz) {
+        try {
+            var result = await Client
+                .From<Quiz>()
+                .Upsert(quiz);
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
     public async Task<Quiz?> GetQuizById(long id) {
         try {
             Quiz? quiz = await Client

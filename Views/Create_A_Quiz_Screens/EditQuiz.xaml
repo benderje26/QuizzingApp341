@@ -39,7 +39,8 @@
                     HeightRequest="50"
                     FontSize="18"
                     HorizontalOptions="Fill"
-                    BackgroundColor="Transparent"/>
+                    BackgroundColor="Transparent"
+                    TextChanged="QuizTitleChanged"/>
             </Frame>
         </StackLayout>
 

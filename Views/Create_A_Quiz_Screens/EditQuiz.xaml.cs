@@ -27,6 +27,12 @@ public partial class EditQuiz : ContentPage {
         }
     }
 
+    public async void QuizTitleChanged(object senter, EventArgs e) {
+        QuizTitle = NewQuizTitle.Text;
+        currentQuiz.Title = NewQuizTitle.Text;
+        await MauiProgram.BusinessLogic.EditQuizTitle(currentQuiz);
+    }
+
     public async void AddQuestionClicked(object sender, EventArgs e) {
         var popup = new CreateNewQuizPopup();
 

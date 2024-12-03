@@ -156,6 +156,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// True if the access code is valid otherwise false
     /// </returns>
     Task<bool> ValidateAccessCode(string accessCode);
+    Task<bool> EditQuizTitle(Quiz quiz);
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);
