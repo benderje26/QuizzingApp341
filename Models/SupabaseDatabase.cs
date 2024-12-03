@@ -72,13 +72,21 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<AccountCreationResult> CreateNewUser(string emailAddress, string username, string password) {
         try {
-            await SetSession(await Client.Auth.SignUp(emailAddress, password,
-                new SignUpOptions() {
-                    Data = new Dictionary<string, object> {
-                        { "username", username }
-                    }
-                }));
-            return Session == null ? AccountCreationResult.NetworkError : AccountCreationResult.Success;
+            await SetSession(await Client.Auth.SignUp(emailAddress, password));
+
+            if (Session != null) {
+                UserData myData = new() {
+                    UserId = UserId,
+                    Username = username
+                };
+
+                var result = await Client
+                    .From<UserData>()
+                    .Insert(myData);
+
+                return result?.Model == null ? AccountCreationResult.Other : AccountCreationResult.Success;
+            }
+            return AccountCreationResult.Other;
         } catch (Exception) {
             return AccountCreationResult.Other;
         }
@@ -106,6 +114,18 @@ public class SupabaseDatabase : IDatabase {
             return LogoutResult.Success;
         } catch (Exception) {
             return LogoutResult.NetworkError;
+        }
+    }
+
+    public async Task<UserData?> GetUserData(Guid userId) {
+        try {
+            return await Client
+                .From<UserData>()
+                .Where(x => x.UserId == userId)
+                .Single();
+        } catch (Exception e) {
+            Console.Write("ERORRRR" + e.Message);
+            return null;
         }
     }
 
