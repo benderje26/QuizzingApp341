@@ -23,7 +23,6 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
     public string? QuestionText { get; set; }
     public CreateMultipleChoiceQuiz(Question? question) {
         MultipleChoiceQuestionToChange = question;
-        Console.WriteLine(question.QuestionText);
 
         // If there is a question present to edit
         if (MultipleChoiceQuestionToChange != null) {
@@ -110,7 +109,4 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
         // Navigate back to the CreateNewQuiz page
         Navigation.PopAsync();
     }
-
-
-
 }

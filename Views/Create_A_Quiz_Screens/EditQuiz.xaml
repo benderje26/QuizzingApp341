@@ -82,5 +82,11 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
+        <ImageButton Grid.Row="3" Source="add_plus_button.png" WidthRequest="20"
+            HeightRequest ="20"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Clicked="AddQuestionClicked"></ImageButton>
     </Grid>
 </ContentPage>

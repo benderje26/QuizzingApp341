@@ -40,7 +40,6 @@ public partial class CreateFillBlank : ContentPage {
         string question = QuestionFillBlank.Text != null ? QuestionFillBlank.Text.Trim() : string.Empty;
         string answer = AnswerFillBlank.Text != null ? AnswerFillBlank.Text.Trim() : string.Empty;
 
-
         // Check for required fields not empty
         if (string.IsNullOrEmpty(question)) {
             DisplayAlert("Error", "Please enter a question.", "OK");
@@ -53,9 +52,11 @@ public partial class CreateFillBlank : ContentPage {
         }
 
         // Do something with the retrieved data - make a question object - saving to Database
+        FillBlankQuestionToChange.QuestionText = question;
+        FillBlankQuestionToChange.AcceptableAnswers = [answer];
 
+        MauiProgram.BusinessLogic.EditQuestion(FillBlankQuestionToChange);
         // Navigate back to the CreateNewQuiz page
         Navigation.PopAsync();
     }
-
 }
