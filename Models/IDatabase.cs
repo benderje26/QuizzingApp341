@@ -106,7 +106,7 @@ public interface IDatabase {
     Task<List<long>> GetActiveQuizIdsByUserId();
 
     /// <summary>
-    /// Gets a list of active quizzes by their IDs.
+    /// Gets a list of the current user's active quizzes by their IDs.
     /// </summary>
     /// <param name="activeQuizIds">List of active quiz IDs.</param>
     /// <returns>A list of active quizzes, or null if there were none</returns>
