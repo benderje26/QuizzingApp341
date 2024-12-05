@@ -346,7 +346,7 @@ public class SupabaseDatabase : IDatabase {
 
             // Add a handler to the channel
             channel.AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates, async (channel, response) => {
-                ActiveQuiz? quiz = response.Model<ActiveQuiz>(); // Update the quiz with the new active question from the response
+                ActiveQuiz? quiz = response.Model<ActiveQuiz>(); // Gets the active quiz with the new change (new question)
 
                 // Get the current active question for the current quiz
                 ActiveQuestion? question = quiz == null ? null : await GetCurrentActiveQuestion(quiz);
