@@ -1,6 +1,11 @@
-﻿namespace QuizzingApp341.Models;
+﻿using System.Collections.ObjectModel;
+
+namespace QuizzingApp341.Models;
 
 public interface IDatabase {
+    /// <summary>
+    /// Skips the login so the user is logged in as anonymous.
+    /// </summary>
     Task SkipLogin();
     /// <summary>
     /// Attempts to create a new user.
@@ -81,6 +86,10 @@ public interface IDatabase {
     /// Returns a list of all the quizzes the user has created
     /// </returns>
     Task<List<Quiz>?> GetUserCreatedQuizzes(Guid? userID);
+    /// <summary>
+    /// Gets all the public quizzes from the database and the user's quizzes.
+    /// </summary>
+    /// <returns>All public and user's quizzes</returns>
     Task<List<Quiz>?> GetAllQuizzesAsync();
 
     /// <summary>
@@ -90,10 +99,26 @@ public interface IDatabase {
     /// <returns>The user's info, or null if there is no logged in user</returns>
     UserInfo? GetUserInfo();
 
+    /// <summary>
+    /// Get's the current user's active quizzes' IDs.
+    /// </summary>
+    /// <returns>The IDs of the active quizzes</returns>
     Task<List<long>> GetActiveQuizIdsByUserId();
 
+    /// <summary>
+    /// Gets a list of the current user's active quizzes by their IDs.
+    /// </summary>
+    /// <param name="activeQuizIds">List of active quiz IDs.</param>
+    /// <returns>A list of active quizzes, or null if there were none</returns>
+    Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds);
 
-    Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long> activeQuizIds);
+    /// <summary>
+    /// Returns all of the users favorite quizzess from the database.
+    /// </summary>
+    /// <returns>
+    /// Returns all of the quizzes that the user has favorited
+    /// </returns>
+    Task<ObservableCollection<Quiz>> GetFavoriteQuizzes();
 
     /// <summary>
     /// Adds a favorite quiz to the database.
@@ -113,6 +138,11 @@ public interface IDatabase {
     /// </returns>
     Task<bool> DeleteFavoriteQuiz(long quizId);
 
+    /// <summary>
+    /// Gets an active quiz by its access code.
+    /// </summary>
+    /// <param name="accessCode">The access code of an active quiz</param>
+    /// <returns>The active quiz</returns>
     Task<ActiveQuiz?> GetActiveQuiz(string accessCode);
 
     /// <summary>
@@ -139,5 +169,10 @@ public interface IDatabase {
     /// <returns></returns>
     Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
 
+    /// <summary>
+    /// Validates that an access code is currently active.
+    /// </summary>
+    /// <param name="accessCode">The access code</param>
+    /// <returns>Whether the access code is currently active</returns>
     Task<bool> ValidateAccessCode(string accessCode);
 }
