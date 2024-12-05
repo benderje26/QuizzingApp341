@@ -133,39 +133,50 @@ public class SupabaseDatabase : IDatabase {
 
     #region Quizzes 
 
+//Get All the Quizzes for user
+    //From Quiz Models to quizzes table in supabase
+    //return List of Quiz 
     public async Task<List<Quiz>?> GetAllQuizzesAsync() {
         try {
-            var result = await Client.From<Quiz>().Get();
+            var result = await Client.From<Quiz>().Get();    //get all quizzes 
             return result?.Models;
         } catch {
-            return null;
+            return null;                                // failed
         }
     }
 
+    //Get Quiz by Quiz id
+    // From Quiz Models to quizzes table in supabase
+    //<param name="id"></param>
+    //rerturn one Quiz that matched the id, otherwise return null
     public async Task<Quiz?> GetQuizById(long id) {
         try {
             Quiz? quiz = await Client
                 .From<Quiz>()
-                .Where(q => q.Id == id)
+                .Where(q => q.Id == id)  // check id
                 .Single();
-            if (quiz == null) {
+            if (quiz == null) {  // if not found
                 return null;
             } else {
-                return quiz;
+                return quiz;  // return quiz
             }
         } catch (Exception) {
             return null;
         }
     }
 
+    //Get all the questions from that quiz id
+    // From Question Model to question table in supabse 
+    //  <param name="id"></param>
+    // return List of questions corresponding to that quiz id
     public async Task<List<Question>?> GetQuestions(long id) {
         try {
             var result = await Client
                 .From<Question>()
-                .Where(q => q.QuizId == id)
-                .Get();
+                .Where(q => q.QuizId == id)   // check if the quiz id exist
+                .Get();                         // get all questions
 
-            if (result == null) {
+            if (result == null) {            //no questions found
                 return null;
             }
             return result.Models; // Return the list of supabase questions
@@ -175,55 +186,71 @@ public class SupabaseDatabase : IDatabase {
     }
 
 
+    // Add question 
+    // From Question Model to question table in supabse 
+    //<param name="question"></param>
+    // return question id
     public async Task<long?> AddQuestion(Question question) {
         try {
             var result = await Client
                 .From<Question>()
-                .Insert(question);
+                .Insert(question);     // insert new question to supabase
 
             if (result == null || result.Model == null) {
                 return null;
             }
 
-            return result.Model.Id;
+            return result.Model.Id;      // return question id 
         } catch {
             return null;
         }
     }
 
+    // Delete question by question id
+    //From Question Model to question table in supabse 
+    //<param name="id"></param>
+    //return true is question got deleted, otherwise false
     public async Task<bool> DeleteQuestion(long id) {
         try {
             await Client
             .From<Question>()
-            .Where(q => q.Id == id)
+            .Where(q => q.Id == id)  // if id match, delete that id
             .Delete();
         } catch {
-            return false;
+            return false;  // failed to delete
         }
-        return true;
+        return true;     // delete successfully
     }
 
+    //Edit question by question object
+    //From Question Model to question table in supabse 
+    //<param name="question"></param>
+    //return true is question got updated, otherwise false
     public async Task<bool> EditQuestion(Question question) {
         try {
             await Client
-            .From<Question>()
-            .Upsert(question);
+            .From<Question>() 
+            .Upsert(question);     //add new question to supabase
         } catch {
             return false;
         }
         return true;
     }
 
+    //Get all the user quizzes by user id
+    //From Quiz model to quiz table in supabse
+    //<param name="userId"></param>
+    //return list of quiz corresponding to user id 
     public async Task<List<Quiz>?> GetUserCreatedQuizzes(Guid? userId) {
         try {
             var result = await Client
                 .From<Quiz>()
-                .Where(q => q.CreatorId == userId)
-                .Get();
+                .Where(q => q.CreatorId == userId)   //check for id
+                .Get();                              //get all quizzes
 
-            return result?.Models;
+            return result?.Models;                 //return list of quizzes
         } catch (Exception e) {
-            Console.Write("ERRORRRRR" + e);
+            Console.Write("ERRORRRRR" + e);          //failed to get quizzes
             return null;
         }
     }
