@@ -231,12 +231,14 @@ public class SupabaseDatabase : IDatabase {
     #region Active Quizzes
     public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
         try {
+            // Get an active quiz from the table based on the access code
             return await Client
                 .From<ActiveQuiz>()
-                .Where(q => q.AccessCode == accessCode)
-                .Single();
+                .Where(q => q.AccessCode == accessCode) // Make sure the access code matches
+                .Single(); // Return the first active quiz
+
         } catch (Exception) {
-            return null;
+            return null; // There was no active quiz
         }
     }
 
@@ -254,6 +256,7 @@ public class SupabaseDatabase : IDatabase {
 
             Console.WriteLine($"Supabase Response: {participants?.Models?.Count} records returned");
             Console.WriteLine($"active_quiz_id:{participants?.Models}");
+
             if (participants?.Models == null || !participants.Models.Any()) {
                 Console.WriteLine($"No participants found for user {UserId}");
                 return []; // No active quizzes found for the user
@@ -301,36 +304,36 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
         try {
-            await Client
+            await Client // Insert into the response table according to the choice selected
                 .From<Response>()
                 .Insert(new Response() {
                     ActiveQuizId = question.ActiveQuizId,
                     UserId = UserId,
                     QuestionNo = question.QuestionNo,
                     MultipleChoiceResponse = [choice],
-                    FillBlankResponse = null
+                    FillBlankResponse = null // Null because this is multiple choice
                 }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
             return true;
         } catch (Exception e) {
             Console.WriteLine("ERRORRRR" + e.Message);
-            return false;
+            return false; // Inserting into responses failed
         }
     }
 
     public async Task<bool> SubmitFillBlankQuestionAnswer(ActiveQuestion question, string response) {
         try {
-            await Client
+            await Client // Insert into the responses table according to the response given
                 .From<Response>()
                 .Insert(new Response() {
                     ActiveQuizId = question.ActiveQuizId,
                     UserId = UserId,
                     QuestionNo = question.QuestionNo,
-                    MultipleChoiceResponse = null,
+                    MultipleChoiceResponse = null, // Null because this is a fill in the blank question
                     FillBlankResponse = response
                 }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
             return true;
         } catch (Exception e) {
-            return false;
+            return false; // Inserting into responses failed
         }
     }
 
@@ -338,18 +341,25 @@ public class SupabaseDatabase : IDatabase {
         try {
             // TODO update participants table that we participated!
             // TODO get current question if it exists
+            // Create a channel for the active quiz
             var channel = Client.Realtime.Channel("realtime", "public", "active_quizzes", null, "id=eq." + quiz.Id);
+
+            // Add a handler to the channel
             channel.AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates, async (channel, response) => {
-                ActiveQuiz? quiz = response.Model<ActiveQuiz>();
+                ActiveQuiz? quiz = response.Model<ActiveQuiz>(); // Update the quiz with the new active question from the response
+
+                // Get the current active question for the current quiz
                 ActiveQuestion? question = quiz == null ? null : await GetCurrentActiveQuestion(quiz);
 
                 if (question == null) {
                     return;
                 }
 
+                // Populate the question for the users
                 handler(question);
             });
-            await channel.Subscribe();
+
+            await channel.Subscribe(); // Listen to any changes
             return true;
         } catch (Exception) {
             return false;
@@ -357,16 +367,18 @@ public class SupabaseDatabase : IDatabase {
     }
 
     public async Task<ActiveQuestion?> GetCurrentActiveQuestion(ActiveQuiz quiz) {
+        // Check if the active question from the active quiz IS active
         long activeQuizId = quiz.Id;
         int questionNo = quiz.CurrentQuestionNo ?? -1;
         if (!quiz.IsActive ?? true || quiz.CurrentQuestionNo < 0) {
             return null;
         }
-        try {
+
+        try { // If the active question is active in db, return the active question
             return await Client
                 .From<ActiveQuestion>()
-                .Where(x => x.ActiveQuizId == activeQuizId)
-                .Where(x => x.QuestionNo == questionNo)
+                .Where(x => x.ActiveQuizId == activeQuizId) // Make sure the active quiz Id matches
+                .Where(x => x.QuestionNo == questionNo) // Make sure the question number matches
                 .Single();
         } catch (Exception) {
             return null;
@@ -374,12 +386,13 @@ public class SupabaseDatabase : IDatabase {
     }
     public async Task<bool> ValidateAccessCode(string accessCode) {
         try {
+            // Check if the access code exists in the active quiz table
             int count = await Client
                 .From<ActiveQuiz>()
-                .Where(a => a.AccessCode == accessCode)
-                .Where(a => a.IsActive == true)
+                .Where(a => a.AccessCode == accessCode) // Make sure the access code matches
+                .Where(a => a.IsActive == true) // Make sure it is active
                 .Limit(1)
-                .Count(Constants.CountType.Exact);
+                .Count(Constants.CountType.Exact); // If count is more than one it exists
 
             return count > 0;
         } catch (Exception e) {
@@ -498,5 +511,4 @@ public class SupabaseDatabase : IDatabase {
         }
     }
     #endregion
-
 }
