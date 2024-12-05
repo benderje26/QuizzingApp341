@@ -169,7 +169,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             Console.WriteLine($"Fetching quiz data for activeQuizIds: {string.Join(", ", activeQuizIds)}");
 
             // Fetch the active quizzes based on the provided IDs
-            var activeQuizzes = await database.GetQuizIdsByActiveQuizIds(activeQuizIds);
+            var activeQuizzes = await database.GetActiveQuizzesByActiveQuizIds(activeQuizIds);
 
             // Check if there are no active quizzes
             if (activeQuizzes == null || !activeQuizzes.Any()) {
@@ -192,14 +192,30 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return result == null ? null : new ObservableCollection<Quiz>(result);
     }
 
-    // Adds a quiz to user favourites
+    #region Favorite Quizzes
+
+    /// <summary>
+    /// Adds a favorite quiz to the questions table 
+    /// </summary>
+    /// <param name="quizId">The quiz's ID</param>
+    /// <returns>
+    /// Returns the id to that favorite quiz after it gets added to the db otherwise null
+    /// </returns>
     public async Task<long?> AddFavoriteQuiz(long quizId) {
+        //Call the database to add the quiz to favorites
         var result = await database.AddFavoriteQuiz(quizId);
         return result;
     }
 
-    // Removes the quiz from favourites
+    /// <summary>
+    /// Deletes a favorite quiz from the questions table 
+    /// </summary>
+    /// <param name="quizId">The quiz's ID</param>
+    /// <returns>
+    /// Returns whether or not the favorite quiz was successfully deleted
+    /// </returns>
     public async Task<bool> DeleteFavoriteQuiz(long quizId) {
+        //Call the database to delete the favorite
         var result = await database.DeleteFavoriteQuiz(quizId);
         return result;
     }
@@ -256,3 +272,4 @@ partial class Regexes {
     [GeneratedRegex(@"^(?=.*\w|.{16,})(?=.*\d|.{16,})(?=.*[\W_]|.{16,})[a-zA-z0-9!@#$%^&*()_\-=+\[\]{}<>\\|;:'"",.?/`~]{8,32}$")]
     public static partial Regex PasswordRegex();
 }
+#endregion
