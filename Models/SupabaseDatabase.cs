@@ -13,36 +13,61 @@ using Constants = Supabase.Postgrest.Constants;
 public class SupabaseDatabase : IDatabase {
 
     #region Auth and User
+    // The Supabase url and key (is okay to be public)
     private const string REST_URL = "https://tcogwlqjinvzckjmnjhp.supabase.co";
     private const string API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjb2d3bHFqaW52emNram1uamhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkzNjc4NTIsImV4cCI6MjA0NDk0Mzg1Mn0.bzYJIRYJ3rtvEh3usrydy7M3ES1J6C5iMgPwzlqnTp8";
 
+    /// <summary>
+    /// The current Supabase client
+    /// </summary>
     private Client Client { get; set; }
 
+    // The current user's info
     private UserInfo? userInfo;
 
+    /// <summary>
+    /// The current Supabase session
+    /// </summary>
     private Session? Session {
         get => _session;
     }
     private Session? _session;
 
+    /// <summary>
+    /// Sets the current session, or logs out.
+    /// </summary>
+    /// <param name="s">The new current session or null if logging out</param>
     private async Task SetSession(Session? s) {
         _session = s;
         await SetUser(s?.User);
     }
 
+    /// <summary>
+    /// Sets the current user.
+    /// </summary>
+    /// <param name="u">The new current user or null if logging out</param>
     private async Task SetUser(User? u) {
         _user = u;
         UserId = u?.Id == null ? Guid.Empty : new Guid(u.Id);
         await GenerateUserInfo();
     }
 
+    /// <summary>
+    /// The current Supabase User
+    /// </summary>
     private User? User {
         get => _user;
     }
     private User? _user;
 
+    /// <summary>
+    /// The current user's ID
+    /// </summary>
     private Guid UserId { get; set; }
 
+    /// <summary>
+    /// Regenerates the info for the current user.
+    /// </summary>
     private async Task GenerateUserInfo() {
         userInfo = new(UserId, User != null) {
             CreatedQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetUserCreatedQuizzes(UserId)) ?? []),
@@ -51,7 +76,7 @@ public class SupabaseDatabase : IDatabase {
     }
 
     public async Task SkipLogin() {
-        await SetSession(null);
+        await SetSession(null); // setting the session to null sets things like UserId to null too
     }
 
     public UserInfo? GetUserInfo() {
@@ -60,9 +85,9 @@ public class SupabaseDatabase : IDatabase {
 
     public SupabaseDatabase() {
         Client = new(REST_URL, API_KEY, new SupabaseOptions {
-            AutoConnectRealtime = true
+            AutoConnectRealtime = true // connects now instead of when they start an active quiz
         });
-        _ = Initialize();
+        _ = Initialize(); // initializes in the background
     }
 
     public async Task Initialize() {
@@ -72,18 +97,22 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<AccountCreationResult> CreateNewUser(string emailAddress, string username, string password) {
         try {
+            // Calls Supabase to sign up and then sets the current session to that new user
             await SetSession(await Client.Auth.SignUp(emailAddress, password));
 
             if (Session != null) {
+                // If it worked, put the user's data into a UserData object
                 UserData myData = new() {
                     UserId = UserId,
                     Username = username
                 };
 
+                // Puts it in the USER_DATA table, which is used for storing usernames
                 var result = await Client
                     .From<UserData>()
                     .Insert(myData);
 
+                // Returns if it was a success
                 return result?.Model == null ? AccountCreationResult.Other : AccountCreationResult.Success;
             }
             return AccountCreationResult.Other;
@@ -94,9 +123,13 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<LoginResult> Login(string emailAddress, string password) {
         try {
+            // Attempts to log in and set the session to what the user logged in as
             await SetSession(await Client.Auth.SignInWithPassword(emailAddress, password));
+
+            // Retuns if it was a success
             return Session == null ? LoginResult.Other : LoginResult.Success;
         } catch (Exception e) {
+            // Sees if it was a bad credentials error
             if (e is GotrueException ge && ge.Reason == FailureHint.Reason.UserBadLogin) {
                 return LoginResult.BadCredentials;
             }
@@ -106,10 +139,14 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<LogoutResult> Logout() {
         if (Client == null) {
+            // Can't log out if already logged out
             return LogoutResult.Other;
         }
         try {
+            // Signs out with supabase
             await Client.Auth.SignOut();
+
+            // Sets variables like UserId to null
             await SetSession(null);
             return LogoutResult.Success;
         } catch (Exception) {
@@ -119,6 +156,7 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<UserData?> GetUserData(Guid userId) {
         try {
+            // Gets a user's data (used for retrieving usernames currently)
             return await Client
                 .From<UserData>()
                 .Where(x => x.UserId == userId)
@@ -297,35 +335,21 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-
-    // Fetch quiz_id by use active_quiz_id from active_quizzes table
-    public async Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long> activeQuizIds) {
+    public async Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds) {
         try {
-            Console.WriteLine($"print user ID (GetActiveQuizzesByActiveQuizIds): {UserId}");
-            Console.WriteLine($"print input activeQuizIds (GetActiveQuizzesByActiveQuizIds): {string.Join(", ", activeQuizIds)}");
-
-            if (activeQuizIds == null || !activeQuizIds.Any()) {
-                Console.WriteLine("No quiz IDs provided.");
-                return null;
+            if (activeQuizIds == null || activeQuizIds.Count == 0) { // if the list is empty no need requesting to db
+                return [];
             }
             var result = await Client
                 .From<ActiveQuiz>()
-                .Where(x => x.Activator == UserId)
-                .Filter(x => x.Id, Supabase.Postgrest.Constants.Operator.In, activeQuizIds)
+                .Where(x => x.Activator == UserId) // only activated by current user
+                .Filter(x => x.Id, Supabase.Postgrest.Constants.Operator.In, activeQuizIds) // they are in the list of the IDs
                 .Get();
-
-            Console.WriteLine($"Total records matching Activator == UserId: {result?.Models?.Count ?? 0}");
-            Console.WriteLine($"Fetched active quizzes (GetActiveQuizzesByActiveQuizIds): {result?.Models?.Count ?? 0} entries");
-
-            if (result?.Models == null || !result.Models.Any()) {
-                Console.WriteLine("No matching active quizzes found.");
-                return null;
-            }
 
             return result.Models;
         } catch (Exception ex) {
             Console.WriteLine($"Error fetching active quizzes: {ex.Message}");
-            return null;
+            return [];
         }
     }
 

@@ -144,7 +144,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             Console.WriteLine($"Fetching quiz data for activeQuizIds: {string.Join(", ", activeQuizIds)}");
 
             // Fetch the active quizzes based on the provided IDs
-            var activeQuizzes = await database.GetQuizIdsByActiveQuizIds(activeQuizIds);
+            var activeQuizzes = await database.GetActiveQuizzesByActiveQuizIds(activeQuizIds);
 
             // Check if there are no active quizzes
             if (activeQuizzes == null || !activeQuizzes.Any()) {
