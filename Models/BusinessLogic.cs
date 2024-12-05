@@ -239,3 +239,4 @@ partial class Regexes {
     [GeneratedRegex(@"^(?=.*\w|.{16,})(?=.*\d|.{16,})(?=.*[\W_]|.{16,})[a-zA-z0-9!@#$%^&*()_\-=+\[\]{}<>\\|;:'"",.?/`~]{8,32}$")]
     public static partial Regex PasswordRegex();
 }
+#endregion
