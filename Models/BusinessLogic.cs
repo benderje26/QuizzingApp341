@@ -18,7 +18,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             return (AccountCreationResult.BadEmail, "Email must be in the correct format (ex: example@example.com).");
         }
         if (!Regexes.UsernameRegex().IsMatch(username)) {
-            return (AccountCreationResult.BadUsername, "Username must be 4 to 32 characters and only contain A-Z, a-z, 0-9, and _ (underscores).");
+            return (AccountCreationResult.BadUsername, "Username must be 5 to 20 characters and only contain A-Z, a-z, 0-9, and _ (underscores).");
         }
         if (!Regexes.PasswordRegex().IsMatch(password)) {
             return (AccountCreationResult.BadPassword, "Password is not strong enough or invalid. It must be 8 characters with a letter, number, and symbol, or at least 16 characters of any kind.");
@@ -75,6 +75,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         };
 
         return (result, s);
+    }
+
+    public async Task<UserData?> GetUserData(Guid userId) {
+        return await database.GetUserData(userId);
     }
     #endregion
 
@@ -210,7 +214,7 @@ partial class Regexes {
     public static partial Regex EmailRegex();
 
     // must be 4-32 letters, numbers, or underscores
-    [GeneratedRegex(@"^\w{4,32}$")]
+    [GeneratedRegex(@"^\w{5,20}$")]
     public static partial Regex UsernameRegex();
 
     // basically it must be at least 8 characters, and it must have a letter, number and symbol OR be at least 16 characters
