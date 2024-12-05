@@ -62,6 +62,76 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         NotifyPropertyChanged(nameof(UserInfo));
     }
 
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(UpdateEmailResult, string?)> UpdateEmail(string emailAddress) {
+        if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
+            return (UpdateEmailResult.BadEmail, "Email must be in the correct format (ex: example@example.com).");
+        }
+
+        UpdateEmailResult result = await database.UpdateEmail(emailAddress);
+
+        string? s = result switch {
+            UpdateEmailResult.Success => null,
+            UpdateEmailResult.DuplicateEmail => "Email already used on another account.",
+            UpdateEmailResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            UpdateEmailResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(UpdateUsernameResult, string?)> UpdateUsername(string username) {
+        if (!Regexes.UsernameRegex().IsMatch(username)) {
+            return (UpdateUsernameResult.BadUsername, "Username must be 5 to 20 characters and only contain A-Z, a-z, 0-9, and _ (underscores).");
+        }
+
+        UpdateUsernameResult result = await database.UpdateUsername(username);
+
+        //NotifyPropertyChanged(nameof(UserInfo));
+
+        string? s = result switch {
+            UpdateUsernameResult.Success => null,
+            UpdateUsernameResult.DuplicateUsername => "That username is already used, pick another one.",
+            UpdateUsernameResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            UpdateUsernameResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(UpdatePasswordResult, string?)> UpdatePassword(string password) {
+        if (!Regexes.PasswordRegex().IsMatch(password)) {
+            return (UpdatePasswordResult.BadPassword, "Password is not strong enough or invalid. It must be 8 characters with a letter, number, and symbol, or at least 16 characters of any kind.");
+        }
+
+        UpdatePasswordResult result = await database.UpdatePassword(password);
+
+        string? s = result switch {
+            UpdatePasswordResult.Success => null,
+            UpdatePasswordResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            UpdatePasswordResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
     public async Task<(LogoutResult, string?)> Logout() {
         LogoutResult result = await database.Logout();
 

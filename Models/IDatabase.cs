@@ -17,6 +17,28 @@ public interface IDatabase {
     /// <param name="password">The password</param>
     /// <returns>The result of attempting to log in</returns>
     Task<LoginResult> Login(string emailAddress, string password);
+
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result of attempting to update the users email</returns>
+    Task<UpdateEmailResult> UpdateEmail(string emailAddress);
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result of attempting to update the users username</returns>
+    Task<UpdateUsernameResult> UpdateUsername(string username);
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result of attempting to update the users password</returns>
+    Task<UpdatePasswordResult> UpdatePassword(string password);
+
     /// <summary>
     /// Attempts to log the user out.
     /// </summary>

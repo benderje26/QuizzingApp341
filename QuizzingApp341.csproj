@@ -77,6 +77,15 @@
 	  <Compile Update="Views\Account_Screen\Account.xaml.cs">
 	    <DependentUpon>Account.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\Account_Screen\UpdatePassword.xaml.cs">
+	    <DependentUpon>UpdatePassword.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Account_Screen\UpdateUsername.xaml.cs">
+	    <DependentUpon>UpdateUsername.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Account_Screen\UpdateEmail.xaml.cs">
+	    <DependentUpon>UpdateEmail.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\CreateMultipleChoiceQuiz.xaml.cs">
 	    <DependentUpon>CreateMultipleChoiceQuiz.xaml</DependentUpon>
 	  </Compile>
@@ -101,6 +110,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\Account_Screen\UpdatePassword.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Account_Screen\UpdateUsername.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Account_Screen\UpdateEmail.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\CreateAccount.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -5,26 +5,10 @@
              x:Class="QuizzingApp341.Views.Account"
              Padding="7"
              Title="Account">
-    <StackLayout Padding="20" VerticalOptions="FillAndExpand">
-
-        <!-- Account Title  -->
-        <Label Text="Account"
-               FontSize="24"
-               HorizontalOptions="Center"
-               VerticalOptions="Start"
-               Margin="0,0,0,20" />
+    <StackLayout Padding="20" VerticalOptions="FillAndExpand" >
 
         <!-- Buttons for each account option -->
-        <!-- I don't think we should do all the functionality below -->
-        <Button Text="Account info >" 
-                FontSize="18"
-                BackgroundColor="DarkBlue"
-                TextColor="White"
-                CornerRadius="10"
-                HeightRequest="50"
-                Margin="0,10" />
-
-        <Button Text="Sign Out >" 
+        <Button Text="Sign Out" 
                 FontSize="18"
                 BackgroundColor="DarkBlue"
                 TextColor="White"
@@ -32,6 +16,33 @@
                 HeightRequest="50"
                 Margin="0,10" 
                 Clicked="OnSignOutClicked"/>
+
+        <Button Text="Update Email" 
+                FontSize="18"
+                BackgroundColor="DarkBlue"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="50"
+                Margin="0,10"
+                Clicked="OnUpdateEmailClicked"/>
+
+        <Button Text="Update Username" 
+                FontSize="18"
+                BackgroundColor="DarkBlue"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="50"
+                Margin="0,10" 
+                Clicked="OnUpdateUsernameClicked"/>
+
+        <Button Text="Update Password" 
+                FontSize="18"
+                BackgroundColor="DarkBlue"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="50"
+                Margin="0,10"
+                Clicked="OnUpdatePasswordClicked"/>
 
         <Button Text="Delete Account"
                 FontSize="18"

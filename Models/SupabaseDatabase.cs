@@ -117,6 +117,66 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result of attempting to update the users email</returns>
+    public async Task<UpdateEmailResult> UpdateEmail(string emailAddress) {
+        try {
+            //Update the users email
+            var newEmail = new UserAttributes { Email = emailAddress };
+            var result = await Client.Auth.Update(newEmail);
+            //Return that email was updated successfully
+            return UpdateEmailResult.Success;
+        } catch (Exception e) {
+            //Write out the error if if occurred and return NetworkError to represent a failed update
+            Console.Write("ERRORRRRR" + e);
+            return UpdateEmailResult.NetworkError;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result of attempting to update the users username</returns>
+    public async Task<UpdateUsernameResult> UpdateUsername(string username) {
+        try {
+            //Update the users username
+                var result = await Client
+                    .From<UserData>()
+                    .Where(x => x.UserId == UserId)
+                    .Set(x => x.Username, username)
+                    .Update();
+            //Return that it was updated successfully
+                return UpdateUsernameResult.Success;
+        } catch (Exception e) {
+            //Write out the error if if occurred and return NetworkError to represent a failed update
+            Console.Write("ERRORRRRR" + e);
+            return UpdateUsernameResult.NetworkError;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result of attempting to update the users password</returns>
+    public async Task<UpdatePasswordResult> UpdatePassword(string password) {
+        try {
+            //Update the users password
+            var newPassword = new UserAttributes { Password = password };
+            var result = await Client.Auth.Update(newPassword);
+            //Return that is was updated successfully
+            return UpdatePasswordResult.Success;
+        } catch (Exception e) {
+            //Write out the error if if occurred and return NetworkError to represent a failed update
+            Console.Write("ERRORRRRR" + e);
+            return UpdatePasswordResult.NetworkError;
+        }
+    }
+
     public async Task<UserData?> GetUserData(Guid userId) {
         try {
             return await Client
