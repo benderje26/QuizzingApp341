@@ -24,6 +24,13 @@ public interface IDatabase {
     Task<LogoutResult> Logout();
 
     /// <summary>
+    /// Attempts to get the UserData object for a User ID.
+    /// </summary>
+    /// <param name="userId">The id of the user you need the UserData for</param>
+    /// <returns>A UserData object for the user</returns>
+    Task<UserData?> GetUserData(Guid userId);
+
+    /// <summary>
     /// Attempts to get a quiz.
     /// </summary>
     /// <param name="id">The given id of the quiz</param>
