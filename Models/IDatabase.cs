@@ -1,4 +1,6 @@
-﻿namespace QuizzingApp341.Models;
+﻿using System.Collections.ObjectModel;
+
+namespace QuizzingApp341.Models;
 
 public interface IDatabase {
     Task SkipLogin();
@@ -94,6 +96,14 @@ public interface IDatabase {
 
 
     Task<List<ActiveQuiz>?> GetQuizIdsByActiveQuizIds(List<long> activeQuizIds);
+
+    /// <summary>
+    /// Returns all of the users favorite quizzess from the database.
+    /// </summary>
+    /// <returns>
+    /// Returns all of the quizzes that the user has favorited
+    /// </returns>
+    Task<ObservableCollection<Quiz>> GetFavoriteQuizzes();
 
     /// <summary>
     /// Adds a favorite quiz to the database.

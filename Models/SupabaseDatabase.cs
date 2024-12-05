@@ -391,74 +391,111 @@ public class SupabaseDatabase : IDatabase {
     #endregion
 
     #region Favorite Quizzes
+
+    /// <summary>
+    /// Returns all of the users favorite quizzess from the database.
+    /// </summary>
+    /// <returns>
+    /// Returns all of the quizzes that the user has favorited
+    /// </returns>
     public async Task<ObservableCollection<Quiz>> GetFavoriteQuizzes() {
         try {
+            //Get all the favorited quizzess from the database
             ModeledResponse<FavoriteQuiz> result = await Client
                 .From<FavoriteQuiz>()
                 .Where(q => q.UserId == UserId)
                 .Get();
 
+            //Store the favorited quizzess into a variable
             List<FavoriteQuiz> favQuizzes = result.Models;
+            //Create a new collection of Quiz, so that the actual information of the favorited quizzess can be accessed
             ObservableCollection<Quiz> quizzes = [];
 
+            //Loop through all of the favorited quizzess
             foreach (FavoriteQuiz favQuiz in favQuizzes) {
+                //Get all of the quiz information for the favorited quiz
                 Quiz? q = await GetQuizById(favQuiz.QuizId);
-                if (q != null) {
+                //Make sure that the quiz returned is valid
+                if (q != null) { 
+                    //Add it to the array to be returned
                     quizzes.Add(q);
                 }
             }
-
+            //Return all the quiz information for the favorited quizzess
             return quizzes;
         } catch (Exception e) {
+            //Write out the error if if occurred and return an empty collection
             Console.Write("ERRORRRRR" + e);
             return [];
         }
     }
 
+    /// <summary>
+    /// Adds a favorite quiz to the database.
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns the id to that favorite quiz after it gets added to the db otherwise null
+    /// </returns>
     public async Task<long?> AddFavoriteQuiz(long quizId) {
         try {
+            //Create the new favorite quiz to be added to the database
             FavoriteQuiz f = new FavoriteQuiz {
                 QuizId = quizId,
                 UserId = UserId,
                 CreatedAt = DateTime.Now
             };
 
+            //Add the favorited quiz to the database
             var result = await Client
                 .From<FavoriteQuiz>()
                 .Insert(f);
 
-
+            //Check to see that the favorited quiz added successfully
             if (result == null || result.Model == null) {
                 return null;
             }
 
+            //Get all the information about the new favorited quiz
             var newQuiz = await GetQuizById(quizId);
+            //Update the users info that they added the favorite quiz
             userInfo.FavoriteQuizzes.Add(newQuiz);
             return result.Model.QuizId;
         } catch (Exception e) {
+            //Write out the error if if occurred and return null to represent a failed add
             Console.Write("ERRORRRRR" + e);
-
             return null;
         }
     }
 
+    /// <summary>
+    /// Deletes a favorite quiz from the database.
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns whether the favorite quiz was successfully deleted
+    /// </returns>
     public async Task<bool> DeleteFavoriteQuiz(long quizId) {
         try {
+            //Delete the favorited quiz from the database
             await Client
             .From<FavoriteQuiz>()
             .Where(q => q.QuizId == quizId)
             .Delete();
+
+            //Get the users favorite quizzes after the deletion
+            ObservableCollection<Quiz> favQuizzess = await GetFavoriteQuizzes();
+            //Clear the users favorited quizzes and readd the current list of favorites
+            userInfo.FavoriteQuizzes.Clear();
+            foreach (Quiz quiz in favQuizzess) {
+                userInfo.FavoriteQuizzes.Add(quiz);
+            }
+            return true;
         } catch (Exception e) {
+            //Write out the error if if occurred and return null to represent a failed add
             Console.Write("ERRORRRRR" + e);
             return false;
         }
-
-        ObservableCollection<Quiz> favQuizzess = await GetFavoriteQuizzes();
-        userInfo.FavoriteQuizzes.Clear();
-        foreach (Quiz quiz in favQuizzess) {
-            userInfo.FavoriteQuizzes.Add(quiz);
-        }
-        return true;
     }
     #endregion
 

@@ -166,12 +166,30 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return result == null ? null : new ObservableCollection<Quiz>(result);
     }
 
+    #region Favorite Quizzes
+
+    /// <summary>
+    /// Adds a favorite quiz to the questions table 
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns the id to that favorite quiz after it gets added to the db otherwise null
+    /// </returns>
     public async Task<long?> AddFavoriteQuiz(long quizId) {
+        //Call the database to add the quiz to favorites
         var result = await database.AddFavoriteQuiz(quizId);
         return result;
     }
 
+    /// <summary>
+    /// Deletes a favorite quiz from the questions table 
+    /// </summary>
+    /// <param name="quizId"></param>
+    /// <returns>
+    /// Returns whether or not the favorite quiz was successfully deleted
+    /// </returns>
     public async Task<bool> DeleteFavoriteQuiz(long quizId) {
+        //Call the database to delete the favorite
         var result = await database.DeleteFavoriteQuiz(quizId);
         return result;
     }
