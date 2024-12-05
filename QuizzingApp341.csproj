@@ -74,6 +74,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\Account_Screen\Account.xaml.cs">
+	    <DependentUpon>Account.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\CreateMultipleChoiceQuiz.xaml.cs">
 	    <DependentUpon>CreateMultipleChoiceQuiz.xaml</DependentUpon>
 	  </Compile>
