@@ -90,7 +90,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="activeQuizIds">List of active quiz IDs</param>
     /// <returns>List of quiz IDs if found, otherwise null</returns>
 
-    Task<List<(long quizId, DateTime? startTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long> activeQuizIds);
+    Task<List<(long quizId, DateTime? startTime, string quizTitle)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long> activeQuizIds);
     /// <summary>
     /// Gets the active quiz IDs for a given user from participants tables
     /// </summary>
@@ -130,7 +130,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="question">The question you are submitting to</param>
     /// <param name="choice">The index of the choice the student selected</param>
     /// <returns></returns>
-    Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice);
+    Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices);
 
     /// <summary>
     /// Submits a fill blank question with its answer.

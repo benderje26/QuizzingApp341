@@ -1,4 +1,6 @@
-﻿namespace QuizzingApp341.Models;
+﻿using System.Collections.ObjectModel;
+
+namespace QuizzingApp341.Models;
 
 public interface IDatabase {
     Task SkipLogin();
@@ -112,9 +114,9 @@ public interface IDatabase {
     /// Submits a multiple choice question with its choice.
     /// </summary>
     /// <param name="question">The question you are submitting to</param>
-    /// <param name="choice">The index of the choice the student selected</param>
+    /// <param name="choices">The index of the choice the student selected</param>
     /// <returns></returns>
-    Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice);
+    Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices);
 
     /// <summary>
     /// Submits a fill blank question with its answer.

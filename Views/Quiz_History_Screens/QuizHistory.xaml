@@ -3,33 +3,47 @@
              x:Class="QuizzingApp341.Views.QuizHistory"
              Padding="7">
 
-    <StackLayout Padding="10" Spacing="20">
+    <ScrollView>
+        <StackLayout Padding="10" Spacing="20">
 
-        <!-- List of Quizzes in the history -->
-        <ListView x:Name="QuizzesListView"
-                  ItemsSource="{Binding Quizzes}"
-            HorizontalOptions="FillAndExpand"
-                  RowHeight="70"
-                  SeparatorColor="#11017a">
+            <!-- Iterate through the quizzes -->
+            <StackLayout x:Name="QuizHistoryStackLayout">
+                <!-- Example static quiz data, replace this with dynamic binding -->
+                <StackLayout Padding="10" Spacing="5">
+                    <Label Text="Title: Quiz4"
+                           FontAttributes="Bold"
+                           FontSize="20" />
+                    <Label Text="Quiz ID: 0"
+                           FontSize="18" />
+                    <Label Text="Last Activated: 2021-11-11 10:30"
+                           FontSize="16"
+                           TextColor="Gray" />
+                </StackLayout>
 
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <StackLayout Padding="10">
-                            <!-- Quiz Id Display -->
-                            <Label Text="{Binding QuizId}" 
-                                   FontAttributes="Bold" 
-                                   FontSize="18" />
+                <StackLayout Padding="10" Spacing="5">
+                    <Label Text="Title: Quiz2"
+                           FontAttributes="Bold"
+                           FontSize="20" />
+                    <Label Text="Quiz ID: 1"
+                           FontSize="18" />
+                    <Label Text="Last Activated: 2021-11-12 12:30"
+                           FontSize="16"
+                           TextColor="Gray" />
+                </StackLayout>
 
-                            <!-- Start Time Display -->
-                            <Label Text="{Binding StartTime, StringFormat='Last Activated: {0:yyyy-MM-dd HH:mm}'}" 
-                                   FontSize="14" 
-                                   TextColor="Gray" />
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </StackLayout>
+                <StackLayout Padding="10" Spacing="5">
+                    <Label Text="Title: Quiz1"
+                           FontAttributes="Bold"
+                           FontSize="20" />
+                    <Label Text="Quiz ID: 0"
+                           FontSize="18" />
+                    <Label Text="Last Activated: 2021-11-13 14:00"
+                           FontSize="16"
+                           TextColor="Gray" />
+                </StackLayout>
+            </StackLayout>
+
+        </StackLayout>
+    </ScrollView>
 
 </ContentPage>
