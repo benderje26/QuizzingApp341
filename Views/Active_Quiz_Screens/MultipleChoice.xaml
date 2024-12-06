@@ -20,10 +20,14 @@
             <Grid RowDefinitions="*,2*,*" ColumnDefinitions="2*,2*,2*">
                 <Label Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding QuestionText}" HorizontalOptions="Center" FontSize="32" Margin="0,40,0,0"/>
                 <VerticalStackLayout Grid.Row="1" Grid.ColumnSpan="3">
-                    <CollectionView x:Name="options" ItemsSource="{Binding Options}" >
+                    <CollectionView x:Name="options" ItemsSource="{Binding Options}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:IndexValuePair">
-                                <RadioButton GroupName="optionsButtons" Content="{Binding Value}" FontSize="24" Margin="0,10,0,0" HorizontalOptions="FillAndExpand" CheckedChanged="OnRadioButtonCheckedChanged"/>
+                                <HorizontalStackLayout VerticalOptions="Center" Spacing="10">
+                                    <CheckBox  CheckedChanged="OnCheckBoxCheckedChanged"
+                                                   HorizontalOptions="Start" />
+                                    <Label Text="{Binding Value}"  FontSize="30" Padding="5" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>

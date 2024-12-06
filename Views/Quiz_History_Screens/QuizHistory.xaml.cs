@@ -42,9 +42,9 @@ public partial class QuizHistory : ContentPage {
 
                 Quizzes.Clear();
 
-                foreach (var (quizId, startTime) in sortedQuizList) {
-                    // Create a new History object for each quiz - storing QuizId and StartTime
-                    Quizzes.Add(new History(quizId, startTime));
+                foreach (var (quizId, startTime,quizTitle) in sortedQuizList) {
+                    // Create a new History object for each quiz - storing QuizId and StartTime and quizTitle
+                    Quizzes.Add(new History(quizId, startTime,quizTitle));
                 }
             } else {
                 await DisplayAlert("No Quizzes", "No quizzes found for the active quizzes.", "OK");
@@ -58,8 +58,9 @@ public partial class QuizHistory : ContentPage {
 
 
     // History class to store quiz information
-    public class History(long quizId, DateTime? startTime) {
+    public class History(long quizId, DateTime? startTime, string quizTitle) {
         public DateTime? StartTime { get; set; } = startTime;
         public long QuizId { get; set; } = quizId;
+        public string QuizTitle { get; set; } = quizTitle;
     }
 }
