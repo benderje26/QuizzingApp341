@@ -7,6 +7,8 @@ using Supabase.Postgrest.Responses;
 using Supabase.Realtime.PostgresChanges;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Net.Mail;
 using Client = Supabase.Client;
 using Constants = Supabase.Postgrest.Constants;
 
@@ -227,11 +229,37 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    /// <summary>
+    /// Attempts to delete the current users account
+    /// </summary>
+    /// <returns>The result of attempting to delete the account</returns>
+    public async Task<DeleteAccountResult> DeleteAccount() {
+        try {
+            using var httpClient = new HttpClient {
+                BaseAddress = new Uri(REST_URL)
+            };
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", API_KEY);
+
+            // Make the DELETE request
+            var response = await httpClient.DeleteAsync($"/auth/v1/admin/users/{UserId}");
+
+            if (response.IsSuccessStatusCode) {
+                return DeleteAccountResult.Success;
+            } else {
+                return DeleteAccountResult.NetworkError;
+            }
+        } catch (Exception e) {
+            //Write out the error if if occurred and return NetworkError to represent a failed update
+            Console.Write("ERRORRRRR" + e);
+            return DeleteAccountResult.NetworkError;
+        }
+    }
+
     #endregion
 
     #region Quizzes 
 
-//Get All the Quizzes for user
+    //Get All the Quizzes for user
     //From Quiz Models to quizzes table in supabase
     //return List of Quiz 
     public async Task<List<Quiz>?> GetAllQuizzesAsync() {

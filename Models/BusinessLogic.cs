@@ -84,12 +84,15 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     /// <param name="emailAddress">The email address</param>
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     public async Task<(UpdateEmailResult, string?)> UpdateEmail(string emailAddress) {
+        // Checking email format 
         if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
             return (UpdateEmailResult.BadEmail, "Email must be in the correct format (ex: example@example.com).");
         }
 
+        // Update the email in the database
         UpdateEmailResult result = await database.UpdateEmail(emailAddress);
 
+        // Map result to user-friendly messages
         string? s = result switch {
             UpdateEmailResult.Success => null,
             UpdateEmailResult.DuplicateEmail => "Email already used on another account.",
@@ -107,14 +110,15 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     /// <param name="username">The username</param>
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     public async Task<(UpdateUsernameResult, string?)> UpdateUsername(string username) {
+        // Checking username format 
         if (!Regexes.UsernameRegex().IsMatch(username)) {
             return (UpdateUsernameResult.BadUsername, "Username must be 5 to 20 characters and only contain A-Z, a-z, 0-9, and _ (underscores).");
         }
 
+        // Update the username in the database
         UpdateUsernameResult result = await database.UpdateUsername(username);
 
-        //NotifyPropertyChanged(nameof(UserInfo));
-
+        // Map result to user-friendly messages
         string? s = result switch {
             UpdateUsernameResult.Success => null,
             UpdateUsernameResult.DuplicateUsername => "That username is already used, pick another one.",
@@ -132,12 +136,15 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     /// <param name="password">The password</param>
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     public async Task<(UpdatePasswordResult, string?)> UpdatePassword(string password) {
+        // Checking password format 
         if (!Regexes.PasswordRegex().IsMatch(password)) {
             return (UpdatePasswordResult.BadPassword, "Password is not strong enough or invalid. It must be 8 characters with a letter, number, and symbol, or at least 16 characters of any kind.");
         }
 
+        // Update the password in the database
         UpdatePasswordResult result = await database.UpdatePassword(password);
 
+        // Map result to user-friendly messages
         string? s = result switch {
             UpdatePasswordResult.Success => null,
             UpdatePasswordResult.NetworkError => NETWORK_ERROR_MESSAGE,
@@ -169,6 +176,25 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public async Task<UserData?> GetUserData(Guid userId) {
         return await database.GetUserData(userId);
     }
+
+    /// <summary>
+    /// Attempts to delete the users account
+    /// </summary>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(DeleteAccountResult, string?)> DeleteAccount() {
+        DeleteAccountResult result = await database.DeleteAccount();
+
+        // maps user to user friendly messages  
+        string? s = result switch {
+            DeleteAccountResult.Success => null,
+            DeleteAccountResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            DeleteAccountResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
     #endregion
 
 

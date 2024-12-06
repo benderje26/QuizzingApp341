@@ -58,6 +58,12 @@ public interface IDatabase {
     Task<UserData?> GetUserData(Guid userId);
 
     /// <summary>
+    /// Attempts to delete the current users account
+    /// </summary>
+    /// <returns>The result of attempting to delete the account</returns>
+    Task<DeleteAccountResult> DeleteAccount();
+
+    /// <summary>
     /// Attempts to get a quiz.
     /// </summary>
     /// <param name="id">The given id of the quiz</param>

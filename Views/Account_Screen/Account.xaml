@@ -14,7 +14,7 @@
                 TextColor="White"
                 CornerRadius="10"
                 HeightRequest="50"
-                Margin="0,10" 
+                Margin="0,20" 
                 Clicked="OnSignOutClicked"/>
 
         <Button Text="Update Email" 
@@ -23,7 +23,7 @@
                 TextColor="White"
                 CornerRadius="10"
                 HeightRequest="50"
-                Margin="0,10"
+                Margin="0,20"
                 Clicked="OnUpdateEmailClicked"/>
 
         <Button Text="Update Username" 
@@ -32,7 +32,7 @@
                 TextColor="White"
                 CornerRadius="10"
                 HeightRequest="50"
-                Margin="0,10" 
+                Margin="0,20" 
                 Clicked="OnUpdateUsernameClicked"/>
 
         <Button Text="Update Password" 
@@ -41,7 +41,7 @@
                 TextColor="White"
                 CornerRadius="10"
                 HeightRequest="50"
-                Margin="0,10"
+                Margin="0,20"
                 Clicked="OnUpdatePasswordClicked"/>
 
         <Button Text="Delete Account"
@@ -50,7 +50,8 @@
                 TextColor="White"
                 CornerRadius="10"
                 HeightRequest="50"
-                Margin="0,20,0,0" />
+                Margin="0,20,0,0" 
+                Clicked="OnDeleteAccountClicked"/>
 
     </StackLayout>
 </ContentPage>

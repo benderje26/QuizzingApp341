@@ -62,6 +62,12 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     Task<UserData?> GetUserData(Guid userId);
 
     /// <summary>
+    /// Attempts to delete the users account
+    /// </summary>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    Task<(DeleteAccountResult, string?)> DeleteAccount();
+
+    /// <summary>
     /// Attempts to get a quiz.
     /// </summary>
     /// <param name="id">The given id of the quiz</param>

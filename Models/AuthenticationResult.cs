@@ -11,3 +11,5 @@ public enum UpdateUsernameResult { Success, BadUsername, DuplicateUsername, Netw
 public enum UpdatePasswordResult { Success, BadPassword, NetworkError, Other }
 
 public enum LogoutResult { Success, NetworkError, Other }
+
+public enum DeleteAccountResult { Success, NetworkError, Other }
