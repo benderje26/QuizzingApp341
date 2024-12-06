@@ -7,8 +7,6 @@ using Supabase.Postgrest.Responses;
 using Supabase.Realtime.PostgresChanges;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Net.Mail;
 using Client = Supabase.Client;
 using Constants = Supabase.Postgrest.Constants;
 
