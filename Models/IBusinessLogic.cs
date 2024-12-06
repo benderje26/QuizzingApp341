@@ -83,6 +83,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// Returns an Observable Collection of all the quizzes the user has created
     /// </returns>
     Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userId);
+    Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes();
 
     /// <summary>
     /// Gets quiz IDs based on a list of active quiz IDs.

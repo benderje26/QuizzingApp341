@@ -173,7 +173,9 @@ public class SupabaseDatabase : IDatabase {
             var result = await Client
                 .From<Question>()
                 .Insert(question);
-
+            Console.WriteLine("****************** INSERTED??: ");
+            Console.WriteLine(result);
+            Console.WriteLine(result.Model.QuestionText);
             if (result == null || result.Model == null) {
                 return null;
             }
@@ -214,6 +216,21 @@ public class SupabaseDatabase : IDatabase {
                 .Where(q => q.CreatorId == userId)
                 .Get();
 
+            return result?.Models;
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
+            return null;
+        }
+    }
+
+    public async Task<List<Quiz>?> GetUserCreatedQuizzes() {
+        try {
+            var result = await Client
+                .From<Quiz>()
+                .Where(q => q.CreatorId == UserId)
+                .Get();
+
+            userInfo.CreatedQuizzes = new ObservableCollection<Quiz>(result?.Models);
             return result?.Models;
         } catch (Exception e) {
             Console.Write("ERRORRRRR" + e);

@@ -11,9 +11,11 @@ public partial class CreateFillBlank : ContentPage {
     public string? Answers { get; set; }
 
     public string? QuestionText { get; set; }
-    public CreateFillBlank(Question? question) {
-        FillBlankQuestionToChange = question;
 
+    private bool isNewQuestion { get; set; }
+    public CreateFillBlank(Question? question, bool isNewQuestion) {
+        FillBlankQuestionToChange = question;
+        this.isNewQuestion = isNewQuestion;
         // If there is a question present to edit
         if (FillBlankQuestionToChange != null) {
             NoQuestionPresent = false;
@@ -55,7 +57,11 @@ public partial class CreateFillBlank : ContentPage {
         FillBlankQuestionToChange.QuestionText = question;
         FillBlankQuestionToChange.AcceptableAnswers = [answer];
 
-        MauiProgram.BusinessLogic.EditQuestion(FillBlankQuestionToChange);
+        if (isNewQuestion) {
+            MauiProgram.BusinessLogic.AddQuestion(FillBlankQuestionToChange);
+        } else {
+            MauiProgram.BusinessLogic.EditQuestion(FillBlankQuestionToChange);
+        }
         // Navigate back to the CreateNewQuiz page
         Navigation.PopAsync();
     }

@@ -118,6 +118,14 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return null;
     }
 
+    public async Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes() {
+        var result = await database.GetUserCreatedQuizzes();
+        if (result != null) {
+            return new ObservableCollection<Quiz>(result);
+        }
+        return null;
+    }
+
     // Get active quiz IDs for a user from participants table
     // Fetch the active_quiz_ids for a user by querying the participants table.
     public async Task<List<long>> GetActiveQuizIdsForUser() {

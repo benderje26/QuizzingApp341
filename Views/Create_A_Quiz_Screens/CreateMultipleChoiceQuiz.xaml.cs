@@ -7,7 +7,7 @@ using Microsoft.Maui.Controls;
 using QuizzingApp341.Models;
 
 public partial class CreateMultipleChoiceQuiz : ContentPage {
-    static int questionNumber = 0;
+    //private int questionNumber;
     public Question? MultipleChoiceQuestionToChange { get; set; } // This is for editing a current question only if there is one to edit
     public bool? QuestionPresent { get; set; } = false;
     public bool? NoQuestionPresent { get; set; } = false;
@@ -21,8 +21,11 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
     public int? CorrectOption { get; set; }
 
     public string? QuestionText { get; set; }
-    public CreateMultipleChoiceQuiz(Question? question) {
+
+    private bool isNewQuestion;
+    public CreateMultipleChoiceQuiz(Question? question, bool isNewQuestion) {
         MultipleChoiceQuestionToChange = question;
+        this.isNewQuestion = isNewQuestion;
 
         // If there is a question present to edit
         if (MultipleChoiceQuestionToChange != null) {
@@ -98,7 +101,12 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
         MultipleChoiceQuestionToChange.MultipleChoiceOptions = options;
         MultipleChoiceQuestionToChange.MultipleChoiceCorrectAnswers = [correctOption];
 
-        MauiProgram.BusinessLogic.EditQuestion(MultipleChoiceQuestionToChange);
+        if (isNewQuestion) {
+            Console.WriteLine("MultipleChoiceQuestionToChange: " + MultipleChoiceQuestionToChange.QuestionText);
+            MauiProgram.BusinessLogic.AddQuestion(MultipleChoiceQuestionToChange);
+        } else {
+            MauiProgram.BusinessLogic.EditQuestion(MultipleChoiceQuestionToChange);
+        }
 
         // Navigate back to the CreateNewQuiz page
         Navigation.PopAsync();

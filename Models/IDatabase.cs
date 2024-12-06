@@ -74,6 +74,7 @@ public interface IDatabase {
     /// Returns a list of all the quizzes the user has created
     /// </returns>
     Task<List<Quiz>?> GetUserCreatedQuizzes(Guid? userID);
+    Task<List<Quiz>?> GetUserCreatedQuizzes();
     Task<List<Quiz>?> GetAllQuizzesAsync();
 
     /// <summary>
