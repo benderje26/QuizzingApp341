@@ -140,9 +140,9 @@ public class SupabaseDatabase : IDatabase {
     }
 
     public async Task<LogoutResult> Logout() {
-        if (Client == null) {
+        if (Session == null) {
             // Can't log out if already logged out
-            return LogoutResult.Other;
+            return LogoutResult.NotSignedIn;
         }
         try {
             // Signs out with supabase
@@ -162,6 +162,9 @@ public class SupabaseDatabase : IDatabase {
     /// <param name="emailAddress">The email address</param>
     /// <returns>The result of attempting to update the users email</returns>
     public async Task<UpdateEmailResult> UpdateEmail(string emailAddress) {
+        if (Session == null) {
+            return UpdateEmailResult.NotSignedIn;
+        }
         try {
             //Update the users email
             var newEmail = new UserAttributes { Email = emailAddress };
@@ -181,6 +184,9 @@ public class SupabaseDatabase : IDatabase {
     /// <param name="username">The username</param>
     /// <returns>The result of attempting to update the users username</returns>
     public async Task<UpdateUsernameResult> UpdateUsername(string username) {
+        if (Session == null) {
+            return UpdateUsernameResult.NotSignedIn;
+        }
         try {
             //Update the users username
                 var result = await Client
@@ -203,6 +209,9 @@ public class SupabaseDatabase : IDatabase {
     /// <param name="password">The password</param>
     /// <returns>The result of attempting to update the users password</returns>
     public async Task<UpdatePasswordResult> UpdatePassword(string password) {
+        if (Session == null) {
+            return UpdatePasswordResult.NotSignedIn;
+        }
         try {
             //Update the users password
             var newPassword = new UserAttributes { Password = password };
@@ -234,24 +243,17 @@ public class SupabaseDatabase : IDatabase {
     /// </summary>
     /// <returns>The result of attempting to delete the account</returns>
     public async Task<DeleteAccountResult> DeleteAccount() {
+        if (User == null) {
+            return DeleteAccountResult.NotSignedIn;
+        }
         try {
-            using var httpClient = new HttpClient {
-                BaseAddress = new Uri(REST_URL)
-            };
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", API_KEY);
-
-            // Make the DELETE request
-            var response = await httpClient.DeleteAsync($"/auth/v1/admin/users/{UserId}");
-
-            if (response.IsSuccessStatusCode) {
-                return DeleteAccountResult.Success;
-            } else {
-                return DeleteAccountResult.NetworkError;
-            }
+            // Make the delete_account stored procedure call
+            await Client.Rpc("delete_account", null);
+            await SetSession(null);
+            return DeleteAccountResult.Success;
         } catch (Exception e) {
-            //Write out the error if if occurred and return NetworkError to represent a failed update
             Console.Write("ERRORRRRR" + e);
-            return DeleteAccountResult.NetworkError;
+            return DeleteAccountResult.Other;
         }
     }
 
