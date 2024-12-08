@@ -186,16 +186,16 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<bool> DeleteQuestion(long id) {
+    public async Task<Exception?> DeleteQuestion(long id) {
         try {
             await Client
             .From<Question>()
             .Where(q => q.Id == id)
             .Delete();
-        } catch {
-            return false;
+        } catch (Exception e) {
+            return e;
         }
-        return true;
+        return null;
     }
 
     public async Task<bool> EditQuestion(Question question) {

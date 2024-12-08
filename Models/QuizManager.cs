@@ -135,19 +135,16 @@ public class QuizManager : INotifyPropertyChanged {
     /// <returns>
     /// returns true if successfully deleted in db otherwise false
     /// </returns>
-    public async Task<bool> DeleteQuestion(long questionId) {
+    public async Task<Exception?> DeleteQuestion(long questionId) {
         try {
-            // Delete from the table in db using the question id
-            if (await MauiProgram.BusinessLogic.DeleteQuestion(questionId)) {
-                return true;
-            }
+            var result = await MauiProgram.BusinessLogic.DeleteQuestion(questionId);
 
             // If successful with db, delete/reset it in the Questions list
             await GetQuestions();
-        } catch {
-            return false;
+            return result;
+        } catch (Exception e) {
+            return e;
         }
-        return true;
     }
 
     /// <summary>

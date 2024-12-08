@@ -96,10 +96,20 @@
 
             <!-- Save Button -->
             <Button Text="Save"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Start"
-                    Margin="0,50,0,0"  
-                Clicked="OnSaveClicked"/>
+                HorizontalOptions="Center"
+                Margin="0,25,0,0"
+                Clicked="OnSaveClicked"
+                WidthRequest="200"/>
+
+              <StackLayout Padding="20">
+                <Button
+                Text="Delete Question"
+                BackgroundColor="Red"
+                Clicked="OnDeleteQuestionClicked"
+                IsVisible="{Binding IsEditQuestion}"
+                WidthRequest="200"
+                ></Button>
+            </StackLayout>
         </StackLayout>
     </ScrollView>
 </ContentPage>

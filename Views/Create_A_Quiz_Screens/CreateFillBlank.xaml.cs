@@ -1,4 +1,5 @@
 using QuizzingApp341.Models;
+using System.Text.Json;
 
 namespace QuizzingApp341.Views;
 
@@ -12,11 +13,14 @@ public partial class CreateFillBlank : ContentPage {
 
     public string? QuestionText { get; set; }
 
-    private bool isNewQuestion { get; set; }
+    public bool IsNewQuestion { get; set; }
+
+    public bool IsEditQuestion { get; set; }
 
     public CreateFillBlank(Question? question, bool isNewQuestion) {
         FillBlankQuestionToChange = question;
-        this.isNewQuestion = isNewQuestion;
+        IsNewQuestion = isNewQuestion;
+        IsEditQuestion = !IsNewQuestion;
         // If there is a question present to edit
         if (FillBlankQuestionToChange != null) {
             NoQuestionPresent = false;
@@ -60,7 +64,8 @@ public partial class CreateFillBlank : ContentPage {
 
 
     private async void OnSaveClicked(object sender, EventArgs e) {
-        if (isNewQuestion) {
+        RetrieveData();
+        if (IsNewQuestion) {
             await MauiProgram.BusinessLogic.AddQuestion(FillBlankQuestionToChange);
         } else {
             await MauiProgram.BusinessLogic.EditQuestion(FillBlankQuestionToChange);
@@ -73,8 +78,12 @@ public partial class CreateFillBlank : ContentPage {
         RetrieveData();
         bool deleteQuestion = await DisplayAlert("Are you sure you would like to delete this question?", FillBlankQuestionToChange?.QuestionText, "Yes", "No");
         if (deleteQuestion) {
-            await MauiProgram.BusinessLogic.DeleteQuestion(FillBlankQuestionToChange.Id);
+            var result = await MauiProgram.BusinessLogic.DeleteQuestion(FillBlankQuestionToChange.Id);
+            if (result != null) {
+                await DisplayAlert("Error. Cannot delete question", result.Message, "Ok");
+            }
         } 
+
         // Navigate back to the CreateNewQuiz page
         await Navigation.PopAsync();
     }

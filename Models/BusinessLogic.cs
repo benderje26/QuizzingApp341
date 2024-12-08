@@ -119,8 +119,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return result;
     }
 
-    public async Task<bool> DeleteQuestion(long id) {
-        bool result = await database.DeleteQuestion(id);
+    public async Task<Exception?> DeleteQuestion(long id) {
+        Exception result = await database.DeleteQuestion(id);
         Console.WriteLine("Trying to delete question ************************");
         Console.WriteLine("ID");
         Console.WriteLine(id);

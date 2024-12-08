@@ -67,7 +67,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns>
     /// Returns true if successfully deleted otherwise null
     /// </returns>
-    Task<bool> DeleteQuestion(long id);
+    Task<Exception?> DeleteQuestion(long id);
 
     /// <summary>
     /// Edits a question by updating it in the db
