@@ -30,7 +30,7 @@
                 </VerticalStackLayout>
                 <!-- TODO talk about if we should include previous button for activator -->
                 <!-- <Button Grid.Row="2" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnPreviousClicked" IsVisible="{Binding CurrentQuestion.NotFirst}"/> -->
-                <Button Grid.Row="2" Grid.Column="1" Text="Submit Answer" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnSubmitAnswerClicked" IsVisible="{Binding ShowSubmitAnswerButton}" IsEnabled="{Binding CanSubmit}"/> 
+                <Button Grid.Row="2" Grid.Column="1" Text="Submit" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnSubmitAnswerClicked" IsVisible="{Binding ShowSubmitAnswerButton}" IsEnabled="{Binding CanSubmit}"/> 
                 <Button Grid.Row="2" Grid.Column="2" Text="Next" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding ShowNextButton}"/>
                 <Button Grid.Row="2" Grid.Column="2" Text="Finish" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnFinishClicked" IsVisible="{Binding ShowFinishButton}"/>
             </Grid>
