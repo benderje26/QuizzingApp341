@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:QuizzingApp341.Views"
              x:Class="QuizzingApp341.Views.Search"
+             x:DataType="local:Search"
              Title="Search Quizzes">
 
     <VerticalStackLayout Padding="10" Spacing="15">
@@ -16,53 +18,50 @@
         <!-- Quizzes CollectionView -->
         <CollectionView x:Name="CV" ItemsSource="{Binding Quizzes}" SelectionMode="None">
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="local:QuizSearch">
                     <Frame Padding="10"
-                           Margin="0,10"
-                           BorderColor="LightGray"
-                           CornerRadius="8"
-                           HasShadow="True">
-                        <Grid ColumnDefinitions="*, Auto, Auto" RowDefinitions="Auto">
+                        Margin="0,10"
+                        BorderColor="LightGray"
+                        CornerRadius="8"
+                        HasShadow="True">
+                        <Grid ColumnDefinitions="*,Auto,5,Auto" RowDefinitions="Auto">
                             <StackLayout Grid.Column="0" VerticalOptions="Center">
                                 <Label Text="{Binding Title}"
-                                       FontSize="18"
-                                       FontAttributes="Bold"
-                                       TextColor="Black" />
+                                    FontSize="18"
+                                    FontAttributes="Bold"
+                                    TextColor="Black" />
                                 <Label Text="{Binding Creator}"
-                                       FontSize="14"
-                                       TextColor="Gray" />
+                                    FontSize="14"
+                                    TextColor="Gray" />
                             </StackLayout>
                             <Button Text="Study"
-                                    Grid.Column="1"
-                                    BackgroundColor="DarkBlue"
-                                    TextColor="White"
-                                    FontAttributes="Bold"
-                                    Padding="10"
-                                    Margin="10,0,10,0"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.StudyCommand}"
-                                    CommandParameter="{Binding .}"
-                                    />
-                            <Button 
-                                    ImageSource="pink_heart.png"
-                                    Grid.Column="2"
-                                    BackgroundColor="DarkBlue"
-                                    Padding="5"
-                                    WidthRequest="60"
-                                    HeightRequest="60"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.FavoriteCommand}"
-                                    CommandParameter="{Binding .}" 
-                                    IsVisible="{Binding Favorite}"/>
-
-                            <Button 
-                                    ImageSource="black_heart.png"
-                                    Grid.Column="2"
-                                    BackgroundColor="DarkBlue"
-                                    Padding="5"
-                                    WidthRequest="60"
-                                    HeightRequest="60"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.FavoriteCommand}"
-                                    CommandParameter="{Binding .}" 
-                                    IsVisible="{Binding NotFavorite}"/>            
+                                Grid.Column="1"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                VerticalOptions="Center"
+                                Padding="10"
+                                Margin="10,0,0,0"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.StudyCommand}"
+                                CommandParameter="{Binding .}" />
+                            
+                            <Button ImageSource="pink_heart.png"
+                                Grid.Column="3"
+                                BackgroundColor="Transparent"
+                                Padding="10"
+                                WidthRequest="50"
+                                HeightRequest="50"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.FavoriteCommand}"
+                                CommandParameter="{Binding .}" 
+                                IsVisible="{Binding Favorite}"/>
+                            <Button ImageSource="black_heart.png"
+                                Grid.Column="3"
+                                BackgroundColor="Transparent"
+                                Padding="10"
+                                WidthRequest="50"
+                                HeightRequest="50"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.FavoriteCommand}"
+                                CommandParameter="{Binding .}" 
+                                IsVisible="{Binding NotFavorite}"/>
                         </Grid>
                     </Frame>
                 </DataTemplate>
