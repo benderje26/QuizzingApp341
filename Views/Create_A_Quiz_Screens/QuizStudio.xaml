@@ -4,6 +4,7 @@
              xmlns:model="clr-namespace:QuizzingApp341.Models"
              xmlns:local="clr-namespace:QuizzingApp341.Views"
              x:Class="QuizzingApp341.Views.QuizStudio"
+             x:DataType="local:QuizStudio"
              Padding="7"
              Title="Studio">
 
@@ -36,7 +37,9 @@
                         <!-- Quiz items  -->
                         <StackLayout x:Name="quizzesList"
                                      Spacing="10">
+
                             <CollectionView ItemsSource="{Binding UserInfo.CreatedQuizzes}">
+
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid ColumnDefinitions="*, Auto"
