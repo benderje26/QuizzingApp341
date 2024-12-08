@@ -83,9 +83,6 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     #region Quizzes
     public QuizManager? EditQuizManager { get; set; }
 
-    public QuizManager? getEditQuizManager() {
-        return (EditQuizManager != null) ? EditQuizManager : null;
-    }
     public void SetEditQuestionQuizManager(QuizManager quizManager) {
         EditQuizManager = quizManager;
     }

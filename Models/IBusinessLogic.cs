@@ -31,8 +31,6 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// </summary>
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(LogoutResult, string?)> Logout();
-
-    public QuizManager? getEditQuizManager();
     void SetEditQuestionQuizManager(QuizManager quizManager);
 
     /// <summary>
