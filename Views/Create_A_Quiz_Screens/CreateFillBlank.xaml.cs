@@ -13,6 +13,7 @@ public partial class CreateFillBlank : ContentPage {
     public string? QuestionText { get; set; }
 
     private bool isNewQuestion { get; set; }
+
     public CreateFillBlank(Question? question, bool isNewQuestion) {
         FillBlankQuestionToChange = question;
         this.isNewQuestion = isNewQuestion;
@@ -35,8 +36,7 @@ public partial class CreateFillBlank : ContentPage {
         BindingContext = this;
     }
 
-
-    private void OnSaveClicked(object sender, EventArgs e) {
+    private void RetrieveData() {
         // Retrieve data from user input
         //check for null, if null - replace with empty string
         string question = QuestionFillBlank.Text != null ? QuestionFillBlank.Text.Trim() : string.Empty;
@@ -56,13 +56,26 @@ public partial class CreateFillBlank : ContentPage {
         // Do something with the retrieved data - make a question object - saving to Database
         FillBlankQuestionToChange.QuestionText = question;
         FillBlankQuestionToChange.AcceptableAnswers = [answer];
+    }
 
+
+    private async void OnSaveClicked(object sender, EventArgs e) {
         if (isNewQuestion) {
-            MauiProgram.BusinessLogic.AddQuestion(FillBlankQuestionToChange);
+            await MauiProgram.BusinessLogic.AddQuestion(FillBlankQuestionToChange);
         } else {
-            MauiProgram.BusinessLogic.EditQuestion(FillBlankQuestionToChange);
+            await MauiProgram.BusinessLogic.EditQuestion(FillBlankQuestionToChange);
         }
         // Navigate back to the CreateNewQuiz page
-        Navigation.PopAsync();
+        await Navigation.PopAsync();
+    }
+
+    private async void OnDeleteQuestionClicked(object sender, EventArgs e) {
+        RetrieveData();
+        bool deleteQuestion = await DisplayAlert("Are you sure you would like to delete this question?", FillBlankQuestionToChange?.QuestionText, "Yes", "No");
+        if (deleteQuestion) {
+            await MauiProgram.BusinessLogic.DeleteQuestion(FillBlankQuestionToChange.Id);
+        } 
+        // Navigate back to the CreateNewQuiz page
+        await Navigation.PopAsync();
     }
 }

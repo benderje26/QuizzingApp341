@@ -175,7 +175,7 @@ public class SupabaseDatabase : IDatabase {
                 .Insert(question);
             Console.WriteLine("****************** INSERTED??: ");
             Console.WriteLine(result);
-            Console.WriteLine(result.Model.QuestionText);
+            Console.WriteLine(result.Model?.QuestionText);
             if (result == null || result.Model == null) {
                 return null;
             }

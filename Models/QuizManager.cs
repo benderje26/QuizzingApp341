@@ -1,13 +1,30 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace QuizzingApp341.Models;
 
 // This class represents a quiz that contains a title, date created, last date activated, questions and answers
-public class QuizManager {
+public class QuizManager : INotifyPropertyChanged {
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+     private void OnPropertyChanged(string propertyName) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     // The quiz table from supabase that has columns Id, created_at, creator, title
     public Quiz? Quiz { get; set; }
-    public ObservableCollection<Question> Questions { get; set; } = [];
+    private ObservableCollection<Question> questions = new ObservableCollection<Question>();
+    public ObservableCollection<Question> Questions
+    {
+        get => questions;
+        set
+        {
+            if (questions != value)
+            {
+                questions = value;
+                OnPropertyChanged(nameof(Questions));
+            }
+        }
+    }
 
     public ActiveQuiz? ActiveQuiz { get; set; }
 

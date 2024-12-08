@@ -32,6 +32,9 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(LogoutResult, string?)> Logout();
 
+    public QuizManager? getEditQuizManager();
+    void SetEditQuestionQuizManager(QuizManager quizManager);
+
     /// <summary>
     /// Attempts to get a quiz.
     /// </summary>
@@ -157,7 +160,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// True if the access code is valid otherwise false
     /// </returns>
     Task<bool> ValidateAccessCode(string accessCode);
-    Task<bool> EditQuizTitle(Quiz quiz);
+    Task<bool> EditQuizTitle(string newQuizTitle);
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);

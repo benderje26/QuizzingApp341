@@ -1,3 +1,4 @@
+using QuizzingApp341.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -80,33 +81,62 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
 
     #region Quizzes
+    public QuizManager? EditQuizManager { get; set; }
+
+    public QuizManager? getEditQuizManager() {
+        return (EditQuizManager != null) ? EditQuizManager : null;
+    }
+    public void SetEditQuestionQuizManager(QuizManager quizManager) {
+        EditQuizManager = quizManager;
+    }
     public async Task<Quiz?> GetQuiz(long id) {
         return await database.GetQuizById(id);
     }
 
-    public async Task<bool> EditQuizTitle(Quiz quiz) {
-        return await database.EditQuizTitle(quiz);
+    public async Task<bool> EditQuizTitle(string newQuizTitle) {
+        if (EditQuizManager?.Quiz != null) {
+            EditQuizManager.Quiz.Title = newQuizTitle;
+            return await database.EditQuizTitle(EditQuizManager.Quiz);
+        }
+        return false;
     }
 
     public async Task<ObservableCollection<Question>?> GetQuestions(long id) {
         var result = await database.GetQuestions(id);
         if (result != null) {
-            List<Question> questions = result;
-            return new ObservableCollection<Question>(questions.OrderBy(q => q.QuestionNo));
+            ObservableCollection<Question> questions = new ObservableCollection<Question>(result.OrderBy(q => q.QuestionNo));
+            if (EditQuizManager != null) {
+                EditQuizManager.Questions = questions;
+            }
+            return questions;
         }
         return null;
     }
 
     public async Task<long?> AddQuestion(Question question) {
         var result = await database.AddQuestion(question);
+        await GetQuestions(EditQuizManager.Quiz.Id);
         return result;
     }
 
     public async Task<bool> DeleteQuestion(long id) {
-        return await database.DeleteQuestion(id);
+        bool result = await database.DeleteQuestion(id);
+        Console.WriteLine("Trying to delete question ************************");
+        Console.WriteLine("ID");
+        Console.WriteLine(id);
+        Console.WriteLine("Result");
+        Console.WriteLine(result);
+        await GetQuestions(EditQuizManager.Quiz.Id);
+        return result;
     }
 
     public async Task<bool> EditQuestion(Question question) {
+        for (int i = 0; i < EditQuizManager?.Questions.Count(); i++) {
+            var currentQuestion = EditQuizManager.Questions[i];
+            if (currentQuestion.Id == question.Id) {
+                EditQuizManager.Questions[i] = question;
+            }
+        }
         return await database.EditQuestion(question);
     }
 

@@ -34,7 +34,7 @@
                    Padding="5"
                    HorizontalOptions="Fill">
                 <Entry
-                    Text="{Binding QuizTitle}"
+                    Text="{Binding EditQuizManager.Quiz.Title}"
                     x:Name="NewQuizTitle"
                     HeightRequest="50"
                     FontSize="18"
@@ -47,7 +47,7 @@
         <ScrollView Grid.Row="2"
             >
             <CollectionView 
-                            ItemsSource="{Binding Questions}">
+                            ItemsSource="{Binding EditQuizManager.Questions}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Padding="10">

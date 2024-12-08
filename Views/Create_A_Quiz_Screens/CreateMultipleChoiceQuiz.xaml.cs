@@ -2,6 +2,8 @@ namespace QuizzingApp341.Views;
 using System;
 #if ANDROID
 using Android.Print;
+using Android.Views;
+using Java.Lang;
 #endif
 using Microsoft.Maui.Controls;
 using QuizzingApp341.Models;
@@ -22,34 +24,31 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
 
     public string? QuestionText { get; set; }
 
-    private bool isNewQuestion;
+    public bool IsNewQuestion { get; set; }
+
+    public bool IsEditQuestion { get; set; }
     public CreateMultipleChoiceQuiz(Question? question, bool isNewQuestion) {
         MultipleChoiceQuestionToChange = question;
-        this.isNewQuestion = isNewQuestion;
+        IsNewQuestion = isNewQuestion;
+        IsEditQuestion = !IsNewQuestion;
 
         // If there is a question present to edit
         if (MultipleChoiceQuestionToChange != null) {
-            try {
-                NoQuestionPresent = false;
-                QuestionPresent = true;
-                QuestionText = question?.QuestionText;
+            NoQuestionPresent = false;
+            QuestionPresent = true;
+            QuestionText = question?.QuestionText;
 
-                if (question?.AcceptableAnswers != null) { // If there are any answers
-                    Answers = string.Join(", ", question.AcceptableAnswers);
-                    AnswerPresent = true;
-                }
-
-                // Set all the options with the question's current answer options
-                OptionA = question?.MultipleChoiceOptions?[0];
-                OptionB = question?.MultipleChoiceOptions?[1];
-                OptionC = question?.MultipleChoiceOptions?[2];
-                OptionD = question?.MultipleChoiceOptions?[3];
-                CorrectOption = question?.MultipleChoiceCorrectAnswers?[0] ?? 0;
-            } catch (Exception e) {
-                Console.WriteLine("******************************");
-                Console.WriteLine("Error: " + e.Message);
+            if (question?.AcceptableAnswers != null) { // If there are any answers
+                Answers = string.Join(", ", question.AcceptableAnswers);
+                AnswerPresent = true;
             }
 
+            // Set all the options with the question's current answer options
+            OptionA = question?.MultipleChoiceOptions?[0];
+            OptionB = question?.MultipleChoiceOptions?[1];
+            OptionC = question?.MultipleChoiceOptions?[2];
+            OptionD = question?.MultipleChoiceOptions?[3];
+            CorrectOption = question?.MultipleChoiceCorrectAnswers?[0] ?? 0;
         } else {
             NoQuestionPresent = true;
         }
@@ -73,7 +72,8 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
         }
         return 0;
     }
-    private void OnSaveClicked(object sender, EventArgs e) {
+
+    private void RetrieveData() {
         // Retrieve data from user input
         //check for null, if null - replace with empty string
         string question = questionMultipleChoice.Text != null ? questionMultipleChoice.Text.Trim() : string.Empty;
@@ -100,15 +100,27 @@ public partial class CreateMultipleChoiceQuiz : ContentPage {
         MultipleChoiceQuestionToChange.QuestionText = question;
         MultipleChoiceQuestionToChange.MultipleChoiceOptions = options;
         MultipleChoiceQuestionToChange.MultipleChoiceCorrectAnswers = [correctOption];
+    }
+    private async void OnSaveClicked(object sender, EventArgs e) {
+        RetrieveData();
 
-        if (isNewQuestion) {
-            Console.WriteLine("MultipleChoiceQuestionToChange: " + MultipleChoiceQuestionToChange.QuestionText);
-            MauiProgram.BusinessLogic.AddQuestion(MultipleChoiceQuestionToChange);
+        if (IsNewQuestion) {
+            await MauiProgram.BusinessLogic.AddQuestion(MultipleChoiceQuestionToChange);
         } else {
-            MauiProgram.BusinessLogic.EditQuestion(MultipleChoiceQuestionToChange);
+            await MauiProgram.BusinessLogic.EditQuestion(MultipleChoiceQuestionToChange);
         }
 
         // Navigate back to the CreateNewQuiz page
-        Navigation.PopAsync();
+        await Navigation.PopAsync();
+    }
+
+    private async void OnDeleteQuestionClicked(object sender, EventArgs e) {
+        RetrieveData();
+        bool deleteQuestion = await DisplayAlert("Are you sure you would like to delete this question?", MultipleChoiceQuestionToChange.QuestionText, "Yes", "No");
+        if (deleteQuestion) {
+            await MauiProgram.BusinessLogic.DeleteQuestion(MultipleChoiceQuestionToChange.Id);
+        }
+        // Navigate back to the CreateNewQuiz page
+        await Navigation.PopAsync();
     }
 }
