@@ -25,7 +25,6 @@ public partial class EditQuiz : ContentPage {
 
     public async void QuizTitleChanged(object senter, EventArgs e) {
         await MauiProgram.BusinessLogic.EditQuizTitle(NewQuizTitle.Text);
-        await MauiProgram.BusinessLogic.GetUserCreatedQuizzes(); // To refresh the created quizzes collection
     }
 
     public async void AddQuestionClicked(object sender, EventArgs e) {

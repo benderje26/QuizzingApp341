@@ -98,6 +98,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             EditQuizManager.Quiz.Title = newQuizTitle;
             return await database.EditQuizTitle(EditQuizManager.Quiz);
         }
+        UserInfo.CreatedQuizzes = await GetUserCreatedQuizzes();
         return false;
     }
 

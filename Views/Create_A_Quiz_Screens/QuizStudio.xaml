@@ -36,7 +36,7 @@
                         <!-- Quiz items  -->
                         <StackLayout x:Name="quizzesList"
                                      Spacing="10">
-                            <CollectionView ItemsSource="{Binding CreatedQuizzes}">
+                            <CollectionView ItemsSource="{Binding UserInfo.CreatedQuizzes}">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid ColumnDefinitions="*, Auto"
