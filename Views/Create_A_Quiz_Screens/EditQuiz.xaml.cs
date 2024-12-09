@@ -1,25 +1,23 @@
 namespace QuizzingApp341.Views;
 using QuizzingApp341.Models;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Maui.Views;
-using System.ComponentModel;
 
 public partial class EditQuiz : ContentPage {
     public ICommand QuestionClickedCommand { get; set; }
     public EditQuiz(QuizManager quizManager) {
         InitializeComponent();
-        MauiProgram.BusinessLogic.EditQuizManager = quizManager;
+        MauiProgram.BusinessLogic.QuizManager = quizManager;
         QuestionClickedCommand = new Command<Question>(QuestionClicked);
         BindingContext = MauiProgram.BusinessLogic;
     }
 
     private async void QuestionClicked(Question question) {
         // If the question is a multiple choice question
-        if (question.QuestionType == 0) {
-            await Navigation.PushAsync(new CreateMultipleChoiceQuiz(question, false));
+        if (question.QuestionType == QuestionType.MultipleChoice) {
+            await Navigation.PushAsync(new CreateMultipleChoice(question));
         } else { // If the question is a fill in the blank question
-            await Navigation.PushAsync(new CreateFillBlank(question, false));
+            await Navigation.PushAsync(new CreateFillBlank(question));
         }
     }
 
@@ -29,23 +27,27 @@ public partial class EditQuiz : ContentPage {
 
     public async void AddQuestionClicked(object sender, EventArgs e) {
         Console.WriteLine("************Question Clicked!!!!!");
-        var popup = new CreateNewQuizPopup();
+        var popup = new CreateNewQuestionPopup();
 
         // Make a new question with this current quiz Id
         Question question = new Question();
-        question.QuestionNo =   MauiProgram.BusinessLogic.EditQuizManager.Questions.Count();
-        question.QuizId = MauiProgram.BusinessLogic.EditQuizManager.Quiz.Id;
+        if (MauiProgram.BusinessLogic.QuizManager?.Quiz == null) {
+            return;
+        }
+
+        question.QuestionNo = MauiProgram.BusinessLogic.QuizManager.Questions.Count;
+        question.QuizId = MauiProgram.BusinessLogic.QuizManager.Quiz.Id;
 
         popup.QuestionTypeSelected += async (questionType) => {   // get questionType when clicked
-            if (questionType == "MultipleChoice") {
+            if (questionType == QuestionType.MultipleChoice) {
                 question.QuestionType = QuestionType.MultipleChoice;
                 await Task.Delay(100); // delay time
-                await Navigation.PushAsync(new CreateMultipleChoiceQuiz(question, true));
+                await Navigation.PushAsync(new CreateMultipleChoice(question));
 
-            } else if (questionType == "FillInBlank") {
+            } else if (questionType == QuestionType.FillBlank) {
                 question.QuestionType = QuestionType.FillBlank;
                 await Task.Delay(100); // delay time
-                await Navigation.PushAsync(new CreateFillBlank(question, true));
+                await Navigation.PushAsync(new CreateFillBlank(question));
             }
         };
 

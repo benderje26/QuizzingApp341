@@ -42,7 +42,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         NotifyPropertyChanged(nameof(UserInfo));
 
         // Map result to user-friendly messages
-        string? s = result switch {
+        string? message = result switch {
             AccountCreationResult.Success => null,
             AccountCreationResult.DuplicateEmail => "Email already used on another account.",
             AccountCreationResult.DuplicateUsername => "That username is already used, pick another one.",
@@ -51,7 +51,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             _ => OTHER_ERROR_MESSAGE
         };
 
-        return (result, s);
+        return (result, message);
     }
     // Logs in a user with email and password
     public async Task<(LoginResult, string?)> Login(string emailAddress, string password) {
@@ -61,7 +61,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         NotifyPropertyChanged(nameof(UserInfo));
 
         // Map result to user-friendly messages
-        string? s = result switch {
+        string? message = result switch {
             LoginResult.Success => null,
             LoginResult.BadCredentials => "The username or password are incorrect.",
             LoginResult.NetworkError => NETWORK_ERROR_MESSAGE,
@@ -69,7 +69,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             _ => OTHER_ERROR_MESSAGE
         };
 
-        return (result, s);
+        return (result, message);
     }
 
     // logs out the user  
@@ -86,14 +86,14 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         NotifyPropertyChanged(nameof(UserInfo));
 
         // maps user to user friendly messages  
-        string? s = result switch {
+        string? message = result switch {
             LogoutResult.Success => null,
             LogoutResult.NetworkError => NETWORK_ERROR_MESSAGE,
             LogoutResult.Other => OTHER_ERROR_MESSAGE,
             _ => OTHER_ERROR_MESSAGE
         };
 
-        return (result, s);
+        return (result, message);
     }
 
     // Retrieves user's data by their ID
@@ -104,8 +104,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
 
     #region Quizzes
-
-    public QuizManager? EditQuizManager { get; set; }
+    public QuizManager? QuizManager { get; set; }
 
     // Get quiz by ID
     public async Task<Quiz?> GetQuiz(long id) {
@@ -113,9 +112,9 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
 
     public async Task<bool> EditQuizTitle(string newQuizTitle) {
-        if (EditQuizManager?.Quiz != null) {
-            EditQuizManager.Quiz.Title = newQuizTitle;
-            return await database.EditQuizTitle(EditQuizManager.Quiz);
+        if (QuizManager?.Quiz != null) {
+            QuizManager.Quiz.Title = newQuizTitle;
+            return await database.EditQuizTitle(QuizManager.Quiz);
         }
         UserInfo.CreatedQuizzes = await GetUserCreatedQuizzes();
         return false;
@@ -126,8 +125,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var result = await database.GetQuestions(id);
         if (result != null) {
             ObservableCollection<Question> questions = new ObservableCollection<Question>(result.OrderBy(q => q.QuestionNo));
-            if (EditQuizManager != null) {
-                EditQuizManager.Questions = questions;
+            if (QuizManager != null) {
+                QuizManager.Questions = questions;
             }
             return questions;
         }
@@ -136,28 +135,37 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
     // Adds a question in the database
     public async Task<long?> AddQuestion(Question question) {
-        var result = await database.AddQuestion(question);
-        await GetQuestions(EditQuizManager.Quiz.Id);
-        return result;
+        if (QuizManager?.Quiz != null) {
+            long? result = await database.AddQuestion(question);
+            await GetQuestions(QuizManager.Quiz.Id);
+            return result;
+        }
+        return null;
     }
 
-    public async Task<Exception?> DeleteQuestion(long id) {
-        Exception result = await database.DeleteQuestion(id);
-        Console.WriteLine("Trying to delete question ************************");
-        Console.WriteLine("ID");
-        Console.WriteLine(id);
-        Console.WriteLine("Result");
-        Console.WriteLine(result);
-        await GetQuestions(EditQuizManager.Quiz.Id);
-        return result;
+    public async Task<(DeleteQuestionResult, string?)> DeleteQuestion(long id) {
+        DeleteQuestionResult result = await database.DeleteQuestion(id);
+        string? message = result switch {
+            DeleteQuestionResult.Success => null,
+            DeleteQuestionResult.QuizStillActive => "",
+            DeleteQuestionResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            DeleteQuestionResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+        
+        if (QuizManager?.Quiz!= null) {
+            await GetQuestions(QuizManager.Quiz.Id);
+        }
+
+        return (result, message);
     }
 
     // edit questions in the database
     public async Task<bool> EditQuestion(Question question) {
-        for (int i = 0; i < EditQuizManager?.Questions.Count(); i++) {
-            var currentQuestion = EditQuizManager.Questions[i];
+        for (int i = 0; i < QuizManager?.Questions.Count(); i++) {
+            var currentQuestion = QuizManager.Questions[i];
             if (currentQuestion.Id == question.Id) {
-                EditQuizManager.Questions[i] = question;
+                QuizManager.Questions[i] = question;
             }
         }
         return await database.EditQuestion(question);

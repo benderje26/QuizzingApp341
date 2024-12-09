@@ -77,6 +77,12 @@
 	  <Compile Update="Views\CreateMultipleChoiceQuiz.xaml.cs">
 	    <DependentUpon>CreateMultipleChoiceQuiz.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\Create_A_Quiz_Screens\CreateMultipleChoice.xaml.cs">
+	    <DependentUpon>CreateMultipleChoice.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Create_A_Quiz_Screens\CreateNewQuestionPopup.xaml.cs">
+	    <DependentUpon>CreateNewQuestionPopup.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\MyQuiz.xaml.cs">
 	    <DependentUpon>MyQuiz.xaml</DependentUpon>
 	  </Compile>

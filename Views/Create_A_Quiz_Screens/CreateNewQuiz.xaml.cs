@@ -1,9 +1,10 @@
 using CommunityToolkit.Maui.Views;
+using QuizzingApp341.Models;
 using System.Collections.ObjectModel;
 
 namespace QuizzingApp341.Views {
     public partial class CreateNewQuiz : ContentPage {
-        public ObservableCollection<Object> Questions { get; set; } = new ObservableCollection<Object>();
+        public ObservableCollection<Question> Questions { get; set; } = [];
         public CreateNewQuiz() {
             InitializeComponent();
 
@@ -11,18 +12,15 @@ namespace QuizzingApp341.Views {
         }
 
         private async void OnQuestionTypeButtonClicked(object sender, EventArgs e) {
-            var popup = new CreateNewQuizPopup();
+            var popup = new CreateNewQuestionPopup();
 
             popup.QuestionTypeSelected += async (questionType) => {   // get questionType when clicked
-                if (questionType == "MultipleChoice") {
-
+                if (questionType == QuestionType.MultipleChoice) {
                     await Task.Delay(100); // delay time
-                    await Navigation.PushAsync(new CreateMultipleChoiceQuiz(null, true)); // Null here because you are creating a quiz
-
-                } else if (questionType == "FillInBlank") {
-
+                    await Navigation.PushAsync(new CreateMultipleChoice(null)); // Null here because you are creating a quiz
+                } else if (questionType == QuestionType.FillBlank) {
                     await Task.Delay(100); // delay time
-                    await Navigation.PushAsync(new CreateFillBlank(null, true)); // Passing in null here because you're creating a new question
+                    await Navigation.PushAsync(new CreateFillBlank(null)); // Passing in null here because you're creating a new question
                 }
             };
 

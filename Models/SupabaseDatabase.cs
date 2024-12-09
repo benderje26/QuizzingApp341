@@ -262,16 +262,17 @@ public class SupabaseDatabase : IDatabase {
     //From Question Model to question table in supabse 
     //<param name="id"></param>
     //return true is question got deleted, otherwise false
-    public async Task<Exception?> DeleteQuestion(long id) {
+    public async Task<DeleteQuestionResult> DeleteQuestion(long id) {
         try {
             await Client
-            .From<Question>()
-            .Where(q => q.Id == id)  // if id match, delete that id
-            .Delete();
+                .From<Question>()
+                .Where(q => q.Id == id)  // if id match, delete that id
+                .Delete();
+
+            return DeleteQuestionResult.Success;
         } catch (Exception e) {
-            return e;
+            return DeleteQuestionResult.Other;
         }
-        return null;
     }
 
     //Edit question by question object

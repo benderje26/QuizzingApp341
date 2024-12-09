@@ -32,14 +32,17 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(LogoutResult, string?)> Logout();
 
-    QuizManager? EditQuizManager {get; set;}
-
     /// <summary>
     /// Attempts to get the UserData object for a User ID.
     /// </summary>
     /// <param name="userId">The id of the user you need the UserData for</param>
     /// <returns>A UserData object for the user</returns>
     Task<UserData?> GetUserData(Guid userId);
+
+    /// <summary>
+    /// The current quiz manager.
+    /// </summary>
+    QuizManager? QuizManager { get; set; }
 
     /// <summary>
     /// Attempts to get a quiz.
@@ -73,7 +76,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns>
     /// Returns true if successfully deleted otherwise null
     /// </returns>
-    Task<Exception?> DeleteQuestion(long id);
+    Task<(DeleteQuestionResult, string?)> DeleteQuestion(long id);
 
     /// <summary>
     /// Edits a question by updating it in the db

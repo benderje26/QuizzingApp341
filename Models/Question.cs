@@ -11,7 +11,7 @@ namespace QuizzingApp341.Models {
         private long id;
         private int questionNo;
         private QuestionType questionType;
-        private string? questionText;
+        private string questionText = string.Empty;
         private string[]? acceptableAnswers;
         private string[]? multipleChoiceOptions;
         private bool? caseSensitive;

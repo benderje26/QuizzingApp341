@@ -67,7 +67,7 @@ public interface IDatabase {
     /// <returns>
     /// Returns true if successfully deleted otherwise null
     /// </returns>
-    Task<Exception?> DeleteQuestion(long id);
+    Task<DeleteQuestionResult> DeleteQuestion(long id);
 
     /// <summary>
     /// Edits a question by updating it in the database.

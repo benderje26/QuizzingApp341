@@ -45,7 +45,7 @@
             </StackLayout>
 
             <!-- Add New Question Button -->
-            <Button Text="+ New Question"
+            <Button Text="New Question"
                     FontAttributes="Bold"
                     FontSize="18"
                     BackgroundColor="LightGray"

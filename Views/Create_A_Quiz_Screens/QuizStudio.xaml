@@ -4,6 +4,7 @@
              xmlns:model="clr-namespace:QuizzingApp341.Models"
              xmlns:local="clr-namespace:QuizzingApp341.Views"
              x:Class="QuizzingApp341.Views.QuizStudio"
+             x:DataType="model:IBusinessLogic"
              Padding="7"
              Title="Studio">
 
@@ -38,9 +39,8 @@
                                      Spacing="10">
 
                             <CollectionView ItemsSource="{Binding UserInfo.CreatedQuizzes}">
-
                                 <CollectionView.ItemTemplate>
-                                    <DataTemplate>
+                                    <DataTemplate x:DataType="model:Quiz">
                                         <Grid ColumnDefinitions="*, Auto"
                                               Padding="0, 10"
                                               VerticalOptions="Center">

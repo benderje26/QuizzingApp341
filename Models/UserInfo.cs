@@ -14,30 +14,30 @@ public class UserInfo(Guid id, bool isSignedIn): INotifyPropertyChanged {
     public ObservableCollection<Quiz>? favoriteQuizzes;
     public ObservableCollection<Quiz>? activatedQuizzes;
     public ObservableCollection<Quiz>? quizHistory;
-    public ObservableCollection<Object>? quizScores;
+    public ObservableCollection<object>? quizScores;
     public ObservableCollection<Quiz> CreatedQuizzes {
-        get => createdQuizzes;
+        get => createdQuizzes ?? [];
         set {
             createdQuizzes = value;
             OnPropertyChanged();
         }
     }
     public ObservableCollection<Quiz> FavoriteQuizzes {
-        get => favoriteQuizzes;
+        get => favoriteQuizzes ?? [];
         set {
             favoriteQuizzes = value;
             OnPropertyChanged();
         }
     }
     public ObservableCollection<Quiz> ActivatedQuizzes { 
-        get => activatedQuizzes;
+        get => activatedQuizzes ?? [];
         set {
             activatedQuizzes = value;
             OnPropertyChanged();
         }
      }
     public ObservableCollection<Quiz> QuizHistory {
-        get => quizHistory;
+        get => quizHistory ?? [];
         set {
             quizHistory = value;
             OnPropertyChanged();

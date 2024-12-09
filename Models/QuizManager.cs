@@ -12,7 +12,7 @@ public class QuizManager : INotifyPropertyChanged {
 
     // The quiz table from supabase that has columns Id, created_at, creator, title
     public Quiz? Quiz { get; set; }
-    private ObservableCollection<Question> questions = new ObservableCollection<Question>();
+    private ObservableCollection<Question> questions = [];
     public ObservableCollection<Question> Questions
     {
         get => questions;
@@ -87,7 +87,7 @@ public class QuizManager : INotifyPropertyChanged {
     /// returns true if it successfully gets all the questions for this quiz
     /// </returns>
     public async Task<bool> GetQuestions() {
-        try {
+        if (Quiz != null) {
             // Get all the questions from db using Quiz.Id
             var result = await MauiProgram.BusinessLogic.GetQuestions(Quiz.Id);
 
@@ -97,9 +97,9 @@ public class QuizManager : INotifyPropertyChanged {
 
             Questions = result;
             return true;
-        } catch {
-            return false;
         }
+
+        return false;
     }
 
     /// <summary>
@@ -112,19 +112,15 @@ public class QuizManager : INotifyPropertyChanged {
     /// </returns>
     //
     public async Task<bool> AddQuestion(Question question) {
-        try {
-            // Add the question to the db
-            long? id = await MauiProgram.BusinessLogic.AddQuestion(question); // returns null if the question was not added, otherwise returns the id assigned to the question
-            if (id == null) { // If the question was not added to the db, return false
-                return false;
-            }
-
-            // If the question was added to the db set the id of the question to the one returned from the db and add it to the questions list 
-            question.Id = id ?? 0;
-            Questions.Add(question);
-        } catch {
+        // Add the question to the db
+        long? id = await MauiProgram.BusinessLogic.AddQuestion(question); // returns null if the question was not added, otherwise returns the id assigned to the question
+        if (id == null) { // If the question was not added to the db, return false
             return false;
         }
+
+        // If the question was added to the db set the id of the question to the one returned from the db and add it to the questions list 
+        question.Id = id ?? 0;
+        Questions.Add(question);
         return true;
     }
 
@@ -135,16 +131,14 @@ public class QuizManager : INotifyPropertyChanged {
     /// <returns>
     /// returns true if successfully deleted in db otherwise false
     /// </returns>
-    public async Task<Exception?> DeleteQuestion(long questionId) {
-        try {
-            var result = await MauiProgram.BusinessLogic.DeleteQuestion(questionId);
-
+    public async Task<(DeleteQuestionResult, string?)> DeleteQuestion(long questionId) {
+        var result = await MauiProgram.BusinessLogic.DeleteQuestion(questionId);
+        if (result.Item1 == DeleteQuestionResult.Success) {
             // If successful with db, delete/reset it in the Questions list
             await GetQuestions();
-            return result;
-        } catch (Exception e) {
-            return e;
         }
+
+        return result;
     }
 
     /// <summary>
@@ -155,22 +149,18 @@ public class QuizManager : INotifyPropertyChanged {
     /// returns true if successfully edited in db otherwise false
     /// </returns>
     public async Task<bool> EditQuestion(Question question) {
-        try {
-            // Update the question 
-            if (await MauiProgram.BusinessLogic.EditQuestion(question)) {
-                // Fix the question in THIS Questions list
-                for (int i = 0; i < Questions.Count; i++) {
-                    if (Questions[i].Id == question.Id) {
-                        Questions[i] = question;
-                        return true;
-                    }
+        // Update the question 
+        if (await MauiProgram.BusinessLogic.EditQuestion(question)) {
+            // Fix the question in THIS Questions list
+            for (int i = 0; i < Questions.Count; i++) {
+                if (Questions[i].Id == question.Id) {
+                    Questions[i] = question;
+                    return true;
                 }
-
             }
-        } catch {
-            return false;
+
         }
-        return true;
+        return false;
     }
 
     public async Task<bool> NextQuestion() {
