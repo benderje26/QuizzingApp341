@@ -8,8 +8,11 @@ using Microsoft.Maui.Graphics;
 using System;
 
 public partial class StatisticsScreen : ContentPage {
-    public StatisticsScreen() {
+
+    public long ActiveQuizId { get; set; }   
+    public StatisticsScreen(long activeQuizId) {
         InitializeComponent();
+        ActiveQuizId = activeQuizId;
     }
 
     // Event handler for button click
@@ -21,7 +24,7 @@ public partial class StatisticsScreen : ContentPage {
 
 // This is a canvas that draws the box plot
 public class Canvas : IDrawable {
-    Statistics scoreStats = new Statistics();
+    Statistics scoreStats = new Statistics(0);
     public void Draw(ICanvas canvas, RectF dirtyRect) {
         canvas.StrokeColor = Colors.DarkBlue;
         canvas.StrokeSize = 2;

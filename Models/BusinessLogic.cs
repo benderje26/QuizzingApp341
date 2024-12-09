@@ -282,6 +282,15 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         }
     }
 
+    /// <summary>
+    /// Gets the current scores of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>List of all of the current scores for the active quiz</returns>
+    public async Task<List<int>?> GetQuizScoresForQuizId(long activeQuizId) {
+        return await database.GetQuizScoresForQuizId(activeQuizId);
+    }
+
     // Retrieves all quizes from the database
     public async Task<ObservableCollection<Quiz>?> GetAllQuizzes() {
         var result = await database.GetAllQuizzesAsync();

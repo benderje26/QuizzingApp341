@@ -132,6 +132,13 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns>List of active quiz IDs</returns>
     Task<List<long>> GetActiveQuizIdsForUser();
 
+    /// <summary>
+    /// Gets the current scores of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>List of all of the current scores for the active quiz</returns>
+    Task<List<int>?> GetQuizScoresForQuizId(long activeQuizId);
+
     Task<ObservableCollection<Quiz>?> GetAllQuizzes();
 
     /// <summary>

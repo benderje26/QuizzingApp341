@@ -141,6 +141,13 @@ public interface IDatabase {
     Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds);
 
     /// <summary>
+    /// Gets the current scores of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>List of all of the current scores for the active quiz</returns>
+    Task<List<int>?> GetQuizScoresForQuizId(long activeQuizId);
+
+    /// <summary>
     /// Returns all of the users favorite quizzess from the database.
     /// </summary>
     /// <returns>

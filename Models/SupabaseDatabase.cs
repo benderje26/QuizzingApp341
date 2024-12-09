@@ -49,6 +49,8 @@ public class SupabaseDatabase : IDatabase {
     private async Task SetUser(User? u) {
         _user = u;
         UserId = u?.Id == null ? Guid.Empty : new Guid(u.Id);
+        Email = u?.Email == null ? string.Empty : u.Email;
+        Username = u?.Id == null ? string.Empty : "HARDCODED"/*GetUserData(UserId).Result.Username*/;
         await GenerateUserInfo();
     }
 
@@ -66,10 +68,20 @@ public class SupabaseDatabase : IDatabase {
     private Guid UserId { get; set; }
 
     /// <summary>
+    /// The current user's email
+    /// </summary>
+    private string Email { get; set; }
+
+    /// <summary>
+    /// The current user's username
+    /// </summary>
+    private string Username { get; set; }
+
+    /// <summary>
     /// Regenerates the info for the current user.
     /// </summary>
     private async Task GenerateUserInfo() {
-        userInfo = new(UserId, User != null) {
+        userInfo = new(UserId, Email, Username, User != null) {
             CreatedQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetUserCreatedQuizzes(UserId)) ?? []),
             FavoriteQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetFavoriteQuizzes()) ?? [])
         };
@@ -226,10 +238,11 @@ public class SupabaseDatabase : IDatabase {
     public async Task<UserData?> GetUserData(Guid userId) {
         try {
             // Gets a user's data (used for retrieving usernames currently)
-            return await Client
+            var test =  await Client
                 .From<UserData>()
                 .Where(x => x.UserId == userId)
                 .Single();
+            return test;
         } catch (Exception e) {
             Console.Write("ERORRRR" + e.Message);
             return null;
@@ -503,6 +516,16 @@ public class SupabaseDatabase : IDatabase {
         } catch (Exception) {
             return false;
         }
+    }
+
+    public async Task<List<int>?> GetQuizScoresForQuizId(long activeQuizId) {
+        try {
+            return [55, 50, 75, 69, 79, 45, 88, 90, 25, 34, 10, 45, 40, 66, 78, 95, 14];
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+            return new List<int>();
+        }
+
     }
 
     public async Task<ActiveQuestion?> GetCurrentActiveQuestion(ActiveQuiz quiz) {
