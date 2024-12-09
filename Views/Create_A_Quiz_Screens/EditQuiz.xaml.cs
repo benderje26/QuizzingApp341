@@ -70,6 +70,11 @@ public partial class EditQuiz : ContentPage {
         }
     }
 
+    public async void OnActivateQuiz(object sender, EventArgs e) {
+        // Activate the quiz
+        await MauiProgram.BusinessLogic.ActivateQuiz(); 
+    }
+
     public async void OnPublicToggled(object sender, ToggledEventArgs e)
 {
     try
