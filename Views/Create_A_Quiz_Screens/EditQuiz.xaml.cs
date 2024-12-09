@@ -6,10 +6,10 @@ using CommunityToolkit.Maui.Views;
 public partial class EditQuiz : ContentPage {
     public ICommand QuestionClickedCommand { get; set; }
     public bool IsNewQuiz { get; set; }
-    public double ScreenWidth {get; set;}
+    public double ScreenWidth { get; set; }
     public EditQuiz(QuizManager quizManager) {
         InitializeComponent();
-        ScreenWidth = DeviceDisplay.MainDisplayInfo.Width;;
+        ScreenWidth = DeviceDisplay.MainDisplayInfo.Width; ;
         QuestionClickedCommand = new Command<Question>(QuestionClicked);
         BindingContext = MauiProgram.BusinessLogic;
     }
@@ -58,8 +58,8 @@ public partial class EditQuiz : ContentPage {
     }
 
     public async void OnDeleteQuiz(object sender, EventArgs e) {
-        bool deleteQuestion = await DisplayAlert("Are you sure you want to delete this quiz?", MauiProgram.BusinessLogic.QuizManager.Quiz.Title , "Yes", "No");
-        
+        bool deleteQuestion = await DisplayAlert("Are you sure you want to delete this quiz?", MauiProgram.BusinessLogic.QuizManager.Quiz.Title, "Yes", "No");
+
         if (deleteQuestion) {
             if (MauiProgram.BusinessLogic.QuizManager.Active) {
                 await DisplayAlert("Could not delete the following quiz because it is still active", MauiProgram.BusinessLogic.QuizManager.Quiz.Title, "Ok");
@@ -72,27 +72,23 @@ public partial class EditQuiz : ContentPage {
 
     public async void OnActivateQuiz(object sender, EventArgs e) {
         // Activate the quiz
-        await MauiProgram.BusinessLogic.ActivateQuiz(); 
+        await MauiProgram.BusinessLogic.ActivateQuiz();
     }
 
-    public async void OnPublicToggled(object sender, ToggledEventArgs e)
-{
-    try
-    {
-        // Optionally: Check the new toggle state (e.Value)
-        bool newState = e.Value;
+    public async void OnPublicToggled(object sender, ToggledEventArgs e) {
+        try {
+            // Optionally: Check the new toggle state (e.Value)
+            bool newState = e.Value;
 
-        // Perform the async operation without blocking the UI
-         await MauiProgram.BusinessLogic.ChangeQuizVisibility(newState);
+            // Perform the async operation without blocking the UI
+            await MauiProgram.BusinessLogic.ChangeQuizVisibility(newState);
 
-        // Log or handle the result if needed
-        Console.WriteLine($"Quiz visibility changed to: {newState}");
+            // Log or handle the result if needed
+            Console.WriteLine($"Quiz visibility changed to: {newState}");
+        } catch (Exception ex) {
+            // Handle any errors gracefully
+            Console.WriteLine($"Error changing quiz visibility: {ex.Message}");
+        }
     }
-    catch (Exception ex)
-    {
-        // Handle any errors gracefully
-        Console.WriteLine($"Error changing quiz visibility: {ex.Message}");
-    }
+
 }
-
-} 
