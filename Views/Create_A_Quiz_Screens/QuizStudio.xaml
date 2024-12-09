@@ -28,32 +28,43 @@
                              VerticalOptions="Start">
                     <StackLayout Padding="0,10">
                         <Label Text="Quizzes:"
-                           FontSize="20"
-                           TextColor="Black"
-                           VerticalOptions="Center"
-                           HorizontalOptions="Start"/>
+                               FontSize="20"
+                               TextColor="Black"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Start"
+                               Padding="10"/>
                         <!-- Quiz items  -->
                         <StackLayout x:Name="quizzesList"
-                                     Spacing="10">
+                                     Spacing="10"
+                                     Padding="5">
 
                             <CollectionView ItemsSource="{Binding UserInfo.CreatedQuizzes}">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate x:DataType="model:Quiz">
-                                        <Grid ColumnDefinitions="*, Auto"
-                                              Padding="0, 10"
-                                              VerticalOptions="Center">
-                                            <Label Text="{Binding Title}"
+                                        <StackLayout
+                                            Padding="5">
+                                            <Frame
+                                            Grid.Row="1"
+                                            BorderColor="Black"
+                                            CornerRadius="5"
+                                            Padding="10"
+                                            HorizontalOptions="Fill">
+                                            <Frame.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type local:QuizStudio}}, Path=EditQuizCommand}"
+                                                    CommandParameter="{Binding .}">
+                                                </TapGestureRecognizer>
+                                            </Frame.GestureRecognizers>
+                                            <StackLayout>
+                                                <Label Text="{Binding Title}"
                                                    FontSize="18"/>
-                                            <!-- <Label Text ="{Binding Id}" IsVisible="false" x:Name ="QuizId"/> -->
-                                            <ImageButton
-                                                WidthRequest="20"
-                                                HeightRequest="20"
-                                                Source="edit.png"
-                                                CornerRadius="5"
-                                                HorizontalOptions="End"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:QuizStudio}}, Path=EditQuizCommand}"
-                                                CommandParameter="{Binding .}"/>
-                                        </Grid>
+                                                <HorizontalStackLayout>
+                                                    <Label Text="Date Created: "/>
+                                                    <Label Text ="{Binding DateCreated}"/>
+                                                </HorizontalStackLayout>
+                                            </StackLayout>
+                                        </Frame>
+                                        </StackLayout>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
