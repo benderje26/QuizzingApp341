@@ -182,11 +182,50 @@ public class SupabaseDatabase : IDatabase {
             return null;                                // failed
         }
     }
+  
+    public async Task<bool> DeleteQuiz(long quizId) {
+        try {
+            await Client
+                .From<Quiz>()
+                .Where(q => q.Id == quizId)
+                .Delete();
+        } catch (Exception e) {
+            Console.WriteLine("DELETE QUIZ ERROR:");
+            Console.WriteLine(e.Message);
+            return false;
+        }
+        return true;
+    }
+    public async Task<bool> UpdateQuiz(Quiz quiz) {
+        try {
+            var result = await Client
+                .From<Quiz>()
+                .Upsert(quiz);
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<long?> AddQuiz(Quiz quiz) {
+        try {
+            var result = await Client
+            .From<Quiz>()
+            .Insert(quiz);
+
+            return result.Model?.Id;
+        } catch (Exception e) {
+            Console.WriteLine("ERROR: " + e.Message);
+            return null;
+        }
+    }
 
     //Get Quiz by Quiz id
     // From Quiz Models to quizzes table in supabase
     //<param name="id"></param>
-    //rerturn one Quiz that matched the id, otherwise return null
+    //return one Quiz that matched the id, otherwise return null
     public async Task<Quiz?> GetQuizById(long id) {
         try {
             Quiz? quiz = await Client
@@ -201,6 +240,21 @@ public class SupabaseDatabase : IDatabase {
         } catch (Exception) {
             return null;
         }
+    }
+
+    public async Task<bool> UpdateQuestionNo(long questionId, int newQuestionNo) {
+        try {
+            var result = await Client
+            .From<Question>()
+            .Where(q => q.Id == questionId)
+            .Set(q => q.QuestionNo, newQuestionNo)
+            .Update();
+
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+            return false;
+        }
+        return true;
     }
 
     //Get all the questions from that quiz id
@@ -244,20 +298,22 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+
     // Delete question by question id
     //From Question Model to question table in supabse 
     //<param name="id"></param>
     //return true is question got deleted, otherwise false
-    public async Task<bool> DeleteQuestion(long id) {
+    public async Task<DeleteQuestionResult> DeleteQuestion(long id) {
         try {
             await Client
-            .From<Question>()
-            .Where(q => q.Id == id)  // if id match, delete that id
-            .Delete();
-        } catch {
-            return false;  // failed to delete
+                .From<Question>()
+                .Where(q => q.Id == id)  // if id match, delete that id
+                .Delete();
+
+            return DeleteQuestionResult.Success;
+        } catch (Exception e) {
+            return DeleteQuestionResult.Other;
         }
-        return true;     // delete successfully
     }
 
     //Edit question by question object
@@ -289,6 +345,21 @@ public class SupabaseDatabase : IDatabase {
             return result?.Models;                 //return list of quizzes
         } catch (Exception e) {
             Console.Write("ERRORRRRR" + e);          //failed to get quizzes
+            return null;
+        }
+    }
+
+    public async Task<List<Quiz>?> GetUserCreatedQuizzes() {
+        try {
+            var result = await Client
+                .From<Quiz>()
+                .Where(q => q.CreatorId == UserId)
+                .Get();
+
+            userInfo.CreatedQuizzes = new ObservableCollection<Quiz>(result?.Models);
+            return result?.Models;
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
             return null;
         }
     }

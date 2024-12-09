@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.CreateFillBlank"
-             Title="CreateFillBlank">
+             Title="Edit Question">
     <ScrollView HorizontalOptions="Fill">
         <StackLayout HorizontalOptions="Fill" Padding="20">
             <Label Text="Question:"
@@ -96,10 +96,20 @@
 
             <!-- Save Button -->
             <Button Text="Save"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Start"
-                    Margin="0,50,0,0"  
-                Clicked="OnSaveClicked"/>
+                HorizontalOptions="Center"
+                Margin="0,25,0,0"
+                Clicked="OnSaveClicked"
+                WidthRequest="200"/>
+
+              <StackLayout Padding="20">
+                <Button
+                Text="Delete Question"
+                BackgroundColor="Red"
+                Clicked="OnDeleteQuestionClicked"
+                IsVisible="{Binding IsEditQuestion}"
+                WidthRequest="200"
+                ></Button>
+            </StackLayout>
         </StackLayout>
     </ScrollView>
 </ContentPage>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="QuizzingApp341.Views.CreateMultipleChoiceQuiz"
-             Title="CreateMultipleChoiceQuiz">
+             x:Class="QuizzingApp341.Views.CreateMultipleChoice"
+             Title="Edit Question">
     <ScrollView>
         <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="Fill" Padding="20">
 
@@ -68,7 +68,18 @@
             <Button Text="Save"
                 HorizontalOptions="Center"
                 Margin="0,25,0,0"
-                Clicked="OnSaveClicked"/>
+                Clicked="OnSaveClicked"
+                WidthRequest="200"/>
+            
+            <StackLayout Padding="20">
+                <Button
+                Text="Delete Question"
+                BackgroundColor="Red"
+                Clicked="OnDeleteQuestionClicked"
+                IsVisible="{Binding IsEditQuestion}"
+                WidthRequest="200"
+                ></Button>
+            </StackLayout>
         </StackLayout>
 
     </ScrollView>

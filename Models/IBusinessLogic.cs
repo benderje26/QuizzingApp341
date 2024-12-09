@@ -40,11 +40,21 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     Task<UserData?> GetUserData(Guid userId);
 
     /// <summary>
+    /// The current quiz manager.
+    /// </summary>
+    QuizManager? QuizManager { get; set; }
+
+    Task<bool> ChangeQuizVisibility(bool isPublic);
+    Task<long?> AddQuiz(Quiz quiz);
+
+    /// <summary>
     /// Attempts to get a quiz.
     /// </summary>
     /// <param name="id">The given id of the quiz</param>
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
     Task<Quiz?> GetQuiz(long id);
+
+    Task<bool> DeleteQuiz(long quizId);
 
     /// <summary>
     /// Gets all of the questions from the questions table in db that matches the given id
@@ -71,7 +81,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns>
     /// Returns true if successfully deleted otherwise null
     /// </returns>
-    Task<bool> DeleteQuestion(long id);
+    Task<(DeleteQuestionResult, string?)> DeleteQuestion(long id);
 
     /// <summary>
     /// Edits a question by updating it in the db
@@ -90,6 +100,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// Returns an Observable Collection of all the quizzes the user has created
     /// </returns>
     Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userId);
+    Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes();
 
     /// <summary>
     /// Gets quiz IDs based on a list of active quiz IDs.
@@ -163,6 +174,8 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// True if the access code is valid otherwise false
     /// </returns>
     Task<bool> ValidateAccessCode(string accessCode);
+    Task<bool> EditQuizTitle(string newQuizTitle);
+    public void RefreshQuestionNums();
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);

@@ -1,9 +1,10 @@
 using QuizzingApp341.Models;
+using System.Text.Json;
 
 namespace QuizzingApp341.Views;
 
 public partial class CreateFillBlank : ContentPage {
-    public Question? FillBlankQuestionToChange { get; set; } // This is for editing a current question only if there is one to edit
+    public Question Question { get; set; }
     public bool? QuestionPresent { get; set; } = false;
     public bool? NoQuestionPresent { get; set; } = false;
     public bool? AnswerPresent { get; set; } = false;
@@ -11,11 +12,17 @@ public partial class CreateFillBlank : ContentPage {
     public string? Answers { get; set; }
 
     public string? QuestionText { get; set; }
-    public CreateFillBlank(Question? question) {
-        FillBlankQuestionToChange = question;
 
+    public bool IsNewQuestion { get; set; }
+
+    public bool IsEditQuestion { get; set; }
+
+    public CreateFillBlank(Question question, bool isNewQuestion) {
+        IsNewQuestion = isNewQuestion;
+        IsEditQuestion = !IsNewQuestion;
         // If there is a question present to edit
-        if (FillBlankQuestionToChange != null) {
+        if (question != null) {
+            Question = question;
             NoQuestionPresent = false;
             QuestionPresent = true;
             QuestionText = question?.QuestionText;
@@ -24,22 +31,20 @@ public partial class CreateFillBlank : ContentPage {
                 Answers = string.Join(", ", question.AcceptableAnswers);
                 AnswerPresent = true;
             }
-
         } else {
             NoQuestionPresent = true;
+            Question = new() { QuestionType = QuestionType.FillBlank };
         }
 
         InitializeComponent();
         BindingContext = this;
     }
 
-
-    private void OnSaveClicked(object sender, EventArgs e) {
+    private void RetrieveData() {
         // Retrieve data from user input
         //check for null, if null - replace with empty string
         string question = QuestionFillBlank.Text != null ? QuestionFillBlank.Text.Trim() : string.Empty;
         string answer = AnswerFillBlank.Text != null ? AnswerFillBlank.Text.Trim() : string.Empty;
-
 
         // Check for required fields not empty
         if (string.IsNullOrEmpty(question)) {
@@ -53,9 +58,33 @@ public partial class CreateFillBlank : ContentPage {
         }
 
         // Do something with the retrieved data - make a question object - saving to Database
-
-        // Navigate back to the CreateNewQuiz page
-        Navigation.PopAsync();
+        Question.QuestionText = question;
+        Question.AcceptableAnswers = [answer];
     }
 
+
+    private async void OnSaveClicked(object sender, EventArgs e) {
+        RetrieveData();
+        if (IsNewQuestion) {
+            await MauiProgram.BusinessLogic.AddQuestion(Question);
+        } else {
+            await MauiProgram.BusinessLogic.EditQuestion(Question);
+        }
+        // Navigate back to the CreateNewQuiz page
+        await Navigation.PopAsync();
+    }
+
+    private async void OnDeleteQuestionClicked(object sender, EventArgs e) {
+        RetrieveData();
+        bool deleteQuestion = await DisplayAlert("Are you sure you would like to delete this question?", Question?.QuestionText, "Yes", "No");
+        if (deleteQuestion && Question != null) {
+            var result = await MauiProgram.BusinessLogic.DeleteQuestion(Question.Id);
+            if (result.Item1 != DeleteQuestionResult.Success) {
+                await DisplayAlert("Error. Cannot delete question", result.Item2, "Ok");
+            }
+        } 
+
+        // Navigate back to the CreateNewQuiz page
+        await Navigation.PopAsync();
+    }
 }
