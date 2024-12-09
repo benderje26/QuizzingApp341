@@ -107,6 +107,15 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     #region Quizzes
     public QuizManager? QuizManager { get; set; }
 
+    public async Task<long?> AddQuiz(Quiz quiz) {
+        quiz.CreatorId = (Guid)UserInfo.Id;
+        var result = await database.AddQuiz(quiz);
+        QuizManager.Quiz.Id = (long)result;
+        UserInfo.CreatedQuizzes = await GetUserCreatedQuizzes();
+        QuizManager = new QuizManager(UserInfo.CreatedQuizzes.FirstOrDefault(q => q.Id == (long)result));
+        return result;
+    }
+
     // Get quiz by ID
     public async Task<Quiz?> GetQuiz(long id) {
         return await database.GetQuizById(id);

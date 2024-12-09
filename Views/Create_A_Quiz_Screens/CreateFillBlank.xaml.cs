@@ -17,8 +17,8 @@ public partial class CreateFillBlank : ContentPage {
 
     public bool IsEditQuestion { get; set; }
 
-    public CreateFillBlank(Question? question) {
-        IsNewQuestion = question == null;
+    public CreateFillBlank(Question question, bool isNewQuestion) {
+        IsNewQuestion = isNewQuestion;
         IsEditQuestion = !IsNewQuestion;
         // If there is a question present to edit
         if (question != null) {

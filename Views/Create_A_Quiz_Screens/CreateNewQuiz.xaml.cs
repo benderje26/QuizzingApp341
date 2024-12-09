@@ -17,10 +17,10 @@ namespace QuizzingApp341.Views {
             popup.QuestionTypeSelected += async (questionType) => {   // get questionType when clicked
                 if (questionType == QuestionType.MultipleChoice) {
                     await Task.Delay(100); // delay time
-                    await Navigation.PushAsync(new CreateMultipleChoice(null)); // Null here because you are creating a quiz
+                    await Navigation.PushAsync(new CreateMultipleChoice(new Question(), true)); // Null here because you are creating a quiz
                 } else if (questionType == QuestionType.FillBlank) {
                     await Task.Delay(100); // delay time
-                    await Navigation.PushAsync(new CreateFillBlank(null)); // Passing in null here because you're creating a new question
+                    await Navigation.PushAsync(new CreateFillBlank(new Question(), true)); // Passing in null here because you're creating a new question
                 }
             };
 

@@ -66,9 +66,9 @@
             </StackLayout>
 
             <!-- Add Quiz Button in the bottom right corner -->
-            <ImageButton Source="add_quiz.png"
-                         WidthRequest="50"
-                         HeightRequest="50"
+            <ImageButton Source="add_plus_button.png"
+                         WidthRequest="20"
+                         HeightRequest="20"
                          AbsoluteLayout.LayoutBounds="1,1"
                          AbsoluteLayout.LayoutFlags="PositionProportional"
                          Margin="0,0,10,10"

@@ -21,8 +21,8 @@ public partial class CreateMultipleChoice : ContentPage {
     public bool IsNewQuestion { get; set; }
 
     public bool IsEditQuestion { get; set; }
-    public CreateMultipleChoice(Question? question) {
-        IsNewQuestion = question == null;
+    public CreateMultipleChoice(Question? question, bool isNewQuestion) {
+        IsNewQuestion = isNewQuestion;
         IsEditQuestion = !IsNewQuestion;
 
         // If there is a question present to edit

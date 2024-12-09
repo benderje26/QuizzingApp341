@@ -209,10 +209,23 @@ public class SupabaseDatabase : IDatabase {
         return true;
     }
 
+    public async Task<long?> AddQuiz(Quiz quiz) {
+        try {
+            var result = await Client
+            .From<Quiz>()
+            .Insert(quiz);
+
+            return result.Model?.Id;
+        } catch (Exception e) {
+            Console.WriteLine("ERROR: " + e.Message);
+            return null;
+        }
+    }
+
     //Get Quiz by Quiz id
     // From Quiz Models to quizzes table in supabase
     //<param name="id"></param>
-    //rerturn one Quiz that matched the id, otherwise return null
+    //return one Quiz that matched the id, otherwise return null
     public async Task<Quiz?> GetQuizById(long id) {
         try {
             Quiz? quiz = await Client

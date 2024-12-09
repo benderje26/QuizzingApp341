@@ -5,9 +5,9 @@ using CommunityToolkit.Maui.Views;
 
 public partial class EditQuiz : ContentPage {
     public ICommand QuestionClickedCommand { get; set; }
+    public bool IsNewQuiz { get; set; }
     public EditQuiz(QuizManager quizManager) {
         InitializeComponent();
-        MauiProgram.BusinessLogic.QuizManager = quizManager;
         QuestionClickedCommand = new Command<Question>(QuestionClicked);
         BindingContext = MauiProgram.BusinessLogic;
     }
@@ -15,13 +15,13 @@ public partial class EditQuiz : ContentPage {
     private async void QuestionClicked(Question question) {
         // If the question is a multiple choice question
         if (question.QuestionType == QuestionType.MultipleChoice) {
-            await Navigation.PushAsync(new CreateMultipleChoice(question));
+            await Navigation.PushAsync(new CreateMultipleChoice(question, false));
         } else { // If the question is a fill in the blank question
-            await Navigation.PushAsync(new CreateFillBlank(question));
+            await Navigation.PushAsync(new CreateFillBlank(question, false));
         }
     }
 
-    public async void QuizTitleChanged(object senter, EventArgs e) {
+    public async void QuizTitleChanged(object sender, EventArgs e) {
         await MauiProgram.BusinessLogic.EditQuizTitle(NewQuizTitle.Text);
     }
 
@@ -35,19 +35,19 @@ public partial class EditQuiz : ContentPage {
             return;
         }
 
-        question.QuestionNo = MauiProgram.BusinessLogic.QuizManager.Questions.Count;
+        question.QuestionNo = MauiProgram.BusinessLogic.QuizManager.Questions.Count + 1;
         question.QuizId = MauiProgram.BusinessLogic.QuizManager.Quiz.Id;
 
         popup.QuestionTypeSelected += async (questionType) => {   // get questionType when clicked
             if (questionType == QuestionType.MultipleChoice) {
                 question.QuestionType = QuestionType.MultipleChoice;
                 await Task.Delay(100); // delay time
-                await Navigation.PushAsync(new CreateMultipleChoice(question));
+                await Navigation.PushAsync(new CreateMultipleChoice(question, true));
 
             } else if (questionType == QuestionType.FillBlank) {
                 question.QuestionType = QuestionType.FillBlank;
                 await Task.Delay(100); // delay time
-                await Navigation.PushAsync(new CreateFillBlank(question));
+                await Navigation.PushAsync(new CreateFillBlank(question, true));
             }
         };
 

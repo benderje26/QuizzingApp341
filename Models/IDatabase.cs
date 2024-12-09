@@ -93,6 +93,7 @@ public interface IDatabase {
     /// </summary>
     /// <returns>All public and user's quizzes</returns>
     Task<List<Quiz>?> GetAllQuizzesAsync();
+    Task<long?> AddQuiz(Quiz quiz);
     Task<bool> DeleteQuiz(long quizId);
 
     /// <summary>
