@@ -1,49 +1,48 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.QuizHistory"
+             BackgroundColor="#f5f5f5"
              Padding="7">
 
-    <ScrollView>
-        <StackLayout Padding="10" Spacing="20">
+    <StackLayout Padding="10" Spacing="20">
 
-            <!-- Iterate through the quizzes -->
-            <StackLayout x:Name="QuizHistoryStackLayout">
-                <!-- Example static quiz data, replace this with dynamic binding -->
-                <StackLayout Padding="10" Spacing="5">
-                    <Label Text="Title: Quiz4"
+        <!-- CollectionView for Quizzes -->
+        <CollectionView x:Name="QuizzesCollectionView"
+                ItemsSource="{Binding Quizzes}"
+                SelectionMode="None">
+            <!--Users cannot select any items in the control -->
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="15"
+                   CornerRadius="10"
+                   HasShadow="True"
+                   BackgroundColor="White"
+                   Margin="0,10"
+                   HeightRequest="120">
+                        <StackLayout Spacing="8">
+                            <!-- Quiz Title -->
+                            <Label Text="{Binding QuizTitle, StringFormat='Title: {0}'}"
                            FontAttributes="Bold"
-                           FontSize="20" />
-                    <Label Text="Quiz ID: 0"
-                           FontSize="18" />
-                    <Label Text="Last Activated: 2021-11-11 10:30"
+                           FontSize="22"
+                           TextColor="#11017a"
+                           LineBreakMode="TailTruncation" 
+                           HorizontalOptions="Start" />
+
+                            <!-- Quiz Id -->
+                            <Label Text="{Binding QuizId, StringFormat='Quiz ID: {0}'}"
                            FontSize="16"
-                           TextColor="Gray" />
-                </StackLayout>
+                           TextColor="#555" />
 
-                <StackLayout Padding="10" Spacing="5">
-                    <Label Text="Title: Quiz2"
-                           FontAttributes="Bold"
-                           FontSize="20" />
-                    <Label Text="Quiz ID: 1"
-                           FontSize="18" />
-                    <Label Text="Last Activated: 2021-11-12 12:30"
-                           FontSize="16"
-                           TextColor="Gray" />
-                </StackLayout>
+                            <!-- Start Time -->
+                            <Label Text="{Binding StartTime, StringFormat='Last Activated: {0:yyyy-MM-dd HH:mm}'}"
+                           FontSize="14"
+                           TextColor="#999" />
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-                <StackLayout Padding="10" Spacing="5">
-                    <Label Text="Title: Quiz1"
-                           FontAttributes="Bold"
-                           FontSize="20" />
-                    <Label Text="Quiz ID: 0"
-                           FontSize="18" />
-                    <Label Text="Last Activated: 2021-11-13 14:00"
-                           FontSize="16"
-                           TextColor="Gray" />
-                </StackLayout>
-            </StackLayout>
-
-        </StackLayout>
-    </ScrollView>
-
+    </StackLayout>
 </ContentPage>
