@@ -10,6 +10,8 @@ public class Quiz : BaseModel, INotifyPropertyChanged {
     private Guid creatorId;
     private string? title;
 
+    private bool isPublic;
+
     [PrimaryKey("id")]
     public long Id {
         get => id;
@@ -33,6 +35,15 @@ public class Quiz : BaseModel, INotifyPropertyChanged {
         get => title;
         set {
             title = value;
+            OnPropertyChanged();
+        }
+    }
+
+    [Column("public")]
+    public bool IsPublic {
+        get => isPublic;
+        set {
+            isPublic = value;
             OnPropertyChanged();
         }
     }

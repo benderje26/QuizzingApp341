@@ -181,5 +181,5 @@ public interface IDatabase {
     /// <param name="accessCode">The access code</param>
     /// <returns>Whether the access code is currently active</returns>
     Task<bool> ValidateAccessCode(string accessCode);
-    Task<bool> EditQuizTitle(Quiz quiz);
+    Task<bool> UpdateQuiz(Quiz quiz);
 }

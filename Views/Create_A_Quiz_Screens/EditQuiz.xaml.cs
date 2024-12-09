@@ -6,8 +6,10 @@ using CommunityToolkit.Maui.Views;
 public partial class EditQuiz : ContentPage {
     public ICommand QuestionClickedCommand { get; set; }
     public bool IsNewQuiz { get; set; }
+    public double ScreenWidth {get; set;}
     public EditQuiz(QuizManager quizManager) {
         InitializeComponent();
+        ScreenWidth = DeviceDisplay.MainDisplayInfo.Width;;
         QuestionClickedCommand = new Command<Question>(QuestionClicked);
         BindingContext = MauiProgram.BusinessLogic;
     }
@@ -67,4 +69,25 @@ public partial class EditQuiz : ContentPage {
             }
         }
     }
+
+    public async void OnPublicToggled(object sender, ToggledEventArgs e)
+{
+    try
+    {
+        // Optionally: Check the new toggle state (e.Value)
+        bool newState = e.Value;
+
+        // Perform the async operation without blocking the UI
+        await MauiProgram.BusinessLogic.ChangeQuizVisibility();
+
+        // Log or handle the result if needed
+        Console.WriteLine($"Quiz visibility changed to: {newState}");
+    }
+    catch (Exception ex)
+    {
+        // Handle any errors gracefully
+        Console.WriteLine($"Error changing quiz visibility: {ex.Message}");
+    }
+}
+
 } 

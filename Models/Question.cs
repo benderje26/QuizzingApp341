@@ -35,6 +35,7 @@ namespace QuizzingApp341.Models {
                 OnPropertyChanged();
             }
         }
+        
 
         [Column("question_type")]
         public QuestionType QuestionType {

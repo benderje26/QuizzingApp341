@@ -50,6 +50,18 @@
                     BackgroundColor="Transparent"
                     TextChanged="QuizTitleChanged"/>
             </Frame>
+
+            <HorizontalStackLayout>
+                <Label Text="Public"
+                       FontSize="18"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Center"
+                       Margin="0,0,10,0"></Label>
+                <Switch IsToggled="{Binding QuizManager.Quiz.IsPublic}"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"
+                        Toggled ="OnPublicToggled"/>
+            </HorizontalStackLayout>
         </StackLayout>
 
         <ScrollView Grid.Row="2">

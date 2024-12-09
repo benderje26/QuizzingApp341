@@ -43,6 +43,8 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// The current quiz manager.
     /// </summary>
     QuizManager? QuizManager { get; set; }
+
+    Task<bool> ChangeQuizVisibility();
     Task<long?> AddQuiz(Quiz quiz);
 
     /// <summary>

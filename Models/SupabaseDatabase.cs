@@ -196,7 +196,7 @@ public class SupabaseDatabase : IDatabase {
         }
         return true;
     }
-    public async Task<bool> EditQuizTitle(Quiz quiz) {
+    public async Task<bool> UpdateQuiz(Quiz quiz) {
         try {
             var result = await Client
                 .From<Quiz>()

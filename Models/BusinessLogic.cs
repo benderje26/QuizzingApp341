@@ -107,6 +107,11 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     #region Quizzes
     public QuizManager? QuizManager { get; set; }
 
+    public async Task<bool> ChangeQuizVisibility() {
+        QuizManager.Quiz.IsPublic = !QuizManager.Quiz.IsPublic;
+        return await database.UpdateQuiz(QuizManager.Quiz);
+    }
+
     public async Task<long?> AddQuiz(Quiz quiz) {
         quiz.CreatorId = (Guid)UserInfo.Id;
         var result = await database.AddQuiz(quiz);
@@ -130,7 +135,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public async Task<bool> EditQuizTitle(string newQuizTitle) {
         if (QuizManager?.Quiz != null) {
             QuizManager.Quiz.Title = newQuizTitle;
-            return await database.EditQuizTitle(QuizManager.Quiz);
+            return await database.UpdateQuiz(QuizManager.Quiz);
         }
         UserInfo.CreatedQuizzes = await GetUserCreatedQuizzes();
         return false;
