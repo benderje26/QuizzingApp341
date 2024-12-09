@@ -183,6 +183,19 @@ public class SupabaseDatabase : IDatabase {
         }
     }
   
+    public async Task<bool> DeleteQuiz(long quizId) {
+        try {
+            await Client
+                .From<Quiz>()
+                .Where(q => q.Id == quizId)
+                .Delete();
+        } catch (Exception e) {
+            Console.WriteLine("DELETE QUIZ ERROR:");
+            Console.WriteLine(e.Message);
+            return false;
+        }
+        return true;
+    }
     public async Task<bool> EditQuizTitle(Quiz quiz) {
         try {
             var result = await Client

@@ -51,6 +51,8 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
     Task<Quiz?> GetQuiz(long id);
 
+    Task<bool> DeleteQuiz(long quizId);
+
     /// <summary>
     /// Gets all of the questions from the questions table in db that matches the given id
     /// </summary>

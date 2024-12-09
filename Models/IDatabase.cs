@@ -93,6 +93,7 @@ public interface IDatabase {
     /// </summary>
     /// <returns>All public and user's quizzes</returns>
     Task<List<Quiz>?> GetAllQuizzesAsync();
+    Task<bool> DeleteQuiz(long quizId);
 
     /// <summary>
     /// Gets the user's info for the currently logged in user. This should not request any data from the database,

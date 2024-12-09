@@ -30,8 +30,11 @@ public class QuizManager : INotifyPropertyChanged {
 
     static int CurrentQuestion { get; set; } = 0;
 
+    public bool Active { get; set; }
+
     // Constructor for setting a quiz
     public QuizManager(Quiz quiz) {
+        Active  = false;
         Quiz = quiz;
         Questions = [];
     }
@@ -44,6 +47,7 @@ public class QuizManager : INotifyPropertyChanged {
     /// </summary>
     /// <param name="activeQuiz"></param>
     public QuizManager(ActiveQuiz activeQuiz) {
+        Active = true;
         ActiveQuiz = activeQuiz;
     }
 

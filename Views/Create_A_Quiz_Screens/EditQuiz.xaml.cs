@@ -54,4 +54,17 @@ public partial class EditQuiz : ContentPage {
         // Show the popup
         await this.ShowPopupAsync(popup);
     }
+
+    public async void OnDeleteQuiz(object sender, EventArgs e) {
+        bool deleteQuestion = await DisplayAlert("Are you sure you want to delete this quiz?", MauiProgram.BusinessLogic.QuizManager.Quiz.Title , "Yes", "No");
+        
+        if (deleteQuestion) {
+            if (MauiProgram.BusinessLogic.QuizManager.Active) {
+                await DisplayAlert("Could not delete the following quiz because it is still active", MauiProgram.BusinessLogic.QuizManager.Quiz.Title, "Ok");
+            } else {
+                await MauiProgram.BusinessLogic.DeleteQuiz(MauiProgram.BusinessLogic.QuizManager.Quiz.Id);
+                await Navigation.PopAsync();
+            }
+        }
+    }
 } 

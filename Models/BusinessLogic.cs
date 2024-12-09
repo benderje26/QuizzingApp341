@@ -1,4 +1,5 @@
 using QuizzingApp341.Views;
+using Supabase;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -109,6 +110,12 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     // Get quiz by ID
     public async Task<Quiz?> GetQuiz(long id) {
         return await database.GetQuizById(id);
+    }
+
+    public async Task<bool> DeleteQuiz(long quizId) {
+        bool result = await database.DeleteQuiz(quizId);
+        UserInfo.CreatedQuizzes = await GetUserCreatedQuizzes();
+        return result;
     }
 
     public async Task<bool> EditQuizTitle(string newQuizTitle) {
