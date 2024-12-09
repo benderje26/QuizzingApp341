@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.CreateAccount"
              Padding="7">
-    <Grid RowDefinitions="*,3*,Auto,2*" ColumnDefinitions="*,3*,*">
+    <Grid RowDefinitions="*,3*,Auto,4*" ColumnDefinitions="*,3*,*">
         <Label
             Grid.Column="1"
             Grid.Row="1"
@@ -33,12 +33,5 @@
                 Margin="0,30,0,0"
                 Clicked="OnCreateAccountButtonClicked"/>
         </VerticalStackLayout>
-        <Button
-            x:Name="backButton"
-            Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
-            HorizontalOptions="End"
-            VerticalOptions="Start"
-            FontSize="Large"
-            Text="&lt;"/>
     </Grid>
 </ContentPage>

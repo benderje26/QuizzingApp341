@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="QuizzingApp341.Views.ResetPassword"
+             x:Class="QuizzingApp341.Views.UpdateUsername"
              Padding="7">
-    <Grid RowDefinitions="*,3*,Auto,3*" ColumnDefinitions="*,3*,*">
+    <Grid RowDefinitions="*,*,Auto,2*" ColumnDefinitions="*,3*,*">
         <Label
             Grid.Column="1"
             Grid.Row="1"
@@ -11,15 +11,18 @@
             VerticalOptions="Center"
             HorizontalTextAlignment="Center"
             FontSize="35"
-            Text="Reset Password"/>
+            Text="Update Username"/>
         <VerticalStackLayout Grid.Row="2" Grid.Column="1">
             <Entry
-                x:Name="emailInput"
-                Placeholder="Email Address"/>
+                x:Name="usernameInput"
+                Placeholder="New Username"/>
+            <Entry
+                x:Name="repeatUsernameInput"
+                Placeholder="Repeat Username"/>
             <Button
-                x:Name="resetPasswordButton"
-                Text="Send Reset Email"
-                Margin="0,30,0,0"/>
+                Text="Update Username"
+                Margin="0,30,0,0"
+                Clicked="OnUpdateUsernameButtonClicked"/>
         </VerticalStackLayout>
     </Grid>
 </ContentPage>
