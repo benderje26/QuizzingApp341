@@ -12,6 +12,8 @@ public class Quiz : BaseModel, INotifyPropertyChanged {
 
     private bool isPublic;
 
+    private DateTime dateCreated;
+
     [PrimaryKey("id")]
     public long Id {
         get => id;
@@ -20,6 +22,15 @@ public class Quiz : BaseModel, INotifyPropertyChanged {
             OnPropertyChanged();
         }
     }
+
+    [Column("created_at")]
+    public DateTime DateCreated { 
+        get => dateCreated;
+        set {
+            dateCreated = value;
+            OnPropertyChanged();
+        }
+     }
 
     [Column("creator_id")]
     public Guid CreatorId { 
