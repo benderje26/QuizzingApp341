@@ -16,24 +16,22 @@
                          AbsoluteLayout.LayoutFlags="All">
 
                 <Grid
-                    VerticalOptions="Start"
-                    Padding="10">
+                    VerticalOptions="Start">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Text="All Quizzes"
-                           FontSize="25"
-                           TextColor="Black"
-                           VerticalOptions="Center"
-                           HorizontalOptions="Start"
-                           Grid.Column="0"/>
                 </Grid>
 
                 <StackLayout Padding="20"
                              VerticalOptions="Start">
                     <StackLayout Padding="0,10">
+                        <Label Text="Quizzes:"
+                           FontSize="20"
+                           TextColor="Black"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Start"/>
                         <!-- Quiz items  -->
                         <StackLayout x:Name="quizzesList"
                                      Spacing="10">
