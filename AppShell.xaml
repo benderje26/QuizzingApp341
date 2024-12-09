@@ -6,9 +6,9 @@
     xmlns:local="clr-namespace:QuizzingApp341.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="QuizzingApp341"
-    Shell.BackgroundColor="#11017a"
-    Shell.TabBarBackgroundColor="White" 
-    Shell.TabBarForegroundColor="#11017a">
+    Shell.BackgroundColor="#006D77"
+    Shell.TabBarBackgroundColor="#086880 " 
+    Shell.TabBarForegroundColor="#086880 ">
 
     <!-- Login Screen: Displayed first -->
     <ShellContent

@@ -4,7 +4,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.Setting"
              Padding="7"
-             Title="Settings">
+             Title="Settings"
+             BackgroundColor="#006D77">
     <StackLayout Padding="20" VerticalOptions="FillAndExpand">
 
         <!-- Settings Title  -->
@@ -12,22 +13,23 @@
                FontSize="24"
                HorizontalOptions="Center"
                VerticalOptions="Start"
-               Margin="0,0,0,20" />
+               Margin="0,0,0,20"
+               TextColor="#FFCA3A"/>
 
         <!-- Buttons for each setting option -->
         <!-- I don't think we should do all the functionality below -->
         <Button Text="Account info >" 
                 FontSize="18"
-                BackgroundColor="DarkBlue"
-                TextColor="White"
+                BackgroundColor="#086880"
+                TextColor="#FFCA3A"
                 CornerRadius="10"
                 HeightRequest="50"
                 Margin="0,10" />
 
         <Button Text="Sign Out >" 
                 FontSize="18"
-                BackgroundColor="DarkBlue"
-                TextColor="White"
+                BackgroundColor="#086880"
+                TextColor="#FFCA3A"
                 CornerRadius="10"
                 HeightRequest="50"
                 Margin="0,10" 
@@ -35,16 +37,16 @@
 
         <Button Text="Appearance >" 
                 FontSize="18"
-                BackgroundColor="DarkBlue"
-                TextColor="White"
+                BackgroundColor="#086880"
+                TextColor="#FFCA3A"
                 CornerRadius="10"
                 HeightRequest="50"
                 Margin="0,10" />
 
         <Button Text="Notifications >" 
                 FontSize="18"
-                BackgroundColor="DarkBlue"
-                TextColor="White"
+                BackgroundColor="#086880"
+                TextColor="#FFCA3A"
                 CornerRadius="10"
                 HeightRequest="50"
                 Margin="0,10" />
@@ -52,8 +54,8 @@
    
         <Button Text="Delete Account"
                 FontSize="18"
-                BackgroundColor="Red"
-                TextColor="White"
+                BackgroundColor="#FFCA3A"
+                TextColor="#086880"
                 CornerRadius="10"
                 HeightRequest="50"
                 Margin="0,20,0,0" />

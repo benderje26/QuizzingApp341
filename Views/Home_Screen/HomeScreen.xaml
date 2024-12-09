@@ -2,51 +2,47 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.HomeScreen"
-             Title="Home">
+             Title="Home"
+              BackgroundColor="#006D77">
 
     <Grid Padding="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Row for QR code and Search Quiz widget -->
-            <RowDefinition Height="*"/> <!-- Row for Entering Quiz ID -->
+            <RowDefinition Height="Auto"/>
+            <!-- Row for QR code and Search Quiz widget -->
+            <RowDefinition Height="*"/>
+            <!-- Row for Entering Quiz ID -->
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/> 
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- First row with two widgets filling the whole row -->
-        <Button ImageSource="qr_code.png"
-                Grid.Row="0"
-                Grid.Column="0"
-                WidthRequest="150"
-                HeightRequest="150"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand"
-                Margin="5"
-                BackgroundColor="#F5F5F5"/>
-
         <Button ImageSource="search_bar.png"
                 Grid.Row="0"
                 Grid.Column="1"
-                WidthRequest="150"
-                HeightRequest="150"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand"
-                Margin="5"
-                BackgroundColor="#F5F5F5"
-                Clicked="OnSearchClicked"/>
+                WidthRequest="70"
+                HeightRequest="70"
+                HorizontalOptions="End"
+                VerticalOptions="Start"
+                Margin="0,0,5,0"
+                BackgroundColor="Transparent"
+                Clicked="OnSearchClicked"
+                CornerRadius="35" />
 
         <!-- Second row with one widget that expands to fill the entire row -->
         <VerticalStackLayout Grid.Row="1"
                              Grid.ColumnSpan="2"
                              HorizontalOptions="FillAndExpand"
                              VerticalOptions="FillAndExpand"
-                             Margin="5"
-                             BackgroundColor="#F5F5F5">
+                             Margin="5">
             <Label
                 Padding="10"
-                Text="Please enter a Quiz ID to start participating in a live Quiz:"/>
+                Text="Please enter a Quiz ID to start participating in a live Quiz:"
+                TextColor="White"
+                FontSize="16"
+                HorizontalOptions="Center" />
 
             <!-- Entry for entering quiz ID-->
             <VerticalStackLayout
@@ -54,19 +50,22 @@
                 Spacing="10"
                 Padding="20">
                 <Frame 
-                BorderColor="#11017a" 
+                BorderColor="#FFCA3A"  
                 BackgroundColor="Transparent"
                 CornerRadius="5" 
                 Padding="10" 
                 HasShadow="False">
-                
-                <Entry
+
+                    <Entry
                     x:Name="quizIdEntry"
                     Placeholder="Enter Quiz ID"
                     WidthRequest="250"
                     HorizontalOptions="Center" 
-                    VerticalOptions="Center"/>
-            </Frame>
+                    VerticalOptions="Center"
+                    TextColor="#FFCA3A"
+                    PlaceholderColor="#FFCA3A"
+                    BackgroundColor="#006D77"/>
+                </Frame>
 
                 <Button
                     Padding="10"
@@ -76,7 +75,9 @@
                     VerticalOptions="Center"
                     Margin="10,10,0,0"
                     Clicked="OnStartClicked"
-                    BackgroundColor="#11017a"/>
+                    BackgroundColor="#FFCA3A"
+                    TextColor="Black"
+                    CornerRadius="10" />
             </VerticalStackLayout>
         </VerticalStackLayout>
     </Grid>
