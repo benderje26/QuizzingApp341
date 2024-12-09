@@ -78,7 +78,7 @@ public partial class EditQuiz : ContentPage {
         bool newState = e.Value;
 
         // Perform the async operation without blocking the UI
-        await MauiProgram.BusinessLogic.ChangeQuizVisibility();
+         await MauiProgram.BusinessLogic.ChangeQuizVisibility(newState);
 
         // Log or handle the result if needed
         Console.WriteLine($"Quiz visibility changed to: {newState}");

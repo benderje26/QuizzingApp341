@@ -107,9 +107,15 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     #region Quizzes
     public QuizManager? QuizManager { get; set; }
 
-    public async Task<bool> ChangeQuizVisibility() {
-        QuizManager.Quiz.IsPublic = !QuizManager.Quiz.IsPublic;
-        return await database.UpdateQuiz(QuizManager.Quiz);
+    public async Task<bool> ChangeQuizVisibility(bool isPublic) {
+        bool originalVisibility = QuizManager.Quiz.IsPublic;
+        QuizManager.Quiz.IsPublic = isPublic;
+        var result = await database.UpdateQuiz(QuizManager.Quiz);
+
+        if (!result) {
+            QuizManager.Quiz.IsPublic = originalVisibility;
+        }
+        return result;
     }
 
     public async Task<long?> AddQuiz(Quiz quiz) {
