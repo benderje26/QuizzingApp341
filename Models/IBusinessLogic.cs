@@ -173,6 +173,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// </returns>
     Task<bool> ValidateAccessCode(string accessCode);
     Task<bool> EditQuizTitle(string newQuizTitle);
+    public void RefreshQuestionNums();
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);

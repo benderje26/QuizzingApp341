@@ -242,6 +242,21 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    public async Task<bool> UpdateQuestionNo(long questionId, int newQuestionNo) {
+        try {
+            var result = await Client
+            .From<Question>()
+            .Where(q => q.Id == questionId)
+            .Set(q => q.QuestionNo, newQuestionNo)
+            .Update();
+
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+            return false;
+        }
+        return true;
+    }
+
     //Get all the questions from that quiz id
     // From Question Model to question table in supabse 
     //  <param name="id"></param>

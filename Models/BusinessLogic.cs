@@ -136,8 +136,17 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return false;
     }
 
+    public async void RefreshQuestionNums() {
+        for (int i = 0; i < QuizManager?.Questions.Count; i++) {
+            await database.UpdateQuestionNo(QuizManager.Questions[i].Id, i + 1);
+        }
+    }
+
     // Retrieves questions for a specific quiz with the id given, ordered by question number
     public async Task<ObservableCollection<Question>?> GetQuestions(long id) {
+        // Refresh the question numbers, because if one question was deleted, the question numbers needs to be renumbered
+        RefreshQuestionNums();
+
         var result = await database.GetQuestions(id);
         if (result != null) {
             ObservableCollection<Question> questions = new ObservableCollection<Question>(result.OrderBy(q => q.QuestionNo));

@@ -42,6 +42,8 @@ public interface IDatabase {
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
     Task<Quiz?> GetQuizById(long id);
 
+    Task<bool> UpdateQuestionNo(long questionId, int newQuestionNo);
+
     /// <summary>
     /// Gets all of the questions from the database that matches the given id.
     /// </summary>
