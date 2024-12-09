@@ -4,7 +4,6 @@
              xmlns:model="clr-namespace:QuizzingApp341.Models"
              xmlns:local="clr-namespace:QuizzingApp341.Views"
              x:Class="QuizzingApp341.Views.QuizStudio"
-             x:DataType="local:QuizStudio"
              Padding="7"
              Title="Studio">
 

@@ -14,7 +14,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     private const string NETWORK_ERROR_MESSAGE = "There was a network error.";
     private const string OTHER_ERROR_MESSAGE = "An unknown error occurred.";
 
-    // UserInfo to Retrive the current user information
+    // UserInfo to Retrieve the current user information
     public UserInfo? UserInfo => database.GetUserInfo();
 
     // Creating a new user account after validating email, username, and password
@@ -104,11 +104,9 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
 
     #region Quizzes
+
     public QuizManager? EditQuizManager { get; set; }
 
-    public void SetEditQuestionQuizManager(QuizManager quizManager) {
-        EditQuizManager = quizManager;
-    }
     // Get quiz by ID
     public async Task<Quiz?> GetQuiz(long id) {
         return await database.GetQuizById(id);

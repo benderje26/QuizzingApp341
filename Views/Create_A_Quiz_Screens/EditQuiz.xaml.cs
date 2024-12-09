@@ -9,7 +9,7 @@ public partial class EditQuiz : ContentPage {
     public ICommand QuestionClickedCommand { get; set; }
     public EditQuiz(QuizManager quizManager) {
         InitializeComponent();
-        MauiProgram.BusinessLogic.SetEditQuestionQuizManager(quizManager);
+        MauiProgram.BusinessLogic.EditQuizManager = quizManager;
         QuestionClickedCommand = new Command<Question>(QuestionClicked);
         BindingContext = MauiProgram.BusinessLogic;
     }
@@ -33,8 +33,8 @@ public partial class EditQuiz : ContentPage {
 
         // Make a new question with this current quiz Id
         Question question = new Question();
-        question.QuestionNo =   MauiProgram.BusinessLogic.getEditQuizManager().Questions.Count();
-        question.QuizId = MauiProgram.BusinessLogic.getEditQuizManager().Quiz.Id;
+        question.QuestionNo =   MauiProgram.BusinessLogic.EditQuizManager.Questions.Count();
+        question.QuizId = MauiProgram.BusinessLogic.EditQuizManager.Quiz.Id;
 
         popup.QuestionTypeSelected += async (questionType) => {   // get questionType when clicked
             if (questionType == "MultipleChoice") {
