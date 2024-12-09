@@ -113,8 +113,6 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// Gets the active quiz IDs for a given user from participants tables
     /// </summary>
     /// <returns>List of active quiz IDs</returns>
-    
-    Task<string?> ActivateQuiz();
     Task<List<long>> GetActiveQuizIdsForUser();
 
     Task<ObservableCollection<Quiz>?> GetAllQuizzes();
