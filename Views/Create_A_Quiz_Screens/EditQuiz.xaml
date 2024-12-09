@@ -13,6 +13,11 @@
                      Order="Primary"
                      Priority="0"
                      Clicked="OnDeleteQuiz"/>
+        <ToolbarItem Text="Activate Quiz"
+                     IconImageSource="play.png"
+                     Order="Primary"
+                     Priority="0"
+                     Clicked="OnActivateQuiz"/>
     </ContentPage.ToolbarItems>
 
     <Grid Padding="10">
@@ -60,7 +65,7 @@
                 <Switch IsToggled="{Binding QuizManager.Quiz.IsPublic}"
                         HorizontalOptions="End"
                         VerticalOptions="Center"
-                        Toggled ="OnPublicToggled"/>
+                        Toggled="OnPublicToggled"/>
             </HorizontalStackLayout>
         </StackLayout>
 

@@ -365,6 +365,23 @@ public class SupabaseDatabase : IDatabase {
     }
 
     #region Active Quizzes
+
+    public async Task<string?> ActivateQuiz(Quiz quiz) {
+        ActiveQuiz activeQuiz = new ActiveQuiz();
+        activeQuiz.QuizId = quiz.Id;
+        activeQuiz.IsActive = true;
+        activeQuiz.CurrentQuestionNo = 1;
+        activeQuiz.Activator = UserId;
+        try {
+            var result = await Client
+            .From<ActiveQuiz>()
+            .Insert(activeQuiz);
+
+            return result.Model?.AccessCode;
+        } catch {
+            return null;
+        }
+    }
     public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
         try {
             // Get an active quiz from the table based on the access code

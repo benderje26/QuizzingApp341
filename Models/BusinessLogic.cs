@@ -302,7 +302,13 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
 
     #region Active Quizzes
-    // retrieves active quizes from its access code
+    
+    public async Task<string?> ActivateQuiz() {
+        // Move QuizManager.Quiz to active quizzes table
+        return await database.ActivateQuiz(QuizManager.Quiz);
+    }
+
+    // retrieves active quizzes from its access code
     public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
         return await database.GetActiveQuiz(accessCode);
     }
