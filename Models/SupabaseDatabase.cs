@@ -3,6 +3,7 @@ using Supabase;
 using Supabase.Gotrue;
 using Supabase.Gotrue.Exceptions;
 using Supabase.Postgrest;
+using Supabase.Postgrest.Exceptions;
 using Supabase.Postgrest.Responses;
 using Supabase.Realtime.PostgresChanges;
 using System.Collections.ObjectModel;
@@ -115,28 +116,58 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<AccountCreationResult> CreateNewUser(string emailAddress, string username, string password) {
         try {
+            bool? alreadyExists = await HasUserData(username);
+            if (alreadyExists == null) {
+                return AccountCreationResult.Other;
+            } else if (alreadyExists.Value) {
+                return AccountCreationResult.DuplicateUsername;
+            }
+
             // Calls Supabase to sign up and then sets the current session to that new user
-            await SetSession(await Client.Auth.SignUp(emailAddress, password));
+            await Client.Auth.SignUp(emailAddress, password);
+            await SetSession(await Client.Auth.SignIn(emailAddress, password));
+        } catch (GotrueException e) {
+            if (e.Reason == Supabase.Gotrue.Exceptions.FailureHint.Reason.UserAlreadyRegistered) {
+                return AccountCreationResult.DuplicateEmail;
+            }
+            return AccountCreationResult.Other;
+        } catch (Exception e) {
+            Console.WriteLine("ERRORRRR:" + e);
+            return AccountCreationResult.Other;
+        }
 
-            if (Session != null) {
-                // If it worked, put the user's data into a UserData object
-                UserData myData = new() {
-                    UserId = UserId,
-                    Username = username
-                };
+        if (Session != null) {
+            // If it worked, put the user's data into a UserData object
+            UserData myData = new() {
+                UserId = UserId,
+                Username = username
+            };
 
-                // Puts it in the USER_DATA table, which is used for storing usernames
+            // Puts it in the USER_DATA table, which is used for storing usernames
+            try {
                 var result = await Client
                     .From<UserData>()
                     .Insert(myData);
 
                 // Returns if it was a success
                 return result?.Model == null ? AccountCreationResult.Other : AccountCreationResult.Success;
+            } catch (Exception e) {
+                Console.WriteLine("ERRORRRR:" + e);
+
+                // If we were unable to assign the username, delete the account
+                await DeleteAccount();
+
+                // Checks to see if it was a uniqueness problem. This would only happen if someone else created
+                // an account inbetween the last check and the time that we inserted into the table
+                if (e is PostgrestException pe) {
+                    if (pe.Reason == Supabase.Postgrest.Exceptions.FailureHint.Reason.UniquenessViolation) {
+                        return AccountCreationResult.DuplicateUsername;
+                    }
+                }
             }
-            return AccountCreationResult.Other;
-        } catch (Exception) {
-            return AccountCreationResult.Other;
         }
+
+        return AccountCreationResult.Other;
     }
 
     public async Task<LoginResult> Login(string emailAddress, string password) {
@@ -148,7 +179,7 @@ public class SupabaseDatabase : IDatabase {
             return Session == null ? LoginResult.Other : LoginResult.Success;
         } catch (Exception e) {
             // Sees if it was a bad credentials error
-            if (e is GotrueException ge && ge.Reason == FailureHint.Reason.UserBadLogin) {
+            if (e is GotrueException ge && ge.Reason == Supabase.Gotrue.Exceptions.FailureHint.Reason.UserBadLogin) {
                 return LoginResult.BadCredentials;
             }
             return LoginResult.Other;
@@ -205,13 +236,13 @@ public class SupabaseDatabase : IDatabase {
         }
         try {
             //Update the users username
-                var result = await Client
-                    .From<UserData>()
-                    .Where(x => x.UserId == UserId)
-                    .Set(x => x.Username, username)
-                    .Update();
+            var result = await Client
+                .From<UserData>()
+                .Where(x => x.UserId == UserId)
+                .Set(x => x.Username, username)
+                .Update();
             //Return that it was updated successfully
-                return UpdateUsernameResult.Success;
+            return UpdateUsernameResult.Success;
         } catch (Exception e) {
             //Write out the error if if occurred and return NetworkError to represent a failed update
             Console.Write("ERRORRRRR" + e);
@@ -255,6 +286,21 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    public async Task<bool?> HasUserData(string username) {
+        try {
+            // Gets a user's data by username
+            UserData? data = await Client
+                .From<UserData>()
+                .Where(x => x.Username == username)
+                .Single();
+
+            return data != null;
+        } catch (Exception e) {
+            Console.Write("ERORRRR" + e.Message);
+            return null;
+        }
+    }
+
     /// <summary>
     /// Attempts to delete the current users account
     /// </summary>
@@ -278,7 +324,7 @@ public class SupabaseDatabase : IDatabase {
 
     #region Quizzes 
 
-    //Get All the Quizzes for user
+    //Get All the Quizzes for the current user
     //From Quiz Models to quizzes table in supabase
     //return List of Quiz 
     public async Task<List<Quiz>?> GetAllQuizzesAsync() {
