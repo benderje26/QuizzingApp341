@@ -172,7 +172,8 @@ public class SupabaseDatabase : IDatabase {
 
     #region Quizzes 
 
-//Get All the Quizzes for user
+    #region Normal Quizzes
+    //Get All the Quizzes for user
     //From Quiz Models to quizzes table in supabase
     //return List of Quiz 
     public async Task<List<Quiz>?> GetAllQuizzesAsync() {
@@ -365,6 +366,8 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    #endregion
+
     #region Active Quizzes
 
     public async Task<ActiveQuiz> ActivateQuiz(Quiz quiz) {
@@ -555,7 +558,6 @@ public class SupabaseDatabase : IDatabase {
         }
     }
     #endregion
-    #endregion
 
     #region Favorite Quizzes
 
@@ -664,5 +666,7 @@ public class SupabaseDatabase : IDatabase {
             return false;
         }
     }
+    #endregion
+    
     #endregion
 }
