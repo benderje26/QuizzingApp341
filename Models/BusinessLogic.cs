@@ -361,24 +361,33 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var questions = await database.GetQuizQuestionsByActiveQuizId(activeQuizId);
         var responses = await database.GetRepsonsesByActiveQuizId(activeQuizId);
 
+        //Create a dictionary to keep track of each student and their respective score
         Dictionary<Guid, int> studentsScores = new Dictionary<Guid, int>();
+        //Go through all of the reponses
         foreach (var response in responses) {
+            //If the student doesn't exist yet in the dictionary, add them to it with a score of 0
             if (!studentsScores.ContainsKey(response.UserId)) {
                 studentsScores.Add(response.UserId, 0);
             }
+            //Get the questions that the response if for
             Question question = questions.FirstOrDefault(q => q.QuestionNo == response.QuestionNo);
             if (question != null) {
+                //If the question is a fill blank, check to see if their answer is one of the acceptable answers
                 if (question.AcceptableAnswers != null && question.AcceptableAnswers.Contains(response.FillBlankResponse)) {
+                    //If it was a fill blank and they had a valid answer, add one to their score
                     studentsScores[response.UserId] += 1;
-                } else if (question.MultipleChoiceCorrectAnswers != null) {
+                } else if (question.MultipleChoiceCorrectAnswers != null) { //Double check that the question is mulitple choice, even though it has to be since it is no fill blank
+                    //Check to see how many of the correct options they selected
                     var correctResponses = question.MultipleChoiceCorrectAnswers.Intersect(response.MultipleChoiceResponse).ToArray();
+                    //Check to if the number of correct options they selected are equal to the total number of currect options
                     if (correctResponses.Length == question.MultipleChoiceCorrectAnswers.Length) {
+                        //Give them a point if they got all the correct options
                         studentsScores[response.UserId] += 1;
                     }
-
                 }
             }
         }
+        //Return the set of all the scores
         return studentsScores.Values.ToList();
     }
 

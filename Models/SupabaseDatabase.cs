@@ -652,10 +652,14 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<List<Question>> GetQuizQuestionsByActiveQuizId(long activeQuizId) {
         try {
+            //Get the quiz that corresonds to the active quiz id
             var activeQuiz = await Client.From<ActiveQuiz>().Where(x => x.Id == activeQuizId).Single();
+            //Get the questions for the quiz
             var questions = await Client.From<Question>().Where(x => x.QuizId == activeQuiz.QuizId).Get();
-            return questions.Models;
+            //Return the questions
+            return questions.Models; 
         } catch (Exception e) {
+            //Write out the error if if occurred and return an empty collection
             Console.WriteLine("Error: " + e.Message);
             return new List<Question>();
         }
@@ -663,9 +667,11 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<List<Response>> GetRepsonsesByActiveQuizId(long activeQuizId) {
         try {
+            //Get the response for the active quiz and return them
             var responses = await Client.From<Response>().Where(x => x.ActiveQuizId == activeQuizId).Get();
             return responses.Models;
         } catch (Exception e) {
+            //Write out the error if if occurred and return an empty collection
             Console.WriteLine("Error: " + e.Message);
             return new List<Response>();
         }
