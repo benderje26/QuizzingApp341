@@ -356,18 +356,14 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices) {
         try {
-
             await Client // Insert into the response table according to the choice selected
-
                 .From<Response>()
                 .Insert(new Response() {
                     ActiveQuizId = question.ActiveQuizId,
                     UserId = UserId,
                     QuestionNo = question.QuestionNo,
-
-                    MultipleChoiceResponse = [choice],
+                    MultipleChoiceResponse = choices,
                     FillBlankResponse = null // Null because this is multiple choice
-
                 }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
 
             return true;

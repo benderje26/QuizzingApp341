@@ -24,5 +24,8 @@ public class ActiveQuestion : BaseModel {
 
     [Column("multiple_choice_options")]
     public string[]? MultipleChoiceOptions { get; set; }
+
+    [Column("is_multiselect")]
+    public bool? IsMultiselect { get; set; }
     public bool IsStudying { get; set; }
 }

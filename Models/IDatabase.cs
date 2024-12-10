@@ -149,7 +149,7 @@ public interface IDatabase {
     /// Submits a multiple choice question with its choice.
     /// </summary>
     /// <param name="question">The question you are submitting to</param>
-    /// <param name="choices">The index of the choice the student selected</param>
+    /// <param name="choices">The indexes of the choices the student selected</param>
     /// <returns></returns>
     Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices);
 
