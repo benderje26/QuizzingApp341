@@ -114,7 +114,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// </summary>
     /// <returns>List of active quiz IDs</returns>
     
-    Task<string?> ActivateQuiz();
+    Task<bool> ActivateQuiz();
     Task<List<long>> GetActiveQuizIdsForUser();
 
     Task<ObservableCollection<Quiz>?> GetAllQuizzes();

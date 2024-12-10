@@ -24,5 +24,15 @@ public class ActiveQuestion : BaseModel {
 
     [Column("multiple_choice_options")]
     public string[]? MultipleChoiceOptions { get; set; }
-    public bool IsStudying { get; set; }
+    // public bool IsStudying { get; set; } COMMENTED OUT BECAUSE I COULDN'T ADD TO active_questions TABLE
+
+    public ActiveQuestion() {}
+    public ActiveQuestion(Question question, long activeQuizId) {
+        ActiveQuizId = activeQuizId;
+        QuestionId = question.Id;
+        QuestionNo = question.QuestionNo;
+        QuestionType = question.QuestionType;
+        Question = question.QuestionText;
+        MultipleChoiceOptions = question.MultipleChoiceOptions;
+    }
 }

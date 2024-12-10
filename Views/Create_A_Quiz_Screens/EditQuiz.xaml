@@ -53,7 +53,7 @@
                     FontSize="18"
                     HorizontalOptions="Fill"
                     BackgroundColor="Transparent"
-                    TextChanged="QuizTitleChanged"/>
+                    TextChanged="QuizTitleChanged"/> 
             </Frame>
 
             <HorizontalStackLayout>

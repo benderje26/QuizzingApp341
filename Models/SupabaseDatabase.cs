@@ -7,6 +7,7 @@ using Supabase.Postgrest.Responses;
 using Supabase.Realtime.PostgresChanges;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using Client = Supabase.Client;
 using Constants = Supabase.Postgrest.Constants;
 
@@ -366,7 +367,7 @@ public class SupabaseDatabase : IDatabase {
 
     #region Active Quizzes
 
-    public async Task<string?> ActivateQuiz(Quiz quiz) {
+    public async Task<ActiveQuiz> ActivateQuiz(Quiz quiz) {
         ActiveQuiz activeQuiz = new ActiveQuiz();
         activeQuiz.QuizId = quiz.Id;
         activeQuiz.IsActive = true;
@@ -378,10 +379,23 @@ public class SupabaseDatabase : IDatabase {
             .Insert(activeQuiz);
 
             // TODO Generate random access code...
-            return result.Model?.AccessCode;
+            // return result.Model?.AccessCode;
+            return result.Model;
         } catch {
             return null;
         }
+    }
+
+    public async Task<bool> ActivateQuestion(ActiveQuestion question) {
+        try {
+            var result = await Client
+            .From<ActiveQuestion>()
+            .Insert(question);
+        } catch (Exception e){
+            Console.WriteLine("Error: " + e.Message);
+            return false;
+        }
+        return true;
     }
     public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
         try {

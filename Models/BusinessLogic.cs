@@ -188,8 +188,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             DeleteQuestionResult.Other => OTHER_ERROR_MESSAGE,
             _ => OTHER_ERROR_MESSAGE
         };
-        
-        if (QuizManager?.Quiz!= null) {
+
+        if (QuizManager?.Quiz != null) {
             await GetQuestions(QuizManager.Quiz.Id);
         }
 
@@ -302,10 +302,24 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
 
     #region Active Quizzes
-    
-    public async Task<string?> ActivateQuiz() {
-        // Move QuizManager.Quiz to active quizzes table
-        return await database.ActivateQuiz(QuizManager.Quiz);
+
+    public async Task<bool> ActivateQuiz() {
+        try {
+            // Move QuizManager.Quiz to active quizzes table
+            var result = await database.ActivateQuiz(QuizManager.Quiz);
+
+            List<Task<bool>> tasks = new List<Task<bool>>();
+
+            for (int i = 0; i < QuizManager.Questions.Count(); i++) {
+                // Add questions to the active questions table
+                tasks.Add(database.ActivateQuestion(new ActiveQuestion(QuizManager.Questions[i], result.Id)));
+            }
+
+            await Task.WhenAll(tasks);
+        } catch {
+            return false;
+        }
+        return true;
     }
 
     // retrieves active quizzes from its access code
