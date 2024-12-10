@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.HomeScreen"
-             Title="Home"
-              BackgroundColor="#006D77">
+             Title="Home">
 
     <Grid Padding="20">
         <Grid.RowDefinitions>
@@ -18,31 +17,28 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- First row with two widgets filling the whole row -->
+        <!-- First row with search bar -->
         <Button ImageSource="search_bar.png"
                 Grid.Row="0"
                 Grid.Column="1"
-                WidthRequest="70"
-                HeightRequest="70"
-                HorizontalOptions="End"
-                VerticalOptions="Start"
-                Margin="0,0,5,0"
-                BackgroundColor="Transparent"
-                Clicked="OnSearchClicked"
-                CornerRadius="35" />
+                WidthRequest="100"
+                HeightRequest="50"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                Margin="2"
+                BackgroundColor="#F5F5F5"
+                Clicked="OnSearchClicked"/>
 
         <!-- Second row with one widget that expands to fill the entire row -->
         <VerticalStackLayout Grid.Row="1"
                              Grid.ColumnSpan="2"
                              HorizontalOptions="FillAndExpand"
                              VerticalOptions="FillAndExpand"
-                             Margin="5">
+                             Margin="5"
+                             BackgroundColor="#F5F5F5">
             <Label
                 Padding="10"
-                Text="Please enter a Quiz ID to start participating in a live Quiz:"
-                TextColor="White"
-                FontSize="16"
-                HorizontalOptions="Center" />
+                Text="Please enter a Quiz ID to start participating in a live Quiz:"/>
 
             <!-- Entry for entering quiz ID-->
             <VerticalStackLayout
@@ -50,7 +46,7 @@
                 Spacing="10"
                 Padding="20">
                 <Frame 
-                BorderColor="#FFCA3A"  
+                BorderColor="#11017a" 
                 BackgroundColor="Transparent"
                 CornerRadius="5" 
                 Padding="10" 
@@ -61,10 +57,7 @@
                     Placeholder="Enter Quiz ID"
                     WidthRequest="250"
                     HorizontalOptions="Center" 
-                    VerticalOptions="Center"
-                    TextColor="#FFCA3A"
-                    PlaceholderColor="#FFCA3A"
-                    BackgroundColor="#006D77"/>
+                    VerticalOptions="Center"/>
                 </Frame>
 
                 <Button
@@ -75,9 +68,7 @@
                     VerticalOptions="Center"
                     Margin="10,10,0,0"
                     Clicked="OnStartClicked"
-                    BackgroundColor="#FFCA3A"
-                    TextColor="Black"
-                    CornerRadius="10" />
+                    BackgroundColor="#11017a"/>
             </VerticalStackLayout>
         </VerticalStackLayout>
     </Grid>
