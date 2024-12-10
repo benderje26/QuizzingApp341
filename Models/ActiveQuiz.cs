@@ -10,6 +10,9 @@ public class ActiveQuiz : BaseModel {
     [Column("quiz_id")]
     public long QuizId { get; set; }
 
+    [Column("quiz_title")]
+    public string? QuizTitle { get; set; } 
+
     [Column("access_code")]
     public string? AccessCode { get; set; }
 
