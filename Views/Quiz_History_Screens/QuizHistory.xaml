@@ -29,11 +29,6 @@
                            LineBreakMode="TailTruncation" 
                            HorizontalOptions="Start" />
 
-                            <!-- Quiz Id -->
-                            <Label Text="{Binding QuizId, StringFormat='Quiz ID: {0}'}"
-                           FontSize="16"
-                           TextColor="#555" />
-
                             <!-- Start Time -->
                             <Label Text="{Binding StartTime, StringFormat='Last Activated: {0:yyyy-MM-dd HH:mm}'}"
                            FontSize="14"
