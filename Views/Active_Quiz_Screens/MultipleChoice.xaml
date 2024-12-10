@@ -21,7 +21,7 @@
                 <Label Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding QuestionText}" HorizontalOptions="Center" FontSize="32" Margin="0,40,0,0"/>
                 <VerticalStackLayout Grid.Row="1" Grid.ColumnSpan="3">
                     <!-- For multiselect -->
-                    <CollectionView ItemsSource="{Binding Options}" IsVisible="{Binding IsMultiselect}">
+                    <CollectionView ItemsSource="{Binding Options}" IsVisible="{Binding Multiselect}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:IndexValuePair">
                                 <HorizontalStackLayout VerticalOptions="Center" Spacing="10">
@@ -33,7 +33,7 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                     <!-- For single select -->
-                    <CollectionView ItemsSource="{Binding Options}" IsVisible="{Binding IsNotMultiselect}">
+                    <CollectionView ItemsSource="{Binding Options}" IsVisible="{Binding NotMultiselect}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:IndexValuePair">
                                 <RadioButton GroupName="optionsButtons"

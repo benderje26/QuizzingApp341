@@ -14,8 +14,8 @@ public partial class MultipleChoice : ContentPage {
     public bool UserIsActivator { get; set; }
     public bool UserIsParticipant { get; set; }
     public bool CanSubmit => SelectedIndices.Length > 0;
-    public bool IsMultiselect { get; set; }
-    public bool IsNotMultiselect => !IsMultiselect;
+    public bool Multiselect { get; set; }
+    public bool NotMultiselect => !Multiselect;
     public int[] SelectedIndices { get; set; }
     public bool ShowSubmitAnswerButton => UserIsParticipant;
     public bool ShowNextButton => UserIsActivator; // TODO: also needs to not be final question
@@ -28,7 +28,7 @@ public partial class MultipleChoice : ContentPage {
         Options = (activeQuestion.MultipleChoiceOptions ?? [])
             .Select((x, ind) => new IndexValuePair(ind, x))
             .ToObservableCollection();
-        IsMultiselect = activeQuestion.IsMultiselect ?? false;
+        Multiselect = activeQuestion.Multiselect ?? false;
         SelectedIndices = [];
         UserIsActivator = isUserActivator;
         UserIsParticipant = isUserParticipant;
