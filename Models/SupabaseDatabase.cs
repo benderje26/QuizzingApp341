@@ -665,7 +665,10 @@ public class SupabaseDatabase : IDatabase {
                         studentsScores[response.UserId] += 1;
                     } else if (question.MultipleChoiceCorrectAnswers != null) {
                         var correctResponses = question.MultipleChoiceCorrectAnswers.Intersect(response.MultipleChoiceResponse).ToArray();
-                        studentsScores[response.UserId] += correctResponses.Length;
+                        if (correctResponses.Length == question.MultipleChoiceCorrectAnswers.Length) {
+                            studentsScores[response.UserId] += 1;
+                        }
+                        
                     }
                 }
             }
