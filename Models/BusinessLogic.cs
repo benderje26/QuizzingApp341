@@ -80,6 +80,90 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         NotifyPropertyChanged(nameof(UserInfo));
     }
 
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(UpdateEmailResult, string?)> UpdateEmail(string emailAddress) {
+        // Checking email format 
+        if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
+            return (UpdateEmailResult.BadEmail, "Email must be in the correct format (ex: example@example.com).");
+        }
+
+        // Update the email in the database
+        UpdateEmailResult result = await database.UpdateEmail(emailAddress);
+        if (result == UpdateEmailResult.Success) {
+            NotifyPropertyChanged(nameof(UserInfo));
+        }
+
+        // Map result to user-friendly messages
+        string? s = result switch {
+            UpdateEmailResult.Success => null,
+            UpdateEmailResult.DuplicateEmail => "Failed to update email. The email you have is likely already used on another account.",
+            UpdateEmailResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            UpdateEmailResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(UpdateUsernameResult, string?)> UpdateUsername(string username) {
+        // Checking username format 
+        if (!Regexes.UsernameRegex().IsMatch(username)) {
+            return (UpdateUsernameResult.BadUsername, "Username must be 5 to 20 characters and only contain A-Z, a-z, 0-9, and _ (underscores).");
+        }
+
+        // Update the username in the database
+        UpdateUsernameResult result = await database.UpdateUsername(username);
+
+        if (result == UpdateUsernameResult.Success) {
+            NotifyPropertyChanged(nameof(UserInfo));
+        }
+
+        // Map result to user-friendly messages
+        string? s = result switch {
+            UpdateUsernameResult.Success => null,
+            UpdateUsernameResult.DuplicateUsername => "That username is already used, pick another one.",
+            UpdateUsernameResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            UpdateUsernameResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(UpdatePasswordResult, string?)> UpdatePassword(string password) {
+        // Checking password format 
+        if (!Regexes.PasswordRegex().IsMatch(password)) {
+            return (UpdatePasswordResult.BadPassword, "Password is not strong enough or invalid. It must be 8 characters with a letter, number, and symbol, or at least 16 characters of any kind.");
+        }
+
+        // Update the password in the database
+        UpdatePasswordResult result = await database.UpdatePassword(password);
+
+        // Map result to user-friendly messages
+        string? s = result switch {
+            UpdatePasswordResult.Success => null,
+            UpdatePasswordResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            UpdatePasswordResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
     // Notify user of changes in user information
     public async Task<(LogoutResult, string?)> Logout() {
         LogoutResult result = await database.Logout();
@@ -101,6 +185,25 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public async Task<UserData?> GetUserData(Guid userId) {
         return await database.GetUserData(userId);
     }
+
+    /// <summary>
+    /// Attempts to delete the users account
+    /// </summary>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(DeleteAccountResult, string?)> DeleteAccount() {
+        DeleteAccountResult result = await database.DeleteAccount();
+
+        // maps user to user friendly messages  
+        string? s = result switch {
+            DeleteAccountResult.Success => null,
+            DeleteAccountResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            DeleteAccountResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
     #endregion
 
 
@@ -247,6 +350,36 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     // Fetch the quiz_id for each active_quiz_id.
     public async Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds) {
         return await database.GetActiveQuizzesByActiveQuizIds(activeQuizIds);
+    }
+
+    /// <summary>
+    /// Gets the current scores of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>List of all of the current scores for the active quiz</returns>
+    public async Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId) {
+        var questions = await database.GetQuizQuestionsByActiveQuizId(activeQuizId);
+        var responses = await database.GetRepsonsesByActiveQuizId(activeQuizId);
+
+        Dictionary<Guid, int> studentsScores = new Dictionary<Guid, int>();
+        foreach (var response in responses) {
+            if (!studentsScores.ContainsKey(response.UserId)) {
+                studentsScores.Add(response.UserId, 0);
+            }
+            Question question = questions.FirstOrDefault(q => q.QuestionNo == response.QuestionNo);
+            if (question != null) {
+                if (question.AcceptableAnswers != null && question.AcceptableAnswers.Contains(response.FillBlankResponse)) {
+                    studentsScores[response.UserId] += 1;
+                } else if (question.MultipleChoiceCorrectAnswers != null) {
+                    var correctResponses = question.MultipleChoiceCorrectAnswers.Intersect(response.MultipleChoiceResponse).ToArray();
+                    if (correctResponses.Length == question.MultipleChoiceCorrectAnswers.Length) {
+                        studentsScores[response.UserId] += 1;
+                    }
+
+                }
+            }
+        }
+        return studentsScores.Values.ToList();
     }
 
     // Retrieves all quizes from the database

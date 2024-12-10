@@ -6,8 +6,10 @@ using Supabase.Postgrest.Models;
 
 
 namespace QuizzingApp341.Models;
-public class UserInfo(Guid id, bool isSignedIn): INotifyPropertyChanged {
+public class UserInfo(Guid id, string email, string username, bool isSignedIn) : INotifyPropertyChanged {
     public Guid? Id { get; set; } = id;
+    public string Email { get; set; } = email;
+    public string Username { get; set; } = username;
     public bool IsSignedIn { get; private set; } = isSignedIn;
 
     public ObservableCollection<Quiz>? createdQuizzes;

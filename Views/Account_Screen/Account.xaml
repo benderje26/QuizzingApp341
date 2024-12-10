@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:QuizzingApp341.Views"
+             xmlns:model="clr-namespace:QuizzingApp341.Models"
+             x:Class="QuizzingApp341.Views.Account"
+             x:DataType="model:BusinessLogic"
+             Padding="7"
+             Title="Account">
+    <ScrollView>
+        <VerticalStackLayout>
+            <Grid RowDefinitions="Auto,Auto,*,*,*,*,*,*" ColumnDefinitions="*,2*">
+                <Label
+                    VerticalOptions="Center"
+                    HorizontalTextAlignment="End"
+                    FontSize="18"
+                    Text="Username: "
+                    Margin="0,10,0,0"
+                    Grid.Row="0"
+                    Grid.Column="0"/>
+                <Label
+                    VerticalOptions="Center"
+                    HorizontalTextAlignment="Start"
+                    FontSize="18"
+                    Text="{Binding UserInfo.Username}"
+                    Margin="0,10,0,0"
+                    Grid.Row="0"
+                    Grid.Column="1"/>
+
+                <Label
+                    VerticalOptions="Center"
+                    HorizontalTextAlignment="End"
+                    FontSize="18"
+                    Text="Email: "
+                    Margin="0,0,0,10"
+                    Grid.Row="1"
+                    Grid.Column="0"/>
+
+                <Label
+                    VerticalOptions="Center"
+                    HorizontalTextAlignment="Start"
+                    FontSize="18"
+                    Text="{Binding UserInfo.Email}"
+                    Margin="0,0,0,10"
+                    Grid.Row="1"
+                    Grid.Column="1"/>
+
+                <!-- Buttons for each account option -->
+                <Button Text="Sign Out" 
+                    FontSize="18"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Margin="0,5"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Clicked="OnSignOutClicked"/>
+
+                <Button Text="Update Email" 
+                    FontSize="18"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Margin="0,5"
+                    Grid.Row="3"
+                    Grid.ColumnSpan="2"
+                    Clicked="OnUpdateEmailClicked"/>
+
+                <Button Text="Update Username" 
+                    FontSize="18"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Margin="0,5"
+                    Grid.Row="4"
+                    Grid.ColumnSpan="2"
+                    Clicked="OnUpdateUsernameClicked"/>
+
+                <Button Text="Update Password" 
+                    FontSize="18"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Margin="0,5"
+                    Grid.Row="5"
+                    Grid.ColumnSpan="2"
+                    Clicked="OnUpdatePasswordClicked"/>
+
+                <Button Text="Delete Account"
+                    FontSize="18"
+                    BackgroundColor="Red"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Margin="0,50,0,0"
+                    Grid.Row="6"
+                    Grid.ColumnSpan="2"
+                    Clicked="OnDeleteAccountClicked"/>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
