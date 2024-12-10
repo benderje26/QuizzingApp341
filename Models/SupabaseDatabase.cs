@@ -1,4 +1,6 @@
 namespace QuizzingApp341.Models;
+
+using QuizzingApp341.Views;
 using Supabase;
 using Supabase.Gotrue;
 using Supabase.Gotrue.Exceptions;
@@ -71,7 +73,8 @@ public class SupabaseDatabase : IDatabase {
     /// Regenerates the info for the current user.
     /// </summary>
     private async Task GenerateUserInfo() {
-        userInfo = new(UserId, User != null) {
+        UserData? data = await GetUserData(UserId);
+        userInfo = new(UserId, User?.Email ?? string.Empty, data?.Username ?? string.Empty, User != null) {
             CreatedQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetUserCreatedQuizzes(UserId)) ?? []),
             FavoriteQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetFavoriteQuizzes()) ?? [])
         };
@@ -199,13 +202,23 @@ public class SupabaseDatabase : IDatabase {
             //Update the users email
             var newEmail = new UserAttributes { Email = emailAddress };
             var result = await Client.Auth.Update(newEmail);
+
+            if (userInfo != null) {
+                userInfo.Email = emailAddress;
+            }
             //Return that email was updated successfully
             return UpdateEmailResult.Success;
+        } catch (GotrueException e) {
+            // Sadly, the exception that is returned when there is a duplicate email
+            // has the reason Reason.Unknown, so it is likely a duplicate email
+            if (e.Reason == Supabase.Gotrue.Exceptions.FailureHint.Reason.Unknown) {
+                return UpdateEmailResult.DuplicateEmail;
+            }
         } catch (Exception e) {
-            //Write out the error if if occurred and return NetworkError to represent a failed update
+            //Write out the error if if occurred
             Console.Write("ERRORRRRR" + e);
-            return UpdateEmailResult.NetworkError;
         }
+        return UpdateEmailResult.Other;
     }
 
     /// <summary>
@@ -224,13 +237,21 @@ public class SupabaseDatabase : IDatabase {
                 .Where(x => x.UserId == UserId)
                 .Set(x => x.Username, username)
                 .Update();
+
+            if (userInfo != null) {
+                userInfo.Username = username;
+            }
             //Return that it was updated successfully
             return UpdateUsernameResult.Success;
+        } catch (PostgrestException e) {
+            if (e.Reason == Supabase.Postgrest.Exceptions.FailureHint.Reason.UniquenessViolation) {
+                return UpdateUsernameResult.DuplicateUsername;
+            }
         } catch (Exception e) {
-            //Write out the error if if occurred and return NetworkError to represent a failed update
+            // Write out the error if if occurred
             Console.Write("ERRORRRRR" + e);
-            return UpdateUsernameResult.NetworkError;
         }
+        return UpdateUsernameResult.Other;
     }
 
     /// <summary>
@@ -246,6 +267,7 @@ public class SupabaseDatabase : IDatabase {
             //Update the users password
             var newPassword = new UserAttributes { Password = password };
             var result = await Client.Auth.Update(newPassword);
+
             //Return that is was updated successfully
             return UpdatePasswordResult.Success;
         } catch (Exception e) {
@@ -258,10 +280,11 @@ public class SupabaseDatabase : IDatabase {
     public async Task<UserData?> GetUserData(Guid userId) {
         try {
             // Gets a user's data (used for retrieving usernames currently)
-            return await Client
+            var user = await Client
                 .From<UserData>()
                 .Where(x => x.UserId == userId)
                 .Single();
+            return user;
         } catch (Exception e) {
             Console.Write("ERORRRR" + e.Message);
             return null;
@@ -624,6 +647,27 @@ public class SupabaseDatabase : IDatabase {
             return true;
         } catch (Exception) {
             return false;
+        }
+    }
+
+    public async Task<List<Question>> GetQuizQuestionsByActiveQuizId(long activeQuizId) {
+        try {
+            var activeQuiz = await Client.From<ActiveQuiz>().Where(x => x.Id == activeQuizId).Single();
+            var questions = await Client.From<Question>().Where(x => x.QuizId == activeQuiz.QuizId).Get();
+            return questions.Models;
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+            return new List<Question>();
+        }
+    }
+
+    public async Task<List<Response>> GetRepsonsesByActiveQuizId(long activeQuizId) {
+        try {
+            var responses = await Client.From<Response>().Where(x => x.ActiveQuizId == activeQuizId).Get();
+            return responses.Models;
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+            return new List<Response>();
         }
     }
 

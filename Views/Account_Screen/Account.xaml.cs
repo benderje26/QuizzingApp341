@@ -1,9 +1,16 @@
 using QuizzingApp341.Models;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace QuizzingApp341.Views {
     public partial class Account : ContentPage {
+        public IBusinessLogic BusinessLogic => MauiProgram.BusinessLogic;
+        public bool IsSignedIn => BusinessLogic.UserInfo?.IsSignedIn ?? false;
+
         public Account() {
             InitializeComponent();
+            BindingContext = BusinessLogic;
         }
 
         private async void OnSignOutClicked(object sender, EventArgs e) {
@@ -12,7 +19,7 @@ namespace QuizzingApp341.Views {
         }
         private async void OnUpdateEmailClicked(object sender, EventArgs e) {
             // Check to see if the user is signed in
-            if (MauiProgram.BusinessLogic.UserInfo?.IsSignedIn ?? false) {
+            if (IsSignedIn) {
                 // Navigate to the Update Email screen
                 await Navigation.PushAsync(new UpdateEmail());
             } else {
@@ -27,7 +34,7 @@ namespace QuizzingApp341.Views {
 
         private async void OnUpdateUsernameClicked(object sender, EventArgs e) {
             // Check to see if the user is signed in
-            if (MauiProgram.BusinessLogic.UserInfo?.IsSignedIn ?? false) {
+            if (IsSignedIn) {
                 // Navigate to the Update Username screen
                 await Navigation.PushAsync(new UpdateUsername());
             } else {
@@ -42,7 +49,7 @@ namespace QuizzingApp341.Views {
         
         private async void OnUpdatePasswordClicked(object sender, EventArgs e) {
             // Check to see if the user is signed in
-            if (MauiProgram.BusinessLogic.UserInfo?.IsSignedIn ?? false) {
+            if (IsSignedIn) {
                 // Navigate to the Update Password screen
                 await Navigation.PushAsync(new UpdatePassword());
             } else {
@@ -57,7 +64,7 @@ namespace QuizzingApp341.Views {
 
         private async void OnDeleteAccountClicked(object sender, EventArgs e) {
             // Check to see if the user is signed in
-            if (MauiProgram.BusinessLogic.UserInfo?.IsSignedIn ?? false) {
+            if (IsSignedIn) {
                 // Confirm that the user wants to delete their account
                 bool result = await DisplayAlert("Delete Account", "Are you sure that you want to delete your account? Press Confirm to delete your account or Cancel exit.", "Confirm", "Cancel");
                 // If they confirmed, double check and flip the positive and negative buttons
@@ -81,6 +88,12 @@ namespace QuizzingApp341.Views {
                     await Shell.Current.GoToAsync("//Login", true);
                 }
             }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        // Helper method to raise the PropertyChanged event
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

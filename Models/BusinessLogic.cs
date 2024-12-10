@@ -93,11 +93,14 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
         // Update the email in the database
         UpdateEmailResult result = await database.UpdateEmail(emailAddress);
+        if (result == UpdateEmailResult.Success) {
+            NotifyPropertyChanged(nameof(UserInfo));
+        }
 
         // Map result to user-friendly messages
         string? s = result switch {
             UpdateEmailResult.Success => null,
-            UpdateEmailResult.DuplicateEmail => "Email already used on another account.",
+            UpdateEmailResult.DuplicateEmail => "Failed to update email. The email you have is likely already used on another account.",
             UpdateEmailResult.NetworkError => NETWORK_ERROR_MESSAGE,
             UpdateEmailResult.Other => OTHER_ERROR_MESSAGE,
             _ => OTHER_ERROR_MESSAGE
@@ -119,6 +122,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
         // Update the username in the database
         UpdateUsernameResult result = await database.UpdateUsername(username);
+
+        if (result == UpdateUsernameResult.Success) {
+            NotifyPropertyChanged(nameof(UserInfo));
+        }
 
         // Map result to user-friendly messages
         string? s = result switch {
@@ -343,6 +350,36 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     // Fetch the quiz_id for each active_quiz_id.
     public async Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds) {
         return await database.GetActiveQuizzesByActiveQuizIds(activeQuizIds);
+    }
+
+    /// <summary>
+    /// Gets the current scores of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>List of all of the current scores for the active quiz</returns>
+    public async Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId) {
+        var questions = await database.GetQuizQuestionsByActiveQuizId(activeQuizId);
+        var responses = await database.GetRepsonsesByActiveQuizId(activeQuizId);
+
+        Dictionary<Guid, int> studentsScores = new Dictionary<Guid, int>();
+        foreach (var response in responses) {
+            if (!studentsScores.ContainsKey(response.UserId)) {
+                studentsScores.Add(response.UserId, 0);
+            }
+            Question question = questions.FirstOrDefault(q => q.QuestionNo == response.QuestionNo);
+            if (question != null) {
+                if (question.AcceptableAnswers != null && question.AcceptableAnswers.Contains(response.FillBlankResponse)) {
+                    studentsScores[response.UserId] += 1;
+                } else if (question.MultipleChoiceCorrectAnswers != null) {
+                    var correctResponses = question.MultipleChoiceCorrectAnswers.Intersect(response.MultipleChoiceResponse).ToArray();
+                    if (correctResponses.Length == question.MultipleChoiceCorrectAnswers.Length) {
+                        studentsScores[response.UserId] += 1;
+                    }
+
+                }
+            }
+        }
+        return studentsScores.Values.ToList();
     }
 
     // Retrieves all quizes from the database
