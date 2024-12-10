@@ -49,6 +49,13 @@ public class SupabaseDatabase : IDatabase {
     private async Task SetUser(User? u) {
         _user = u;
         UserId = u?.Id == null ? Guid.Empty : new Guid(u.Id);
+        Email = u?.Email == null ? string.Empty : u.Email;
+        if (u?.Id == null) {
+            Username = "";
+        } else {
+            UserData userData = await GetUserData(UserId);
+            Username = userData.Username == null ? string.Empty : userData.Username;
+        }
         await GenerateUserInfo();
     }
 
@@ -66,10 +73,20 @@ public class SupabaseDatabase : IDatabase {
     private Guid UserId { get; set; }
 
     /// <summary>
+    /// The current user's email
+    /// </summary>
+    private string Email { get; set; }
+
+    /// <summary>
+    /// The current user's username
+    /// </summary>
+    private string Username { get; set; }
+
+    /// <summary>
     /// Regenerates the info for the current user.
     /// </summary>
     private async Task GenerateUserInfo() {
-        userInfo = new(UserId, User != null) {
+        userInfo = new(UserId, Email, Username, User != null) {
             CreatedQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetUserCreatedQuizzes(UserId)) ?? []),
             FavoriteQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetFavoriteQuizzes()) ?? [])
         };
@@ -138,9 +155,9 @@ public class SupabaseDatabase : IDatabase {
     }
 
     public async Task<LogoutResult> Logout() {
-        if (Client == null) {
+        if (Session == null) {
             // Can't log out if already logged out
-            return LogoutResult.Other;
+            return LogoutResult.NotSignedIn;
         }
         try {
             // Signs out with supabase
@@ -154,16 +171,105 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result of attempting to update the users email</returns>
+    public async Task<UpdateEmailResult> UpdateEmail(string emailAddress) {
+        if (Session == null) {
+            return UpdateEmailResult.NotSignedIn;
+        }
+        try {
+            //Update the users email
+            var newEmail = new UserAttributes { Email = emailAddress };
+            var result = await Client.Auth.Update(newEmail);
+            //Return that email was updated successfully
+            return UpdateEmailResult.Success;
+        } catch (Exception e) {
+            //Write out the error if if occurred and return NetworkError to represent a failed update
+            Console.Write("ERRORRRRR" + e);
+            return UpdateEmailResult.NetworkError;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result of attempting to update the users username</returns>
+    public async Task<UpdateUsernameResult> UpdateUsername(string username) {
+        if (Session == null) {
+            return UpdateUsernameResult.NotSignedIn;
+        }
+        try {
+            //Update the users username
+                var result = await Client
+                    .From<UserData>()
+                    .Where(x => x.UserId == UserId)
+                    .Set(x => x.Username, username)
+                    .Update();
+            //Return that it was updated successfully
+                return UpdateUsernameResult.Success;
+        } catch (Exception e) {
+            //Write out the error if if occurred and return NetworkError to represent a failed update
+            Console.Write("ERRORRRRR" + e);
+            return UpdateUsernameResult.NetworkError;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result of attempting to update the users password</returns>
+    public async Task<UpdatePasswordResult> UpdatePassword(string password) {
+        if (Session == null) {
+            return UpdatePasswordResult.NotSignedIn;
+        }
+        try {
+            //Update the users password
+            var newPassword = new UserAttributes { Password = password };
+            var result = await Client.Auth.Update(newPassword);
+            //Return that is was updated successfully
+            return UpdatePasswordResult.Success;
+        } catch (Exception e) {
+            //Write out the error if if occurred and return NetworkError to represent a failed update
+            Console.Write("ERRORRRRR" + e);
+            return UpdatePasswordResult.NetworkError;
+        }
+    }
+
     public async Task<UserData?> GetUserData(Guid userId) {
         try {
             // Gets a user's data (used for retrieving usernames currently)
-            return await Client
+            var user = await Client
                 .From<UserData>()
                 .Where(x => x.UserId == userId)
                 .Single();
+            return user;
         } catch (Exception e) {
             Console.Write("ERORRRR" + e.Message);
             return null;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to delete the current users account
+    /// </summary>
+    /// <returns>The result of attempting to delete the account</returns>
+    public async Task<DeleteAccountResult> DeleteAccount() {
+        if (User == null) {
+            return DeleteAccountResult.NotSignedIn;
+        }
+        try {
+            // Make the delete_account stored procedure call
+            await Client.Rpc("delete_account", null);
+            await SetSession(null);
+            return DeleteAccountResult.Success;
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
+            return DeleteAccountResult.Other;
         }
     }
 
@@ -171,7 +277,7 @@ public class SupabaseDatabase : IDatabase {
 
     #region Quizzes 
 
-//Get All the Quizzes for user
+    //Get All the Quizzes for user
     //From Quiz Models to quizzes table in supabase
     //return List of Quiz 
     public async Task<List<Quiz>?> GetAllQuizzesAsync() {
@@ -415,6 +521,35 @@ public class SupabaseDatabase : IDatabase {
         } catch (Exception) {
             return false;
         }
+    }
+
+    public async Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId) {
+        try {
+            var activeQuiz = await Client.From<ActiveQuiz>().Where(x => x.Id == activeQuizId).Single();
+            var questions = await Client.From<Question>().Where(x => x.QuizId == activeQuiz.QuizId).Get();
+            var responses = await Client.From<Response>().Where(x => x.ActiveQuizId == activeQuizId).Get();
+
+            Dictionary<Guid, int> studentsScores = new Dictionary<Guid, int>();
+            foreach (var response in responses.Models) {
+                if (!studentsScores.ContainsKey(response.UserId)) {
+                    studentsScores.Add(response.UserId, 0);
+                }
+                Question question = questions.Models.FirstOrDefault(q => q.QuestionNo == response.QuestionNo);
+                if (question != null) {
+                    if (question.AcceptableAnswers != null && question.AcceptableAnswers.Contains(response.FillBlankResponse)) {
+                        studentsScores[response.UserId] += 1;
+                    } else if (question.MultipleChoiceCorrectAnswers != null) {
+                        var correctResponses = question.MultipleChoiceCorrectAnswers.Intersect(response.MultipleChoiceResponse).ToArray();
+                        studentsScores[response.UserId] += correctResponses.Length;
+                    }
+                }
+            }
+            return studentsScores.Values.ToList();
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+            return new List<int>();
+        }
+
     }
 
     public async Task<ActiveQuestion?> GetCurrentActiveQuestion(ActiveQuiz quiz) {

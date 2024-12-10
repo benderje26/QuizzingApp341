@@ -14,6 +14,9 @@ public class Response : BaseModel {
     [Column("question_no")]
     public int QuestionNo { get; set; }
 
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
+
     [Column("multiple_choice_response")]
     public int[]? MultipleChoiceResponse { get; set; }
 

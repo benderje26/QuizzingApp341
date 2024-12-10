@@ -22,6 +22,28 @@ public interface IDatabase {
     /// <param name="password">The password</param>
     /// <returns>The result of attempting to log in</returns>
     Task<LoginResult> Login(string emailAddress, string password);
+
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result of attempting to update the users email</returns>
+    Task<UpdateEmailResult> UpdateEmail(string emailAddress);
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result of attempting to update the users username</returns>
+    Task<UpdateUsernameResult> UpdateUsername(string username);
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result of attempting to update the users password</returns>
+    Task<UpdatePasswordResult> UpdatePassword(string password);
+
     /// <summary>
     /// Attempts to log the user out.
     /// </summary>
@@ -34,6 +56,12 @@ public interface IDatabase {
     /// <param name="userId">The id of the user you need the UserData for</param>
     /// <returns>A UserData object for the user</returns>
     Task<UserData?> GetUserData(Guid userId);
+
+    /// <summary>
+    /// Attempts to delete the current users account
+    /// </summary>
+    /// <returns>The result of attempting to delete the account</returns>
+    Task<DeleteAccountResult> DeleteAccount();
 
     /// <summary>
     /// Attempts to get a quiz.
@@ -111,6 +139,13 @@ public interface IDatabase {
     /// <param name="activeQuizIds">List of active quiz IDs.</param>
     /// <returns>A list of active quizzes, or null if there were none</returns>
     Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds);
+
+    /// <summary>
+    /// Gets the current scores of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>List of all of the current scores for the active quiz</returns>
+    Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId);
 
     /// <summary>
     /// Returns all of the users favorite quizzess from the database.
