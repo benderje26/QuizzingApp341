@@ -308,6 +308,9 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             // Move QuizManager.Quiz to active quizzes table
             var result = await database.ActivateQuiz(QuizManager.Quiz);
 
+            // Set access code for quiz manager
+            QuizManager.ActiveQuiz.AccessCode = result.AccessCode;
+
             List<Task<bool>> tasks = new List<Task<bool>>();
 
             for (int i = 0; i < QuizManager.Questions.Count(); i++) {

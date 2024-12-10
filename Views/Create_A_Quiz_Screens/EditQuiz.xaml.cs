@@ -73,6 +73,17 @@ public partial class EditQuiz : ContentPage {
     public async void OnActivateQuiz(object sender, EventArgs e) {
         // Activate the quiz
         await MauiProgram.BusinessLogic.ActivateQuiz();
+
+        // Display the access code
+        string accessCode = MauiProgram.BusinessLogic.QuizManager.ActiveQuiz.AccessCode;
+
+        // Use this to start the quiz
+        bool startQuiz = await DisplayAlert("Access Code:", accessCode, "Start Quiz", "Cancel");
+
+        // If start quiz ---> start Quiz
+        if (startQuiz) {
+            // Display the page to start the quiz
+        }
     }
 
     public async void OnPublicToggled(object sender, ToggledEventArgs e) {
