@@ -6,6 +6,14 @@
              xmlns:local="clr-namespace:QuizzingApp341.Views"
              Padding="7"
              Title="Edit Quiz">
+    <!-- Toolbar with Icon -->
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Delete"
+                     IconImageSource="bin.png"
+                     Order="Primary"
+                     Priority="0"
+                     Clicked="OnDeleteQuiz"/>
+    </ContentPage.ToolbarItems>
 
     <Grid Padding="10">
         <Grid.RowDefinitions>
@@ -34,53 +42,80 @@
                    Padding="5"
                    HorizontalOptions="Fill">
                 <Entry
-                    Text="{Binding QuizTitle}"
+                    Text="{Binding QuizManager.Quiz.Title}"
                     x:Name="NewQuizTitle"
                     HeightRequest="50"
                     FontSize="18"
                     HorizontalOptions="Fill"
-                    BackgroundColor="Transparent"/>
+                    BackgroundColor="Transparent"
+                    TextChanged="QuizTitleChanged"/>
             </Frame>
+
+            <HorizontalStackLayout>
+                <Label Text="Public:"
+                       FontSize="18"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Center"
+                       Margin="0,0,10,0"/>
+                <Switch IsToggled="{Binding QuizManager.Quiz.IsPublic}"
+                        Toggled="OnPublicToggled"/>
+            </HorizontalStackLayout>
         </StackLayout>
 
-        <CollectionView Grid.Row="2"
-                        ItemsSource="{Binding Questions}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <StackLayout Padding="10">
-                        <HorizontalStackLayout>
-                            <ImageButton
-                                Source="drag.png"
-                                HeightRequest="20"
-                                WidthRequest="15"
-                                VerticalOptions="Start"/>
-                            <Label Text="Question "
-                                   VerticalOptions="Start"/>
-                            <Label Grid.Row="0"
-                                   Text="{Binding QuestionNum}"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Start"
-                                   Margin="0,0,0,5"/>
-                        </HorizontalStackLayout>
-                        <Frame Grid.Row="1"
-                               BorderColor="Black"
-                               CornerRadius="5"
-                               Padding="5"
-                               HorizontalOptions="Fill">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer 
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type local:EditQuiz}}, Path=QuestionClickedCommand}"
-                                    CommandParameter="{Binding .}"/>
-                            </Frame.GestureRecognizers>
-                            <Label
-                                Text="{Binding QuestionText}"
-                                FontSize="18"
-                                HorizontalOptions="Fill"
-                                BackgroundColor="Transparent"/>
-                        </Frame>
-                    </StackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <ScrollView Grid.Row="2">
+            <CollectionView
+                ItemsSource="{Binding QuizManager.Questions}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="10">
+                            <HorizontalStackLayout>
+                                <ImageButton
+                                    Source="drag.png"
+                                    HeightRequest="20"
+                                    WidthRequest="15"
+                                    VerticalOptions="Start"/>
+                                <Label Text="Question "
+                                       VerticalOptions="Start"/>
+                                <Label Grid.Row="0"
+                                       Text="{Binding QuestionNo}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Start"
+                                       Margin="0,0,0,5"/>
+                            </HorizontalStackLayout>
+                            <Frame Grid.Row="1"
+                                   BorderColor="Black"
+                                   CornerRadius="5"
+                                   Padding="5"
+                                   HorizontalOptions="Fill">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:EditQuiz}}, Path=QuestionClickedCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+                                <Label
+                                    Text="{Binding QuestionText}"
+                                    FontSize="18"
+                                    HorizontalOptions="Fill"
+                                    BackgroundColor="Transparent"/>
+                            </Frame>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+
+
+        <StackLayout
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Grid.Row="3">
+            <ImageButton
+                Source="add_plus_button.png"
+                WidthRequest="20"
+                HeightRequest="20"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Clicked="AddQuestionClicked"/>
+        </StackLayout>
     </Grid>
 </ContentPage>

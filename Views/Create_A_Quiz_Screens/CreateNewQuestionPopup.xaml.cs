@@ -1,20 +1,21 @@
 using CommunityToolkit.Maui.Views;
+using QuizzingApp341.Models;
 
 namespace QuizzingApp341.Views {
-    public partial class CreateNewQuizPopup : Popup {
-        public event Action<string>? QuestionTypeSelected;
+    public partial class CreateNewQuestionPopup : Popup {
+        public event Action<QuestionType>? QuestionTypeSelected;
 
-        public CreateNewQuizPopup() {
+        public CreateNewQuestionPopup() {
             InitializeComponent();
         }
 
         private void OnMultipleChoiceClicked(object sender, EventArgs e) {
-            QuestionTypeSelected?.Invoke("MultipleChoice");
+            QuestionTypeSelected?.Invoke(QuestionType.MultipleChoice);
             Close();
         }
 
         private void OnFillInBlankClicked(object sender, EventArgs e) {
-            QuestionTypeSelected?.Invoke("FillInBlank");
+            QuestionTypeSelected?.Invoke(QuestionType.FillBlank);
             Close();
         }
 

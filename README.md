@@ -48,7 +48,7 @@ Favorites tab ✅
 
 Fix bug with starting the quiz ✅ (The bug that was seen during the demo was not able to be replecated, and now irrelavent since Pachia's refactoring)
 
-Create a users table and create the user data object in the project ✅ (Users table already existed and handled by supabase :) )
+Create a users table and create the user data object in the project ✅ (Users table already existed and handled by supabase :) 
 
 Created the ability to take live quizzes ✅, albeit with manually pretending to be the teacher on the database side ☐. Instructions are below if interested in testing.
 

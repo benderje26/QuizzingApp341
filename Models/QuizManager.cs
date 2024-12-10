@@ -1,20 +1,40 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace QuizzingApp341.Models;
 
 // This class represents a quiz that contains a title, date created, last date activated, questions and answers
-public class QuizManager {
+public class QuizManager : INotifyPropertyChanged {
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+     private void OnPropertyChanged(string propertyName) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     // The quiz table from supabase that has columns Id, created_at, creator, title
     public Quiz? Quiz { get; set; }
-    public ObservableCollection<Question> Questions { get; set; } = [];
+    private ObservableCollection<Question> questions = [];
+    public ObservableCollection<Question> Questions
+    {
+        get => questions;
+        set
+        {
+            if (questions != value)
+            {
+                questions = value;
+                OnPropertyChanged(nameof(Questions));
+            }
+        }
+    }
 
     public ActiveQuiz? ActiveQuiz { get; set; }
 
     static int CurrentQuestion { get; set; } = 0;
 
+    public bool Active { get; set; }
+
     // Constructor for setting a quiz
     public QuizManager(Quiz quiz) {
+        Active  = false;
         Quiz = quiz;
         Questions = [];
     }
@@ -27,6 +47,7 @@ public class QuizManager {
     /// </summary>
     /// <param name="activeQuiz"></param>
     public QuizManager(ActiveQuiz activeQuiz) {
+        Active = true;
         ActiveQuiz = activeQuiz;
     }
 
@@ -70,7 +91,7 @@ public class QuizManager {
     /// returns true if it successfully gets all the questions for this quiz
     /// </returns>
     public async Task<bool> GetQuestions() {
-        try {
+        if (Quiz != null) {
             // Get all the questions from db using Quiz.Id
             var result = await MauiProgram.BusinessLogic.GetQuestions(Quiz.Id);
 
@@ -80,9 +101,9 @@ public class QuizManager {
 
             Questions = result;
             return true;
-        } catch {
-            return false;
         }
+
+        return false;
     }
 
     /// <summary>
@@ -95,19 +116,15 @@ public class QuizManager {
     /// </returns>
     //
     public async Task<bool> AddQuestion(Question question) {
-        try {
-            // Add the question to the db
-            long? id = await MauiProgram.BusinessLogic.AddQuestion(question); // returns null if the question was not added, otherwise returns the id assigned to the question
-            if (id == null) { // If the question was not added to the db, return false
-                return false;
-            }
-
-            // If the question was added to the db set the id of the question to the one returned from the db and add it to the questions list 
-            question.Id = id ?? 0;
-            Questions.Add(question);
-        } catch {
+        // Add the question to the db
+        long? id = await MauiProgram.BusinessLogic.AddQuestion(question); // returns null if the question was not added, otherwise returns the id assigned to the question
+        if (id == null) { // If the question was not added to the db, return false
             return false;
         }
+
+        // If the question was added to the db set the id of the question to the one returned from the db and add it to the questions list 
+        question.Id = id ?? 0;
+        Questions.Add(question);
         return true;
     }
 
@@ -118,19 +135,14 @@ public class QuizManager {
     /// <returns>
     /// returns true if successfully deleted in db otherwise false
     /// </returns>
-    public async Task<bool> DeleteQuestion(long questionId) {
-        try {
-            // Delete from the table in db using the question id
-            if (await MauiProgram.BusinessLogic.DeleteQuestion(questionId)) {
-                return true;
-            }
-
+    public async Task<(DeleteQuestionResult, string?)> DeleteQuestion(long questionId) {
+        var result = await MauiProgram.BusinessLogic.DeleteQuestion(questionId);
+        if (result.Item1 == DeleteQuestionResult.Success) {
             // If successful with db, delete/reset it in the Questions list
             await GetQuestions();
-        } catch {
-            return false;
         }
-        return true;
+
+        return result;
     }
 
     /// <summary>
@@ -141,22 +153,18 @@ public class QuizManager {
     /// returns true if successfully edited in db otherwise false
     /// </returns>
     public async Task<bool> EditQuestion(Question question) {
-        try {
-            // Update the question 
-            if (await MauiProgram.BusinessLogic.EditQuestion(question)) {
-                // Fix the question in THIS Questions list
-                for (int i = 0; i < Questions.Count; i++) {
-                    if (Questions[i].Id == question.Id) {
-                        Questions[i] = question;
-                        return true;
-                    }
+        // Update the question 
+        if (await MauiProgram.BusinessLogic.EditQuestion(question)) {
+            // Fix the question in THIS Questions list
+            for (int i = 0; i < Questions.Count; i++) {
+                if (Questions[i].Id == question.Id) {
+                    Questions[i] = question;
+                    return true;
                 }
-
             }
-        } catch {
-            return false;
+
         }
-        return true;
+        return false;
     }
 
     public async Task<bool> NextQuestion() {

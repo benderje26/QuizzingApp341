@@ -42,6 +42,8 @@ public interface IDatabase {
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
     Task<Quiz?> GetQuizById(long id);
 
+    Task<bool> UpdateQuestionNo(long questionId, int newQuestionNo);
+
     /// <summary>
     /// Gets all of the questions from the database that matches the given id.
     /// </summary>
@@ -67,7 +69,7 @@ public interface IDatabase {
     /// <returns>
     /// Returns true if successfully deleted otherwise null
     /// </returns>
-    Task<bool> DeleteQuestion(long id);
+    Task<DeleteQuestionResult> DeleteQuestion(long id);
 
     /// <summary>
     /// Edits a question by updating it in the database.
@@ -86,11 +88,15 @@ public interface IDatabase {
     /// Returns a list of all the quizzes the user has created
     /// </returns>
     Task<List<Quiz>?> GetUserCreatedQuizzes(Guid? userID);
+    Task<List<Quiz>?> GetUserCreatedQuizzes();
+
     /// <summary>
     /// Gets all the public quizzes from the database and the user's quizzes.
     /// </summary>
     /// <returns>All public and user's quizzes</returns>
     Task<List<Quiz>?> GetAllQuizzesAsync();
+    Task<long?> AddQuiz(Quiz quiz);
+    Task<bool> DeleteQuiz(long quizId);
 
     /// <summary>
     /// Gets the user's info for the currently logged in user. This should not request any data from the database,
@@ -149,9 +155,9 @@ public interface IDatabase {
     /// Submits a multiple choice question with its choice.
     /// </summary>
     /// <param name="question">The question you are submitting to</param>
-    /// <param name="choice">The index of the choice the student selected</param>
+    /// <param name="choices">The indexes of the choices the student selected</param>
     /// <returns></returns>
-    Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice);
+    Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices);
 
     /// <summary>
     /// Submits a fill blank question with its answer.
@@ -175,4 +181,5 @@ public interface IDatabase {
     /// <param name="accessCode">The access code</param>
     /// <returns>Whether the access code is currently active</returns>
     Task<bool> ValidateAccessCode(string accessCode);
+    Task<bool> UpdateQuiz(Quiz quiz);
 }

@@ -1,26 +1,97 @@
 namespace QuizzingApp341.Views;
 using QuizzingApp341.Models;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
-public partial class EditQuiz : ContentPage {
-    public string QuizTitle { get; set; }
-    public ObservableCollection<Question> Questions { get; set; }
-    public ICommand QuestionClickedCommand { get; set; }
+using CommunityToolkit.Maui.Views;
 
+public partial class EditQuiz : ContentPage {
+    public ICommand QuestionClickedCommand { get; set; }
+    public bool IsNewQuiz { get; set; }
+    public double ScreenWidth {get; set;}
+    private readonly QuizManager manager;
     public EditQuiz(QuizManager quizManager) {
         InitializeComponent();
-        QuizTitle = (quizManager.Quiz?.Title != null) ? quizManager.Quiz.Title : "";
-        Questions = quizManager.Questions;
+        manager = quizManager;
+        ScreenWidth = DeviceDisplay.MainDisplayInfo.Width;;
         QuestionClickedCommand = new Command<Question>(QuestionClicked);
-        BindingContext = this;
+        BindingContext = MauiProgram.BusinessLogic;
     }
 
     private async void QuestionClicked(Question question) {
         // If the question is a multiple choice question
-        if (question.QuestionType == 0) {
-            await Navigation.PushAsync(new CreateMultipleChoiceQuiz(question));
+        if (question.QuestionType == QuestionType.MultipleChoice) {
+            await Navigation.PushAsync(new CreateMultipleChoice(question, false));
         } else { // If the question is a fill in the blank question
-            await Navigation.PushAsync(new CreateFillBlank(question));
+            await Navigation.PushAsync(new CreateFillBlank(question, false));
         }
     }
-}
+
+    public async void QuizTitleChanged(object sender, EventArgs e) {
+        await MauiProgram.BusinessLogic.EditQuizTitle(NewQuizTitle.Text);
+    }
+
+    public async void AddQuestionClicked(object sender, EventArgs e) {
+        Console.WriteLine("************Question Clicked!!!!!");
+        var popup = new CreateNewQuestionPopup();
+
+        // Make a new question with this current quiz Id
+        Question question = new Question();
+        if (manager.Quiz == null) {
+            return;
+        }
+
+        question.QuestionNo = manager.Questions.Count + 1;
+        question.QuizId = manager.Quiz.Id;
+
+        popup.QuestionTypeSelected += async (questionType) => {   // get questionType when clicked
+            if (questionType == QuestionType.MultipleChoice) {
+                question.QuestionType = QuestionType.MultipleChoice;
+                await Task.Delay(100); // delay time
+                await Navigation.PushAsync(new CreateMultipleChoice(question, true));
+
+            } else if (questionType == QuestionType.FillBlank) {
+                question.QuestionType = QuestionType.FillBlank;
+                await Task.Delay(100); // delay time
+                await Navigation.PushAsync(new CreateFillBlank(question, true));
+            }
+        };
+
+        // Show the popup
+        await this.ShowPopupAsync(popup);
+    }
+
+    public async void OnDeleteQuiz(object sender, EventArgs e) {
+        bool deleteQuestion = await DisplayAlert("Are you sure you want to delete this quiz?", manager.Quiz?.Title , "Yes", "No");
+        
+        if (deleteQuestion) {
+            if (manager.Active) {
+                await DisplayAlert("Could not delete the following quiz because it is still active", manager.Quiz?.Title, "Ok");
+            } else {
+                if (manager.Quiz != null) {
+                    await MauiProgram.BusinessLogic.DeleteQuiz(manager.Quiz.Id);
+                }
+                await Navigation.PopAsync();
+            }
+        }
+    }
+
+    public async void OnPublicToggled(object sender, ToggledEventArgs e)
+    {
+        try
+        {
+            // Optionally: Check the new toggle state (e.Value)
+            bool newState = e.Value;
+
+            // Perform the async operation without blocking the UI
+            await MauiProgram.BusinessLogic.ChangeQuizVisibility(newState);
+
+            // Log or handle the result if needed
+            Console.WriteLine($"Quiz visibility changed to: {newState}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any errors gracefully
+            Console.WriteLine($"Error changing quiz visibility: {ex.Message}");
+        }
+    }
+
+} 
