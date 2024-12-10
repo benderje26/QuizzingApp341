@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:QuizzingApp341.Models"
              x:Class="QuizzingApp341.Views.CreateMultipleChoice"
-             Title="Edit Question">
+             Title="{Binding ScreenTitle}">
     <ScrollView>
         <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="Fill" Padding="20">
 
@@ -20,7 +21,7 @@
                Padding="5" 
                Margin="0,10">
                 <Editor 
-                    x:Name="questionMultipleChoice"   
+                    x:Name="questionName"   
                     Text ="{Binding QuestionText}"
                     Placeholder="Type your question here..."
                     HeightRequest="150"
@@ -34,52 +35,95 @@
                TextColor="DarkBlue"
                Margin="0,20,0,5"/>
 
-            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                <Entry x:Name="optionAEntry" Text="{Binding OptionA}" Placeholder="Option A" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
-                <Entry x:Name="optionBEntry" Text="{Binding OptionB}" Placeholder="Option B" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
-                <Entry x:Name="optionCEntry" Text="{Binding OptionC}" Placeholder="Option C" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
-                <Entry x:Name="optionDEntry" Text="{Binding OptionD}" Placeholder="Option D" HorizontalOptions="Center" WidthRequest="300" Margin="0,10"/>
-            </StackLayout>
+            <VerticalStackLayout Grid.Row="1" Grid.ColumnSpan="3">
+                <!-- For multiselect -->
+                <CollectionView ItemsSource="{Binding Options}" IsVisible="{Binding Multiselect}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:IndexValuePair">
+                            <Grid ColumnDefinitions="42,*,12,16">
+                                <CheckBox
+                                    Grid.Column="0"
+                                    IsChecked="{Binding IsSelected, Mode=OneWay}"
+                                    CheckedChanged="OnCheckBoxCheckedChanged"
+                                    HorizontalOptions="Start"
+                                    VerticalOptions="Center"
+                                    Color="DimGrey"/>
+                                <Entry
+                                    Grid.Column="1"
+                                    Text="{Binding Value, Mode=TwoWay}"
+                                    FontSize="20"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="FillAndExpand"/>
+                                <ImageButton
+                                    Grid.Column="3"
+                                    Source="minus.png"
+                                    Clicked="OnRemoveOptionClicked"
+                                    VerticalOptions="Center"
+                                    WidthRequest="16"
+                                    HeightRequest="16"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <!-- For single select -->
+                <CollectionView ItemsSource="{Binding Options}" IsVisible="{Binding NotMultiselect}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:IndexValuePair">
+                            <Grid ColumnDefinitions="42,*,12,16">
+                                <RadioButton
+                                    Grid.Column="0"
+                                    IsChecked="{Binding IsSelected, Mode=OneWay}"
+                                    CheckedChanged="OnRadioButtonCheckedChanged"
+                                    HorizontalOptions="FillAndExpand"
+                                    VerticalOptions="Center"
+                                    GroupName="optionsButtons">
+                                </RadioButton>
+                                <Entry
+                                    Grid.Column="1"
+                                    Text="{Binding Value, Mode=TwoWay}"
+                                    FontSize="20"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="FillAndExpand"/>
+                                <ImageButton
+                                    Grid.Column="3"
+                                    Source="minus.png"
+                                    Clicked="OnRemoveOptionClicked"
+                                    VerticalOptions="Center"
+                                    WidthRequest="16"
+                                    HeightRequest="16"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+            <Button
+                Text="Add Option"
+                HorizontalOptions="FillAndExpand"
+                Clicked="OnAddOptionClicked"
+                Margin="0,10,0,0"/>
 
-            <Label Text="Correct Answer:"
-               HorizontalOptions="Center"
-               FontSize="22" 
-               FontAttributes="Bold"
-               TextColor="DarkBlue"
-               Margin="0,20,0,5"/>
-
-            <Picker Title="Select correct answer"
-                HorizontalOptions="Center"
-                 x:Name="correctAnswerFromUser"
-                WidthRequest="300"
-                Margin="0,10"
-                SelectedIndex="{Binding CorrectOption}">
-                <Picker.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Option A</x:String>
-                        <x:String>Option B</x:String>
-                        <x:String>Option C</x:String>
-                        <x:String>Option D</x:String>
-                    </x:Array>
-                </Picker.ItemsSource>
-            </Picker>
+            <HorizontalStackLayout>
+                <Label Text="Select Multiple:"
+                       FontSize="18"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Center"
+                       Margin="0,0,10,0"/>
+                <Switch IsToggled="{Binding Multiselect, Mode=TwoWay}"/>
+            </HorizontalStackLayout>
 
             <!-- Save Button -->
             <Button Text="Save"
                 HorizontalOptions="Center"
-                Margin="0,25,0,0"
+                Margin="0,25,0,10"
                 Clicked="OnSaveClicked"
                 WidthRequest="200"/>
             
-            <StackLayout Padding="20">
-                <Button
+            <Button
                 Text="Delete Question"
                 BackgroundColor="Red"
                 Clicked="OnDeleteQuestionClicked"
                 IsVisible="{Binding IsEditQuestion}"
-                WidthRequest="200"
-                ></Button>
-            </StackLayout>
+                WidthRequest="200"/>
         </StackLayout>
 
     </ScrollView>

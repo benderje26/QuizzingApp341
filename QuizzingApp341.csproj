@@ -60,6 +60,7 @@
 	  <None Remove="Resources\Images\favorite.png" />
 	  <None Remove="Resources\Images\history.png" />
 	  <None Remove="Resources\Images\home.png" />
+	  <None Remove="Resources\Images\minus.png" />
 	  <None Remove="Resources\Images\page.png" />
 	  <None Remove="Resources\Images\settings.png" />
 	</ItemGroup>

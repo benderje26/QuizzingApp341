@@ -7,8 +7,10 @@ public partial class EditQuiz : ContentPage {
     public ICommand QuestionClickedCommand { get; set; }
     public bool IsNewQuiz { get; set; }
     public double ScreenWidth {get; set;}
+    private readonly QuizManager manager;
     public EditQuiz(QuizManager quizManager) {
         InitializeComponent();
+        manager = quizManager;
         ScreenWidth = DeviceDisplay.MainDisplayInfo.Width;;
         QuestionClickedCommand = new Command<Question>(QuestionClicked);
         BindingContext = MauiProgram.BusinessLogic;
@@ -33,12 +35,12 @@ public partial class EditQuiz : ContentPage {
 
         // Make a new question with this current quiz Id
         Question question = new Question();
-        if (MauiProgram.BusinessLogic.QuizManager?.Quiz == null) {
+        if (manager.Quiz == null) {
             return;
         }
 
-        question.QuestionNo = MauiProgram.BusinessLogic.QuizManager.Questions.Count + 1;
-        question.QuizId = MauiProgram.BusinessLogic.QuizManager.Quiz.Id;
+        question.QuestionNo = manager.Questions.Count + 1;
+        question.QuizId = manager.Quiz.Id;
 
         popup.QuestionTypeSelected += async (questionType) => {   // get questionType when clicked
             if (questionType == QuestionType.MultipleChoice) {
@@ -58,36 +60,38 @@ public partial class EditQuiz : ContentPage {
     }
 
     public async void OnDeleteQuiz(object sender, EventArgs e) {
-        bool deleteQuestion = await DisplayAlert("Are you sure you want to delete this quiz?", MauiProgram.BusinessLogic.QuizManager.Quiz.Title , "Yes", "No");
+        bool deleteQuestion = await DisplayAlert("Are you sure you want to delete this quiz?", manager.Quiz?.Title , "Yes", "No");
         
         if (deleteQuestion) {
-            if (MauiProgram.BusinessLogic.QuizManager.Active) {
-                await DisplayAlert("Could not delete the following quiz because it is still active", MauiProgram.BusinessLogic.QuizManager.Quiz.Title, "Ok");
+            if (manager.Active) {
+                await DisplayAlert("Could not delete the following quiz because it is still active", manager.Quiz?.Title, "Ok");
             } else {
-                await MauiProgram.BusinessLogic.DeleteQuiz(MauiProgram.BusinessLogic.QuizManager.Quiz.Id);
+                if (manager.Quiz != null) {
+                    await MauiProgram.BusinessLogic.DeleteQuiz(manager.Quiz.Id);
+                }
                 await Navigation.PopAsync();
             }
         }
     }
 
     public async void OnPublicToggled(object sender, ToggledEventArgs e)
-{
-    try
     {
-        // Optionally: Check the new toggle state (e.Value)
-        bool newState = e.Value;
+        try
+        {
+            // Optionally: Check the new toggle state (e.Value)
+            bool newState = e.Value;
 
-        // Perform the async operation without blocking the UI
-         await MauiProgram.BusinessLogic.ChangeQuizVisibility(newState);
+            // Perform the async operation without blocking the UI
+            await MauiProgram.BusinessLogic.ChangeQuizVisibility(newState);
 
-        // Log or handle the result if needed
-        Console.WriteLine($"Quiz visibility changed to: {newState}");
+            // Log or handle the result if needed
+            Console.WriteLine($"Quiz visibility changed to: {newState}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any errors gracefully
+            Console.WriteLine($"Error changing quiz visibility: {ex.Message}");
+        }
     }
-    catch (Exception ex)
-    {
-        // Handle any errors gracefully
-        Console.WriteLine($"Error changing quiz visibility: {ex.Message}");
-    }
-}
 
 } 

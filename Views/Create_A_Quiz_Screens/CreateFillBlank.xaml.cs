@@ -4,35 +4,35 @@ using System.Text.Json;
 namespace QuizzingApp341.Views;
 
 public partial class CreateFillBlank : ContentPage {
+    public string ScreenTitle => IsNewQuestion ? "Create Question" : "Edit Question";
     public Question Question { get; set; }
-    public bool? QuestionPresent { get; set; } = false;
-    public bool? NoQuestionPresent { get; set; } = false;
-    public bool? AnswerPresent { get; set; } = false;
+    public bool QuestionPresent { get; set; } = false;
+    public bool NoQuestionPresent => !QuestionPresent;
+    public bool AnswerPresent { get; set; } = false;
+    public bool CaseSensitive { get; set; } = false;
+    public string Answers { get; set; } = string.Empty;
 
-    public string? Answers { get; set; }
-
-    public string? QuestionText { get; set; }
+    public string QuestionText { get; set; } = string.Empty;
 
     public bool IsNewQuestion { get; set; }
 
-    public bool IsEditQuestion { get; set; }
+    public bool IsEditQuestion => !IsNewQuestion;
 
     public CreateFillBlank(Question question, bool isNewQuestion) {
         IsNewQuestion = isNewQuestion;
-        IsEditQuestion = !IsNewQuestion;
         // If there is a question present to edit
         if (question != null) {
             Question = question;
-            NoQuestionPresent = false;
             QuestionPresent = true;
-            QuestionText = question?.QuestionText;
+            QuestionText = question.QuestionText;
+            CaseSensitive = question?.CaseSensitive ?? false;
 
             if (question?.AcceptableAnswers != null) { // If there are any answers
                 Answers = string.Join(", ", question.AcceptableAnswers);
                 AnswerPresent = true;
             }
         } else {
-            NoQuestionPresent = true;
+            QuestionPresent = false;
             Question = new() { QuestionType = QuestionType.FillBlank };
         }
 
@@ -40,31 +40,40 @@ public partial class CreateFillBlank : ContentPage {
         BindingContext = this;
     }
 
-    private void RetrieveData() {
+    private bool RetrieveData() {
         // Retrieve data from user input
-        //check for null, if null - replace with empty string
-        string question = QuestionFillBlank.Text != null ? QuestionFillBlank.Text.Trim() : string.Empty;
-        string answer = AnswerFillBlank.Text != null ? AnswerFillBlank.Text.Trim() : string.Empty;
+        string question = questionName.Text.Trim();
+        string[] answers = answerText.Text
+            .Split(',')
+            .Select(x => x.Trim())
+            .Where(x => !string.IsNullOrEmpty(x))
+            .ToArray();
 
         // Check for required fields not empty
         if (string.IsNullOrEmpty(question)) {
             DisplayAlert("Error", "Please enter a question.", "OK");
-            return;
+            return false;
         }
 
-        if (string.IsNullOrEmpty(answer)) {
+        if (answers.Length == 0) {
             DisplayAlert("Error", "Please enter a correct answer.", "OK");
-            return;
+            return false;
         }
 
         // Do something with the retrieved data - make a question object - saving to Database
         Question.QuestionText = question;
-        Question.AcceptableAnswers = [answer];
+        Question.AcceptableAnswers = answers;
+        Question.CaseSensitive = CaseSensitive;
+        return true;
     }
 
 
     private async void OnSaveClicked(object sender, EventArgs e) {
-        RetrieveData();
+        bool goodToSave = RetrieveData();
+        if (!goodToSave) {
+            return;
+        }
+
         if (IsNewQuestion) {
             await MauiProgram.BusinessLogic.AddQuestion(Question);
         } else {
@@ -75,16 +84,15 @@ public partial class CreateFillBlank : ContentPage {
     }
 
     private async void OnDeleteQuestionClicked(object sender, EventArgs e) {
-        RetrieveData();
         bool deleteQuestion = await DisplayAlert("Are you sure you would like to delete this question?", Question?.QuestionText, "Yes", "No");
         if (deleteQuestion && Question != null) {
             var result = await MauiProgram.BusinessLogic.DeleteQuestion(Question.Id);
             if (result.Item1 != DeleteQuestionResult.Success) {
                 await DisplayAlert("Error. Cannot delete question", result.Item2, "Ok");
+            } else {
+                // Navigate back to the CreateNewQuiz page
+                await Navigation.PopAsync();
             }
-        } 
-
-        // Navigate back to the CreateNewQuiz page
-        await Navigation.PopAsync();
+        }
     }
 }

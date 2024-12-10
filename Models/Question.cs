@@ -15,6 +15,7 @@ namespace QuizzingApp341.Models {
         private string[]? acceptableAnswers;
         private string[]? multipleChoiceOptions;
         private bool? caseSensitive;
+        private bool? multiselect;
         private long quizId;
         private int[]? multipleChoiceCorrectAnswers;
 
@@ -47,10 +48,10 @@ namespace QuizzingApp341.Models {
         }
 
         [Column("question")]
-        public string? QuestionText {
+        public string QuestionText {
             get => questionText;
             set {
-                questionText = value;
+                questionText = value ?? string.Empty;
                 OnPropertyChanged();
             }
         }
@@ -78,6 +79,15 @@ namespace QuizzingApp341.Models {
             get => caseSensitive;
             set {
                 caseSensitive = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [Column("multiselect")]
+        public bool? Multiselect {
+            get => multiselect;
+            set {
+                multiselect = value;
                 OnPropertyChanged();
             }
         }
