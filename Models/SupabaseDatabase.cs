@@ -7,6 +7,7 @@ using Supabase.Postgrest.Responses;
 using Supabase.Realtime.PostgresChanges;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.Json;
 using Client = Supabase.Client;
 using Constants = Supabase.Postgrest.Constants;
 
@@ -424,7 +425,7 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
+    public async Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices) {
         try {
             await Client // Insert into the response table according to the choice selected
                 .From<Response>()
@@ -432,15 +433,19 @@ public class SupabaseDatabase : IDatabase {
                     ActiveQuizId = question.ActiveQuizId,
                     UserId = UserId,
                     QuestionNo = question.QuestionNo,
-                    MultipleChoiceResponse = [choice],
+                    MultipleChoiceResponse = choices,
                     FillBlankResponse = null // Null because this is multiple choice
                 }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
+
             return true;
         } catch (Exception e) {
-            Console.WriteLine("ERRORRRR" + e.Message);
-            return false; // Inserting into responses failed
+
+            Console.WriteLine($"Error occurred while submitting multiple choice answer: {e.Message}");
+            return false;
         }
     }
+
+
 
     public async Task<bool> SubmitFillBlankQuestionAnswer(ActiveQuestion question, string response) {
         try {

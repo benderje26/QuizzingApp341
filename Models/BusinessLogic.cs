@@ -245,26 +245,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
     // Get quiz IDs from active quiz IDs
     // Fetch the quiz_id for each active_quiz_id.
-    public async Task<List<(long quizId, DateTime? startTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long> activeQuizIds) {
-        try {
-            Console.WriteLine($"Fetching quiz data for activeQuizIds: {string.Join(", ", activeQuizIds)}");
-
-            // Fetch the active quizzes based on the provided IDs
-            var activeQuizzes = await database.GetActiveQuizzesByActiveQuizIds(activeQuizIds);
-
-            // Check if there are no active quizzes
-            if (activeQuizzes == null || !activeQuizzes.Any()) {
-                Console.WriteLine("No active quizzes found.");
-                return null;
-            }
-
-            var quizList = activeQuizzes.Select(q => (q.QuizId, q.StartTime)).ToList();
-
-            return quizList;
-        } catch (Exception ex) {
-            Console.WriteLine($"Error fetching active quizzes: {ex.Message}");
-            return null;
-        }
+    public async Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds) {
+        return await database.GetActiveQuizzesByActiveQuizIds(activeQuizIds);
     }
 
     // Retrieves all quizes from the database
@@ -307,9 +289,9 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return await database.GetActiveQuiz(accessCode);
     }
 
-    // Submits an answer for a multiple-choice question
-    public async Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
-        return await database.SubmitMultipleChoiceQuestionAnswer(question, choice);
+
+    public async Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices) {
+        return await database.SubmitMultipleChoiceQuestionAnswer(question, choices);
     }
 
     // Submits an answer for a fill-in-the-blank question
