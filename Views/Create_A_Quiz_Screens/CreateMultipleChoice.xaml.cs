@@ -10,22 +10,7 @@ public partial class CreateMultipleChoice : ContentPage {
     public string ScreenTitle => IsNewQuestion ? "Create Question" : "Edit Question";
     public Question Question { get; set; }
     public ObservableCollection<IndexValuePair> Options { get; set; }
-    private IndexValuePair? lastSelected;
-    public bool Multiselect {
-        get => multiselect;
-        set {
-            multiselect = value;
-            if (!value && Options.Where(x => x.IsSelected).Count() > 1) {
-                foreach (var option in Options) {
-                    option.IsSelected = false;
-                }
-            }
-            OnPropertyChanged(nameof(Multiselect));
-            OnPropertyChanged(nameof(NotMultiselect));
-        }
-    }
-    private bool multiselect;
-    public bool NotMultiselect => !Multiselect;
+    public bool Multiselect { get; set; }
 
     public string QuestionText { get; set; } = string.Empty;
 
@@ -60,17 +45,6 @@ public partial class CreateMultipleChoice : ContentPage {
     private void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e) {
         if (sender is CheckBox checkBox && checkBox.BindingContext is IndexValuePair value) {
             value.IsSelected = e.Value;
-            lastSelected = value;
-        }
-    }
-
-    private void OnRadioButtonCheckedChanged(object sender, CheckedChangedEventArgs e) {
-        if (sender is RadioButton radio && radio.BindingContext is IndexValuePair value) {
-            if (Multiselect) {
-                return;
-            }
-            value.IsSelected = e.Value;
-            lastSelected = value;
         }
     }
 

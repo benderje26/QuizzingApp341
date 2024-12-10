@@ -35,67 +35,35 @@
                TextColor="DarkBlue"
                Margin="0,20,0,5"/>
 
-            <VerticalStackLayout Grid.Row="1" Grid.ColumnSpan="3">
-                <!-- For multiselect -->
-                <CollectionView ItemsSource="{Binding Options}" IsVisible="{Binding Multiselect}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="model:IndexValuePair">
-                            <Grid ColumnDefinitions="42,*,12,16">
-                                <CheckBox
-                                    Grid.Column="0"
-                                    IsChecked="{Binding IsSelected, Mode=OneWay}"
-                                    CheckedChanged="OnCheckBoxCheckedChanged"
-                                    HorizontalOptions="Start"
-                                    VerticalOptions="Center"
-                                    Color="DimGrey"/>
-                                <Entry
-                                    Grid.Column="1"
-                                    Text="{Binding Value, Mode=TwoWay}"
-                                    FontSize="20"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="FillAndExpand"/>
-                                <ImageButton
-                                    Grid.Column="3"
-                                    Source="minus.png"
-                                    Clicked="OnRemoveOptionClicked"
-                                    VerticalOptions="Center"
-                                    WidthRequest="16"
-                                    HeightRequest="16"/>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-                <!-- For single select -->
-                <CollectionView ItemsSource="{Binding Options}" IsVisible="{Binding NotMultiselect}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="model:IndexValuePair">
-                            <Grid ColumnDefinitions="42,*,12,16">
-                                <RadioButton
-                                    Grid.Column="0"
-                                    IsChecked="{Binding IsSelected, Mode=OneWay}"
-                                    CheckedChanged="OnRadioButtonCheckedChanged"
-                                    HorizontalOptions="FillAndExpand"
-                                    VerticalOptions="Center"
-                                    GroupName="optionsButtons">
-                                </RadioButton>
-                                <Entry
-                                    Grid.Column="1"
-                                    Text="{Binding Value, Mode=TwoWay}"
-                                    FontSize="20"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="FillAndExpand"/>
-                                <ImageButton
-                                    Grid.Column="3"
-                                    Source="minus.png"
-                                    Clicked="OnRemoveOptionClicked"
-                                    VerticalOptions="Center"
-                                    WidthRequest="16"
-                                    HeightRequest="16"/>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </VerticalStackLayout>
+            <CollectionView ItemsSource="{Binding Options}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:IndexValuePair">
+                        <Grid ColumnDefinitions="42,*,12,16">
+                            <CheckBox
+                                Grid.Column="0"
+                                IsChecked="{Binding IsSelected, Mode=OneWay}"
+                                CheckedChanged="OnCheckBoxCheckedChanged"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center"
+                                Color="DimGrey"/>
+                            <Entry
+                                Grid.Column="1"
+                                Text="{Binding Value, Mode=TwoWay}"
+                                FontSize="20"
+                                VerticalOptions="Center"
+                                HorizontalOptions="FillAndExpand"/>
+                            <ImageButton
+                                Grid.Column="3"
+                                Source="minus.png"
+                                Clicked="OnRemoveOptionClicked"
+                                VerticalOptions="Center"
+                                WidthRequest="16"
+                                HeightRequest="16"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
             <Button
                 Text="Add Option"
                 HorizontalOptions="FillAndExpand"
