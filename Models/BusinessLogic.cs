@@ -93,11 +93,14 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
         // Update the email in the database
         UpdateEmailResult result = await database.UpdateEmail(emailAddress);
+        if (result == UpdateEmailResult.Success) {
+            NotifyPropertyChanged(nameof(UserInfo));
+        }
 
         // Map result to user-friendly messages
         string? s = result switch {
             UpdateEmailResult.Success => null,
-            UpdateEmailResult.DuplicateEmail => "Email already used on another account.",
+            UpdateEmailResult.DuplicateEmail => "Failed to update email. The email you have is likely already used on another account.",
             UpdateEmailResult.NetworkError => NETWORK_ERROR_MESSAGE,
             UpdateEmailResult.Other => OTHER_ERROR_MESSAGE,
             _ => OTHER_ERROR_MESSAGE
@@ -119,6 +122,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
         // Update the username in the database
         UpdateUsernameResult result = await database.UpdateUsername(username);
+
+        if (result == UpdateUsernameResult.Success) {
+            NotifyPropertyChanged(nameof(UserInfo));
+        }
 
         // Map result to user-friendly messages
         string? s = result switch {

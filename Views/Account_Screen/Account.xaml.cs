@@ -5,16 +5,12 @@ using System.Runtime.CompilerServices;
 
 namespace QuizzingApp341.Views {
     public partial class Account : ContentPage {
-
-        public string Email { get; set; } = MauiProgram.BusinessLogic.UserInfo.Email;
-
-        public string Username { get; set; } = MauiProgram.BusinessLogic.UserInfo.Username;
-
-        public bool IsSignedIn { get; set; } = MauiProgram.BusinessLogic.UserInfo.IsSignedIn;
+        public IBusinessLogic BusinessLogic => MauiProgram.BusinessLogic;
+        public bool IsSignedIn => BusinessLogic.UserInfo?.IsSignedIn ?? false;
 
         public Account() {
             InitializeComponent();
-            BindingContext = this;
+            BindingContext = BusinessLogic;
         }
 
         private async void OnSignOutClicked(object sender, EventArgs e) {

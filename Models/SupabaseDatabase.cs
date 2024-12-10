@@ -51,13 +51,6 @@ public class SupabaseDatabase : IDatabase {
     private async Task SetUser(User? u) {
         _user = u;
         UserId = u?.Id == null ? Guid.Empty : new Guid(u.Id);
-        Email = u?.Email == null ? string.Empty : u.Email;
-        if (u?.Id == null) {
-            Username = "";
-        } else {
-            UserData userData = await GetUserData(UserId);
-            Username = userData.Username == null ? string.Empty : userData.Username;
-        }
         await GenerateUserInfo();
     }
 
@@ -75,20 +68,11 @@ public class SupabaseDatabase : IDatabase {
     private Guid UserId { get; set; }
 
     /// <summary>
-    /// The current user's email
-    /// </summary>
-    private string Email { get; set; }
-
-    /// <summary>
-    /// The current user's username
-    /// </summary>
-    private string Username { get; set; }
-
-    /// <summary>
     /// Regenerates the info for the current user.
     /// </summary>
     private async Task GenerateUserInfo() {
-        userInfo = new(UserId, Email, Username, User != null) {
+        UserData? data = await GetUserData(UserId);
+        userInfo = new(UserId, User?.Email ?? string.Empty, data?.Username ?? string.Empty, User != null) {
             CreatedQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetUserCreatedQuizzes(UserId)) ?? []),
             FavoriteQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetFavoriteQuizzes()) ?? [])
         };
@@ -216,13 +200,23 @@ public class SupabaseDatabase : IDatabase {
             //Update the users email
             var newEmail = new UserAttributes { Email = emailAddress };
             var result = await Client.Auth.Update(newEmail);
+
+            if (userInfo != null) {
+                userInfo.Email = emailAddress;
+            }
             //Return that email was updated successfully
             return UpdateEmailResult.Success;
+        } catch (GotrueException e) {
+            // Sadly, the exception that is returned when there is a duplicate email
+            // has the reason Reason.Unknown, so it is likely a duplicate email
+            if (e.Reason == Supabase.Gotrue.Exceptions.FailureHint.Reason.Unknown) {
+                return UpdateEmailResult.DuplicateEmail;
+            }
         } catch (Exception e) {
-            //Write out the error if if occurred and return NetworkError to represent a failed update
+            //Write out the error if if occurred
             Console.Write("ERRORRRRR" + e);
-            return UpdateEmailResult.NetworkError;
         }
+        return UpdateEmailResult.Other;
     }
 
     /// <summary>
@@ -241,13 +235,21 @@ public class SupabaseDatabase : IDatabase {
                 .Where(x => x.UserId == UserId)
                 .Set(x => x.Username, username)
                 .Update();
+
+            if (userInfo != null) {
+                userInfo.Username = username;
+            }
             //Return that it was updated successfully
             return UpdateUsernameResult.Success;
+        } catch (PostgrestException e) {
+            if (e.Reason == Supabase.Postgrest.Exceptions.FailureHint.Reason.UniquenessViolation) {
+                return UpdateUsernameResult.DuplicateUsername;
+            }
         } catch (Exception e) {
-            //Write out the error if if occurred and return NetworkError to represent a failed update
+            // Write out the error if if occurred
             Console.Write("ERRORRRRR" + e);
-            return UpdateUsernameResult.NetworkError;
         }
+        return UpdateUsernameResult.Other;
     }
 
     /// <summary>
@@ -263,6 +265,7 @@ public class SupabaseDatabase : IDatabase {
             //Update the users password
             var newPassword = new UserAttributes { Password = password };
             var result = await Client.Auth.Update(newPassword);
+
             //Return that is was updated successfully
             return UpdatePasswordResult.Success;
         } catch (Exception e) {
