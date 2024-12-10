@@ -1,4 +1,6 @@
 namespace QuizzingApp341.Models;
+
+using QuizzingApp341.Views;
 using Supabase;
 using Supabase.Gotrue;
 using Supabase.Gotrue.Exceptions;
@@ -648,36 +650,25 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId) {
+    public async Task<List<Question>> GetQuizQuestionsByActiveQuizId(long activeQuizId) {
         try {
             var activeQuiz = await Client.From<ActiveQuiz>().Where(x => x.Id == activeQuizId).Single();
             var questions = await Client.From<Question>().Where(x => x.QuizId == activeQuiz.QuizId).Get();
-            var responses = await Client.From<Response>().Where(x => x.ActiveQuizId == activeQuizId).Get();
-
-            Dictionary<Guid, int> studentsScores = new Dictionary<Guid, int>();
-            foreach (var response in responses.Models) {
-                if (!studentsScores.ContainsKey(response.UserId)) {
-                    studentsScores.Add(response.UserId, 0);
-                }
-                Question question = questions.Models.FirstOrDefault(q => q.QuestionNo == response.QuestionNo);
-                if (question != null) {
-                    if (question.AcceptableAnswers != null && question.AcceptableAnswers.Contains(response.FillBlankResponse)) {
-                        studentsScores[response.UserId] += 1;
-                    } else if (question.MultipleChoiceCorrectAnswers != null) {
-                        var correctResponses = question.MultipleChoiceCorrectAnswers.Intersect(response.MultipleChoiceResponse).ToArray();
-                        if (correctResponses.Length == question.MultipleChoiceCorrectAnswers.Length) {
-                            studentsScores[response.UserId] += 1;
-                        }
-                        
-                    }
-                }
-            }
-            return studentsScores.Values.ToList();
+            return questions.Models;
         } catch (Exception e) {
             Console.WriteLine("Error: " + e.Message);
-            return new List<int>();
+            return new List<Question>();
         }
+    }
 
+    public async Task<List<Response>> GetRepsonsesByActiveQuizId(long activeQuizId) {
+        try {
+            var responses = await Client.From<Response>().Where(x => x.ActiveQuizId == activeQuizId).Get();
+            return responses.Models;
+        } catch (Exception e) {
+            Console.WriteLine("Error: " + e.Message);
+            return new List<Response>();
+        }
     }
 
     public async Task<ActiveQuestion?> GetCurrentActiveQuestion(ActiveQuiz quiz) {

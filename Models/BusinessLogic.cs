@@ -358,7 +358,28 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     /// <param name="activeQuizId">Current active quiz</param>
     /// <returns>List of all of the current scores for the active quiz</returns>
     public async Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId) {
-        return await database.GetQuizScoresForActiveQuizId(activeQuizId);
+        var questions = await database.GetQuizQuestionsByActiveQuizId(activeQuizId);
+        var responses = await database.GetRepsonsesByActiveQuizId(activeQuizId);
+
+        Dictionary<Guid, int> studentsScores = new Dictionary<Guid, int>();
+        foreach (var response in responses) {
+            if (!studentsScores.ContainsKey(response.UserId)) {
+                studentsScores.Add(response.UserId, 0);
+            }
+            Question question = questions.FirstOrDefault(q => q.QuestionNo == response.QuestionNo);
+            if (question != null) {
+                if (question.AcceptableAnswers != null && question.AcceptableAnswers.Contains(response.FillBlankResponse)) {
+                    studentsScores[response.UserId] += 1;
+                } else if (question.MultipleChoiceCorrectAnswers != null) {
+                    var correctResponses = question.MultipleChoiceCorrectAnswers.Intersect(response.MultipleChoiceResponse).ToArray();
+                    if (correctResponses.Length == question.MultipleChoiceCorrectAnswers.Length) {
+                        studentsScores[response.UserId] += 1;
+                    }
+
+                }
+            }
+        }
+        return studentsScores.Values.ToList();
     }
 
     // Retrieves all quizes from the database
