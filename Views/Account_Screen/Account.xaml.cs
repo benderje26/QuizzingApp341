@@ -6,35 +6,9 @@ using System.Runtime.CompilerServices;
 namespace QuizzingApp341.Views {
     public partial class Account : ContentPage {
 
-        String _email;
-        String _username;
+        public string Email { get; set; } = MauiProgram.BusinessLogic.UserInfo.Email;
 
-        public string Email {
-            get { if (_email == null || _email == "") {
-                    return MauiProgram.BusinessLogic.UserInfo.Email;
-                } else {
-                    return _email;
-                }
-            }
-            set {
-                _email = value; // TODO: Sanity check
-                OnPropertyChanged();
-            }
-        }
-
-        public string Username {
-            get {
-                if (_username == null || _username == "") {
-                    return MauiProgram.BusinessLogic.UserInfo.Username;
-                } else {
-                    return _username;
-                }
-            }
-            set {
-                _username = value; // TODO: Sanity check
-                OnPropertyChanged();
-            }
-        }
+        public string Username { get; set; } = MauiProgram.BusinessLogic.UserInfo.Username;
 
         public bool IsSignedIn { get; set; } = MauiProgram.BusinessLogic.UserInfo.IsSignedIn;
 

@@ -50,7 +50,12 @@ public class SupabaseDatabase : IDatabase {
         _user = u;
         UserId = u?.Id == null ? Guid.Empty : new Guid(u.Id);
         Email = u?.Email == null ? string.Empty : u.Email;
-        Username = u?.Id == null ? string.Empty : "HARDCODED"/*GetUserData(UserId).Result.Username*/;
+        if (u?.Id == null) {
+            Username = "";
+        } else {
+            UserData userData = await GetUserData(UserId);
+            Username = userData.Username == null ? string.Empty : userData.Username;
+        }
         await GenerateUserInfo();
     }
 
@@ -238,11 +243,11 @@ public class SupabaseDatabase : IDatabase {
     public async Task<UserData?> GetUserData(Guid userId) {
         try {
             // Gets a user's data (used for retrieving usernames currently)
-            var test =  await Client
+            var user = await Client
                 .From<UserData>()
                 .Where(x => x.UserId == userId)
                 .Single();
-            return test;
+            return user;
         } catch (Exception e) {
             Console.Write("ERORRRR" + e.Message);
             return null;
@@ -518,9 +523,28 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<List<int>?> GetQuizScoresForQuizId(long activeQuizId) {
+    public async Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId) {
         try {
-            return [55, 50, 75, 69, 79, 45, 88, 90, 25, 34, 10, 45, 40, 66, 78, 95, 14];
+            var activeQuiz = await Client.From<ActiveQuiz>().Where(x => x.Id == activeQuizId).Single();
+            var questions = await Client.From<Question>().Where(x => x.QuizId == activeQuiz.QuizId).Get();
+            var responses = await Client.From<Response>().Where(x => x.ActiveQuizId == activeQuizId).Get();
+
+            Dictionary<Guid, int> studentsScores = new Dictionary<Guid, int>();
+            foreach (var response in responses.Models) {
+                if (!studentsScores.ContainsKey(response.UserId)) {
+                    studentsScores.Add(response.UserId, 0);
+                }
+                Question question = questions.Models.FirstOrDefault(q => q.QuestionNo == response.QuestionNo);
+                if (question != null) {
+                    if (question.AcceptableAnswers != null && question.AcceptableAnswers.Contains(response.FillBlankResponse)) {
+                        studentsScores[response.UserId] += 1;
+                    } else if (question.MultipleChoiceCorrectAnswers != null) {
+                        var correctResponses = question.MultipleChoiceCorrectAnswers.Intersect(response.MultipleChoiceResponse).ToArray();
+                        studentsScores[response.UserId] += correctResponses.Length;
+                    }
+                }
+            }
+            return studentsScores.Values.ToList();
         } catch (Exception e) {
             Console.WriteLine("Error: " + e.Message);
             return new List<int>();

@@ -2,7 +2,7 @@
 public class Statistics(long activeQuizId) {
 
     List<int> scores = [55, 50, 75, 69, 79, 45, 88, 90, 25, 34, 10, 45, 40, 66, 78, 95, 14];
-    //List<int> scores = MauiProgram.BusinessLogic.GetQuizScoresForQuizId(activeQuizId).Result;
+    //List<int> scores = MauiProgram.BusinessLogic.GetQuizScoresForActiveQuizId(activeQuizId).Result;
 
     // Get the min
     public double GetMin() {

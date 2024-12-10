@@ -287,8 +287,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     /// </summary>
     /// <param name="activeQuizId">Current active quiz</param>
     /// <returns>List of all of the current scores for the active quiz</returns>
-    public async Task<List<int>?> GetQuizScoresForQuizId(long activeQuizId) {
-        return await database.GetQuizScoresForQuizId(activeQuizId);
+    public async Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId) {
+        return await database.GetQuizScoresForActiveQuizId(activeQuizId);
     }
 
     // Retrieves all quizes from the database
