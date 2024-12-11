@@ -176,6 +176,15 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     Task<bool> ValidateAccessCode(string accessCode);
     Task<bool> EditQuizTitle(string newQuizTitle);
     public void RefreshQuestionNums();
+
+    /// <summary>
+    /// delete the quiz data from History screen by quiz_Id
+    /// </summary>
+    /// <param name="activeQuizId"></param>
+    /// <returns>
+    /// True if the quizTitlee got deleted otherwise false
+    /// </returns>
+    Task<bool> DeleteQuizFromHistory(long activeQuizId);
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);

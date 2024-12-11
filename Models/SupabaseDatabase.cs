@@ -526,6 +526,28 @@ public class SupabaseDatabase : IDatabase {
             Console.WriteLine("Error: " + e.Message);
             return false;
         }
+
+
+    }
+
+    public async Task<bool> DeleteQuizFromHistory(long activeQuizId) {
+        try {
+            Console.WriteLine($"Attempting to delete quiz: {activeQuizId}");
+            Console.WriteLine($"Using UserId: {UserId}");
+
+            await Client
+                .From<Participants>()
+                .Where(x => x.UserId == UserId)
+                .Where(x => x.ActiveQuizId == activeQuizId)
+                .Delete();
+
+            Console.WriteLine($"Successfully deleted quiz: {activeQuizId}");
+            return true;
+        } catch (Exception ex) {
+
+            Console.WriteLine($"Error while deleting quiz '{activeQuizId}': {ex.Message}\n{ex.StackTrace}");
+            return false;
+        }
     }
     #endregion
     #endregion

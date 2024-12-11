@@ -182,4 +182,14 @@ public interface IDatabase {
     /// <returns>Whether the access code is currently active</returns>
     Task<bool> ValidateAccessCode(string accessCode);
     Task<bool> UpdateQuiz(Quiz quiz);
+
+    /// <summary>
+    /// delete the quiz data from History screen 
+    /// </summary>
+    /// <param name="quizTitle"></param>
+    /// <returns>
+    /// True if the quizTitlee got deleted otherwise false
+    /// </returns>
+    Task<bool> DeleteQuizFromHistory(long activeQuizId);
+
 }

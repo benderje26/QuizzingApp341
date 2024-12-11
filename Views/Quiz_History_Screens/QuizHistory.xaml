@@ -10,7 +10,6 @@
         <CollectionView x:Name="QuizzesCollectionView"
                         ItemsSource="{Binding Quizzes}"
                         SelectionMode="None">
-            <!--Users cannot select any items in the control -->
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
@@ -20,18 +19,59 @@
                            BackgroundColor="White"
                            Margin="0,10">
                         <StackLayout Spacing="8">
+
                             <!-- Quiz Title -->
                             <Label Text="{Binding QuizTitle}"
                                    FontAttributes="Bold"
                                    FontSize="22"
-                           TextColor="#11017a"
-                                   LineBreakMode="TailTruncation" 
+                                   TextColor="DarkCyan"
+                                   LineBreakMode="TailTruncation"
                                    HorizontalOptions="Start" />
 
                             <!-- Start Time -->
                             <Label Text="{Binding StartTime, StringFormat='{0:MMMM d, yyyy} at {0:t}'}"
                                    FontSize="14"
-                                   TextColor="#999" />
+                                   TextColor="black" />
+
+                            <!-- Buttons -->
+                            <HorizontalStackLayout Spacing="15"
+                                                   HorizontalOptions="Fill"
+                                                   VerticalOptions="Center">
+
+                                <!-- Study Button -->
+                                <Button Text="Study"
+                                        BackgroundColor="DarkGreen"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        Padding="10"
+                                        WidthRequest="100"
+                                        HorizontalOptions="Start"
+                                        Clicked="OnStudyButtonClicked"
+                                        CommandParameter="{Binding ActiveQuizId}" />
+
+                                <!-- View Stats Button -->
+                                <Button Text="View Stats"
+                                        BackgroundColor="DarkGoldenrod"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        Padding="10"
+                                        WidthRequest="100"
+                                        HorizontalOptions="Center"
+                                        Clicked="OnViewStatsButtonClicked"
+                                        CommandParameter="{Binding}" />  
+
+                                <!-- Delete Button -->
+                                <Button Text="Delete"
+                                        BackgroundColor="DarkRed"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        Padding="10"
+                                        WidthRequest="100"
+                                        HorizontalOptions="End"
+                                        Clicked="OnDeleteButtonClicked"
+                                        CommandParameter="{Binding ActiveQuizId}" />
+
+                            </HorizontalStackLayout>
                         </StackLayout>
                     </Frame>
                 </DataTemplate>

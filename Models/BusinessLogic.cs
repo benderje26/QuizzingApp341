@@ -241,6 +241,11 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         }
     }
 
+    //Detele quiz by QuizTitle from History Screen
+    public async Task<bool> DeleteQuizFromHistory(long activeQuizId) {
+        return await database.DeleteQuizFromHistory(activeQuizId);
+    }
+
 
 
     // Get quiz IDs from active quiz IDs
