@@ -712,7 +712,7 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
+    public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler, QuizEndedHandler endedHandler) {
         try {
             // Insert into participant table that we participated
             Participant participant = new() {
@@ -735,6 +735,8 @@ public class SupabaseDatabase : IDatabase {
 
                 if (quiz != null) {
                     await HandleActiveQuizUpdate(quiz, handler);
+                } else {
+                    endedHandler();
                 }
             });
 

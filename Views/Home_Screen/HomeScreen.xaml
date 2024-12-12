@@ -62,12 +62,12 @@
                 </Frame>
 
                 <Button
-                    Padding="10"
+                    Padding="30,10"
                     Text="Start"
-                    WidthRequest="100"
+                    FontSize="30"
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
-                    Margin="10,10,0,0"
+                    Margin="10,10,10,0"
                     Clicked="OnStartClicked"
                     BackgroundColor="#11017a"/>
             </VerticalStackLayout>
