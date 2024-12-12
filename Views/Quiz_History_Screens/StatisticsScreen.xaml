@@ -5,7 +5,9 @@ Statistics screen -->
              x:Class="QuizzingApp341.Views.StatisticsScreen"
              xmlns:drawable="clr-namespace:QuizzingApp341.Views"
              Padding="7"
-             Title="Statistics">
+             Title="Statistics"
+             BackgroundColor="#006D77">
+    
     <ContentPage.Resources>
         <drawable:Boxplot x:Key="MyDrawable" />
     </ContentPage.Resources>
@@ -19,9 +21,11 @@ Statistics screen -->
 
                 <StackLayout Orientation="Vertical">
                     <Label Text="Quiz 1"
-                           FontSize="20"/>
+                           FontSize="20"
+                           TextColor="#FFCA3A"/>
                     <Label Text="Date: 10/24/2024"
-                           FontSize="15"/>
+                           FontSize="15"
+                           TextColor="#FFCA3A"/>
                 </StackLayout>
 
                 <!-- Box plot chart -->
@@ -33,54 +37,66 @@ Statistics screen -->
                     Grid.Row="1"/>
 
                 <!-- Stats section -->
-                <StackLayout BackgroundColor="#E6E6E6"
+                <StackLayout BackgroundColor="#086880"
                              Padding="10">
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Mean: "
                                FontAttributes="Bold"
-                               FontSize="15"/>
+                               FontSize="15"
+                               TextColor="#FFCA3A"/>
                         <Label Text="75"
-                            FontSize="15"/>
+                               FontSize="15"
+                               TextColor="#FFCA3A"/>
                     </StackLayout>
 
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Median: "
                                FontAttributes="Bold"
-                               FontSize="15"/>
+                               FontSize="15"
+                               TextColor="#FFCA3A"/>
                         <Label Text="83"
-                               FontSize="15"/>
+                               FontSize="15"
+                               TextColor="#FFCA3A"/>
                     </StackLayout>
 
                     <StackLayout Orientation="Horizontal">
                         <Label Text="High: "
                                FontAttributes="Bold"
-                               FontSize="15"/>
+                               FontSize="15"
+                               TextColor="#FFCA3A"/>
                         <Label Text="89"
-                            FontSize="15"/>
+                            FontSize="15"
+                               TextColor="#FFCA3A"/>
                     </StackLayout>
 
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Low: "
                                FontAttributes="Bold"
-                               FontSize="15"/>
+                               FontSize="15"
+                               TextColor="#FFCA3A"/>
                         <Label Text="55"
-                            FontSize="15"/>
+                            FontSize="15"
+                               TextColor="#FFCA3A"/>
                     </StackLayout>
 
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Lower Quartile: "
                                FontAttributes="Bold"
-                               FontSize="15"/>
+                               FontSize="15"
+                               TextColor="#FFCA3A"/>
                         <Label Text="60"
-                            FontSize="15"/>
+                            FontSize="15"
+                               TextColor="#FFCA3A"/>
                     </StackLayout>
 
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Upper Quartile: "
                                FontAttributes="Bold"
-                               FontSize="15"/>
+                               FontSize="15"
+                               TextColor="#FFCA3A"/>
                         <Label Text="89"
-                            FontSize="15"/>
+                            FontSize="15"
+                               TextColor="#FFCA3A"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
@@ -89,7 +105,7 @@ Statistics screen -->
         <!-- Button to view all participants in the second row -->
         <Button Text="View All Participants"
                 Clicked="ViewAllParticipantsClicked"
-                BackgroundColor="#11017a"
+                BackgroundColor="#086880"
                 Grid.Row="1"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="End"/>
