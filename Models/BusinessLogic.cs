@@ -304,16 +304,23 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     #region Active Quizzes
 
     public async Task<bool> ActivateQuiz() {
+        if (QuizManager?.Quiz == null) {
+            return false;
+        }
         try {
             // Move QuizManager.Quiz to active quizzes table
-            var result = await database.ActivateQuiz(QuizManager.Quiz);
+            ActiveQuiz? result = await database.ActivateQuiz(QuizManager.Quiz);
+
+            if (result == null) {
+                return false;
+            }
 
             // Set access code for quiz manager
-            QuizManager.ActiveQuiz.AccessCode = result.AccessCode;
+            QuizManager.ActiveQuiz = result;
 
-            List<Task<bool>> tasks = new List<Task<bool>>();
+            List<Task<bool>> tasks = [];
 
-            for (int i = 0; i < QuizManager.Questions.Count(); i++) {
+            for (int i = 0; i < QuizManager.Questions.Count; i++) {
                 // Add questions to the active questions table
                 tasks.Add(database.ActivateQuestion(new ActiveQuestion(QuizManager.Questions[i], result.Id)));
             }
