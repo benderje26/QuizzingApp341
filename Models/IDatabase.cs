@@ -209,7 +209,7 @@ public interface IDatabase {
     /// <param name="quiz">The quiz the student is joining</param>
     /// <param name="handler">The handler for when a new active question comes in</param>
     /// <returns></returns>
-    Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
+    Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler questionHandler, QuizEndedHandler endedHandler);
 
     /// <summary>
     /// Validates that an access code is currently active.

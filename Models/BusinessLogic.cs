@@ -445,8 +445,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
 
     // Joins an active quiz using a handler for new questions
-    public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
-        return await database.JoinActiveQuiz(quiz, handler);
+    public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler questionHandler, QuizEndedHandler endedHandler) {
+        return await database.JoinActiveQuiz(quiz, questionHandler, endedHandler);
     }
 
     // validates the access code for the quiz

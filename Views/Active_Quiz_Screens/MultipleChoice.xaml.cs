@@ -122,6 +122,12 @@ public partial class MultipleChoice : ContentPage {
             System.Diagnostics.Debug.WriteLine($"Error submitting answer: {ex.Message}");
         }
     }
+
+    protected override bool OnBackButtonPressed() {
+        _ = UserInterfaceUtil.ProcessActiveQuizEnded(Navigation);
+
+        return true;
+    }
 }
 
 

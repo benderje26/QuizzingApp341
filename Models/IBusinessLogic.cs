@@ -193,7 +193,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="quiz">The quiz the student is joining</param>
     /// <param name="handler">The handler for when a new active question comes in</param>
     /// <returns></returns>
-    Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
+    Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler questionHandler, QuizEndedHandler endedHandler);
 
     /// <summary>
     /// This makes sure that an access code given by the user is a valid access code by checking the db
@@ -216,3 +216,5 @@ public interface IBusinessLogic : INotifyPropertyChanged {
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);
+
+public delegate void QuizEndedHandler();
