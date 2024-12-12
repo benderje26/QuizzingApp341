@@ -545,20 +545,21 @@ public class SupabaseDatabase : IDatabase {
         return true;
     }
 
-
-    public async Task<ActiveQuiz?> ActivateQuiz(Quiz quiz, String accessCode) {
-        ActiveQuiz activeQuiz = new ActiveQuiz();
-        activeQuiz.StartTime = DateTime.Now;
-        activeQuiz.QuizId = quiz.Id;
-        activeQuiz.IsActive = true;
-        activeQuiz.CurrentQuestionNo = 1;
-        activeQuiz.Activator = UserId;
-        activeQuiz.AccessCode = accessCode;
+    public async Task<ActiveQuiz?> ActivateQuiz(Quiz quiz, string accessCode) {
+        ActiveQuiz activeQuiz = new() {
+            StartTime = DateTime.Now,
+            QuizId = quiz.Id,
+            IsActive = true,
+            CurrentQuestionNo = 1,
+            Activator = UserId,
+            AccessCode = accessCode,
+            QuizTitle = quiz.Title
+        };
         try {
             var result = await Client
             .From<ActiveQuiz>()
             .Insert(activeQuiz);
-            // var response = await Client.Rpc("activate_quiz", activeQuiz);
+
             return result.Model;
         } catch {
             return null;
@@ -797,8 +798,6 @@ public class SupabaseDatabase : IDatabase {
             Console.WriteLine("Error: " + e.Message);
             return false;
         }
-
-
     }
 
     public async Task<bool> DeleteQuizFromActivationHistory(long activeQuizId) {
@@ -928,7 +927,8 @@ public class SupabaseDatabase : IDatabase {
             return false;
         }
     }
+
     #endregion
-    
+
     #endregion
 }

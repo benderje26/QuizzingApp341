@@ -7,7 +7,7 @@ public partial class EditQuiz : ContentPage {
     public ICommand QuestionClickedCommand { get; set; }
     public bool IsNewQuiz { get; set; }
     public double ScreenWidth { get; set; }
-    private readonly QuizManager manager;
+    private readonly QuizManager? manager;
     public EditQuiz() {
         InitializeComponent();
         manager = MauiProgram.BusinessLogic.QuizManager;
@@ -81,7 +81,7 @@ public partial class EditQuiz : ContentPage {
         // Activate the quiz
         await MauiProgram.BusinessLogic.ActivateQuiz();
         
-        if (manager == null) {
+        if (manager?.ActiveQuiz == null) {
             return;
         }
 

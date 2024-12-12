@@ -134,10 +134,9 @@ public interface IDatabase {
     UserInfo? GetUserInfo();
 
     Task<bool> DeactivateQuestions(long id);
-    Task<ActiveQuiz?> ActivateQuiz(Quiz quiz, String accessCode);
+    Task<ActiveQuiz?> ActivateQuiz(Quiz quiz, string accessCode);
     Task<ActiveQuiz?> UpdateActiveQuiz(ActiveQuiz activeQuiz);
     Task<bool> ActivateQuestion(ActiveQuestion questions);
-    Task<List<long>> GetActiveQuizIdsByUserId();
 
     /// <summary>
     /// Gets a list of the current user's active quizzes by their IDs.

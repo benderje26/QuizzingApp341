@@ -139,7 +139,6 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     Task<bool> DeactivateQuiz();
     Task<bool> ActivateQuiz();
     Task<bool> IncrementCurrentQuestion();
-    Task<List<long>> GetActiveQuizIdsForUser();
 
     /// <summary>
     /// Gets the current scores of the given active quiz

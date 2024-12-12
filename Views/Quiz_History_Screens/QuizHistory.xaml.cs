@@ -17,7 +17,7 @@ public partial class QuizHistory : ContentPage {
             }
         }
     }
-    private bool takenSelected;
+    private bool takenSelected = true;
     public bool ActivatedSelected {
         get => !TakenSelected;
         set => TakenSelected = !value;
