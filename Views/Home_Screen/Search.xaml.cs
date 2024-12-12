@@ -1,21 +1,21 @@
 using QuizzingApp341.Models;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace QuizzingApp341.Views;
 
 public partial class Search : ContentPage {
     private readonly IBusinessLogic _businessLogic;
-    private ObservableCollection<QuizSearch> _allQuizzes;
 
-    public ObservableCollection<QuizSearch> Quizzes { get; set; }
-    public string searchText { get; set; }
+    private ObservableCollection<QuizSearch> _allQuizzes = [];
+    public ObservableCollection<QuizSearch> Quizzes { get; set; } = [];
+    public string SearchText { get; set; }
 
     public Search(IBusinessLogic businessLogic) {
         InitializeComponent();
         _businessLogic = businessLogic ?? throw new ArgumentNullException(nameof(businessLogic));
-        Quizzes = new ObservableCollection<QuizSearch>();
-        _allQuizzes = new ObservableCollection<QuizSearch>();
-        searchText = string.Empty;
+        SearchText = string.Empty;
 
         BindingContext = this;
         LoadQuizzesAsync();
@@ -65,50 +65,58 @@ public partial class Search : ContentPage {
 
     private void OnSearchTextChanged(object sender, TextChangedEventArgs e) {
         FilterQuizzes(e.NewTextValue);
-        searchText = e.NewTextValue;
+        SearchText = e.NewTextValue;
     }
 
     // Command for study button
-    public Command<QuizSearch> StudyCommand => new Command<QuizSearch>(async (quiz) => {
+    public Command<QuizSearch> StudyCommand => new(async quiz => {
         await DisplayAlert("Study", $"Start studying {quiz.Title}?", "OK");
         // Navigate to the study page here if needed
     });
 
     // Command for Favorite button
-    public Command<QuizSearch> FavoriteCommand => new Command<QuizSearch>(async (quiz) => {
-        if (quiz.Favorite == true) {
-            await _businessLogic.DeleteFavoriteQuiz(quiz.Id);
-            //quiz.Favorite = false;
-            //quiz.NotFavorite = true;
-            var index = Quizzes.IndexOf(quiz);
-            Quizzes.Remove(quiz);
-            Quizzes.Insert(index, new QuizSearch(quiz.Id, quiz.Title, quiz.Creator, false));
+    public Command<QuizSearch> FavoriteCommand => new(quiz => {
+        quiz.Favorite = !quiz.Favorite;
+        if (quiz.Favorite) {
+            _businessLogic.AddFavoriteQuiz(quiz.Id);
         } else {
-            await _businessLogic.AddFavoriteQuiz(quiz.Id);
-            //quiz.Favorite = true;
-            //quiz.NotFavorite = false;
-            var index = Quizzes.IndexOf(quiz);
-            Quizzes.Remove(quiz);
-            Quizzes.Insert(index, new QuizSearch(quiz.Id, quiz.Title, quiz.Creator, true));
+            _businessLogic.DeleteFavoriteQuiz(quiz.Id);
         }
-        //OnPropertyChanged(nameof(Quizzes));
     });
 
+    public Command<Search> SearchCommand => new((quiz) => {
 
+    });
 }
 
-public class QuizSearch {
+public class QuizSearch : INotifyPropertyChanged {
     public long Id { get; set; }
-    public string? Title { get; set; }
-    public string? Creator { get; set; }
-    public bool? Favorite { get; set; }
-    public bool? NotFavorite { get; set; }
+    public string Title { get; set; }
+    public string Creator { get; set; }
+    public bool Favorite {
+        get => favorite;
+        set {
+            if (favorite != value) {
+                favorite = value;
+                NotifyPropertyChanged(nameof(Favorite));
+                NotifyPropertyChanged(nameof(NotFavorite));
+            }
+        }
+    }
+    private bool favorite;
+    public bool NotFavorite => !Favorite;
 
-    public QuizSearch(long id, string title, string creator, bool? favorite) {
+    public QuizSearch(long id, string title, string creator, bool favorite) {
         Id = id;
         Title = title;
         Creator = creator;
         Favorite = favorite;
-        NotFavorite = !favorite;
     }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    // Helper method to raise the PropertyChanged event
+    private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
 }

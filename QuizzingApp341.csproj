@@ -60,6 +60,7 @@
 	  <None Remove="Resources\Images\favorite.png" />
 	  <None Remove="Resources\Images\history.png" />
 	  <None Remove="Resources\Images\home.png" />
+	  <None Remove="Resources\Images\minus.png" />
 	  <None Remove="Resources\Images\page.png" />
 	  <None Remove="Resources\Images\settings.png" />
 	</ItemGroup>
@@ -74,8 +75,26 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\Account_Screen\Account.xaml.cs">
+	    <DependentUpon>Account.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Account_Screen\UpdatePassword.xaml.cs">
+	    <DependentUpon>UpdatePassword.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Account_Screen\UpdateUsername.xaml.cs">
+	    <DependentUpon>UpdateUsername.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Account_Screen\UpdateEmail.xaml.cs">
+	    <DependentUpon>UpdateEmail.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\CreateMultipleChoiceQuiz.xaml.cs">
 	    <DependentUpon>CreateMultipleChoiceQuiz.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Create_A_Quiz_Screens\CreateMultipleChoice.xaml.cs">
+	    <DependentUpon>CreateMultipleChoice.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\Create_A_Quiz_Screens\CreateNewQuestionPopup.xaml.cs">
+	    <DependentUpon>CreateNewQuestionPopup.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\MyQuiz.xaml.cs">
 	    <DependentUpon>MyQuiz.xaml</DependentUpon>
@@ -98,6 +117,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\Account_Screen\UpdatePassword.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Account_Screen\UpdateUsername.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Account_Screen\UpdateEmail.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\CreateAccount.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

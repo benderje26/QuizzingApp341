@@ -22,6 +22,28 @@ public interface IDatabase {
     /// <param name="password">The password</param>
     /// <returns>The result of attempting to log in</returns>
     Task<LoginResult> Login(string emailAddress, string password);
+
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result of attempting to update the users email</returns>
+    Task<UpdateEmailResult> UpdateEmail(string emailAddress);
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result of attempting to update the users username</returns>
+    Task<UpdateUsernameResult> UpdateUsername(string username);
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result of attempting to update the users password</returns>
+    Task<UpdatePasswordResult> UpdatePassword(string password);
+
     /// <summary>
     /// Attempts to log the user out.
     /// </summary>
@@ -36,11 +58,19 @@ public interface IDatabase {
     Task<UserData?> GetUserData(Guid userId);
 
     /// <summary>
+    /// Attempts to delete the current users account
+    /// </summary>
+    /// <returns>The result of attempting to delete the account</returns>
+    Task<DeleteAccountResult> DeleteAccount();
+
+    /// <summary>
     /// Attempts to get a quiz.
     /// </summary>
     /// <param name="id">The given id of the quiz</param>
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
     Task<Quiz?> GetQuizById(long id);
+
+    Task<bool> UpdateQuestionNo(long questionId, int newQuestionNo);
 
     /// <summary>
     /// Gets all of the questions from the database that matches the given id.
@@ -67,7 +97,7 @@ public interface IDatabase {
     /// <returns>
     /// Returns true if successfully deleted otherwise null
     /// </returns>
-    Task<bool> DeleteQuestion(long id);
+    Task<DeleteQuestionResult> DeleteQuestion(long id);
 
     /// <summary>
     /// Edits a question by updating it in the database.
@@ -86,11 +116,15 @@ public interface IDatabase {
     /// Returns a list of all the quizzes the user has created
     /// </returns>
     Task<List<Quiz>?> GetUserCreatedQuizzes(Guid? userID);
+    Task<List<Quiz>?> GetUserCreatedQuizzes();
+
     /// <summary>
     /// Gets all the public quizzes from the database and the user's quizzes.
     /// </summary>
     /// <returns>All public and user's quizzes</returns>
     Task<List<Quiz>?> GetAllQuizzesAsync();
+    Task<long?> AddQuiz(Quiz quiz);
+    Task<bool> DeleteQuiz(long quizId);
 
     /// <summary>
     /// Gets the user's info for the currently logged in user. This should not request any data from the database,
@@ -100,17 +134,25 @@ public interface IDatabase {
     UserInfo? GetUserInfo();
 
     /// <summary>
-    /// Get's the current user's active quizzes' IDs.
-    /// </summary>
-    /// <returns>The IDs of the active quizzes</returns>
-    Task<List<long>> GetActiveQuizIdsByUserId();
-
-    /// <summary>
     /// Gets a list of the current user's active quizzes by their IDs.
     /// </summary>
     /// <param name="activeQuizIds">List of active quiz IDs.</param>
     /// <returns>A list of active quizzes, or null if there were none</returns>
     Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds);
+
+    /// <summary>
+    /// Gets the quiz questions of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>Returns all the quiz questions for the given active quiz</returns>
+    Task<List<Question>> GetQuizQuestionsByActiveQuizId(long activeQuizId);
+
+    /// <summary>
+    /// Gets the responses of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>Returns all the responses for the given active quiz</returns>
+    Task<List<Response>> GetRepsonsesByActiveQuizId(long activeQuizId);
 
     /// <summary>
     /// Returns all of the users favorite quizzess from the database.
@@ -149,9 +191,9 @@ public interface IDatabase {
     /// Submits a multiple choice question with its choice.
     /// </summary>
     /// <param name="question">The question you are submitting to</param>
-    /// <param name="choice">The index of the choice the student selected</param>
+    /// <param name="choices">The indexes of the choices the student selected</param>
     /// <returns></returns>
-    Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice);
+    Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices);
 
     /// <summary>
     /// Submits a fill blank question with its answer.
@@ -175,4 +217,14 @@ public interface IDatabase {
     /// <param name="accessCode">The access code</param>
     /// <returns>Whether the access code is currently active</returns>
     Task<bool> ValidateAccessCode(string accessCode);
+    Task<bool> UpdateQuiz(Quiz quiz);
+
+    /// <summary>
+    /// Delete the active quiz data.
+    /// </summary>
+    /// <returns>
+    /// True if it worked
+    /// </returns>
+    Task<bool> DeleteQuizFromActivationHistory(long activeQuizId);
+
 }

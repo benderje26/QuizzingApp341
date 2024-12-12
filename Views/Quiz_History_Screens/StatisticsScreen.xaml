@@ -9,7 +9,7 @@ Statistics screen -->
              BackgroundColor="#006D77">
     
     <ContentPage.Resources>
-        <drawable:Canvas x:Key="MyDrawable" />
+        <drawable:Boxplot x:Key="MyDrawable" />
     </ContentPage.Resources>
 
     <!-- Define a Grid with two rows -->

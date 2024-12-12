@@ -26,6 +26,28 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="password">The password</param>
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(LoginResult, string?)> Login(string emailAddress, string password);
+
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    Task<(UpdateEmailResult, string?)> UpdateEmail(string emailAddress);
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    Task<(UpdateUsernameResult, string?)> UpdateUsername(string username);
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    Task<(UpdatePasswordResult, string?)> UpdatePassword(string password);
+
     /// <summary>
     /// Attempts to log the user out.
     /// </summary>
@@ -40,11 +62,27 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     Task<UserData?> GetUserData(Guid userId);
 
     /// <summary>
+    /// Attempts to delete the users account
+    /// </summary>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    Task<(DeleteAccountResult, string?)> DeleteAccount();
+
+    /// <summary>
+    /// The current quiz manager.
+    /// </summary>
+    QuizManager? QuizManager { get; set; }
+
+    Task<bool> ChangeQuizVisibility(bool isPublic);
+    Task<long?> AddQuiz(Quiz quiz);
+
+    /// <summary>
     /// Attempts to get a quiz.
     /// </summary>
     /// <param name="id">The given id of the quiz</param>
     /// <returns>The quiz if it is accessible, null if it is not or doesn't exist</returns>
     Task<Quiz?> GetQuiz(long id);
+
+    Task<bool> DeleteQuiz(long quizId);
 
     /// <summary>
     /// Gets all of the questions from the questions table in db that matches the given id
@@ -71,7 +109,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns>
     /// Returns true if successfully deleted otherwise null
     /// </returns>
-    Task<bool> DeleteQuestion(long id);
+    Task<(DeleteQuestionResult, string?)> DeleteQuestion(long id);
 
     /// <summary>
     /// Edits a question by updating it in the db
@@ -90,19 +128,21 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// Returns an Observable Collection of all the quizzes the user has created
     /// </returns>
     Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes(Guid? userId);
+    Task<ObservableCollection<Quiz>?> GetUserCreatedQuizzes();
 
     /// <summary>
     /// Gets quiz IDs based on a list of active quiz IDs.
     /// </summary>
     /// <param name="activeQuizIds">List of active quiz IDs</param>
     /// <returns>List of quiz IDs if found, otherwise null</returns>
+    Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds);
 
-    Task<List<(long quizId, DateTime? startTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long> activeQuizIds);
     /// <summary>
-    /// Gets the active quiz IDs for a given user from participants tables
+    /// Gets the current scores of the given active quiz
     /// </summary>
-    /// <returns>List of active quiz IDs</returns>
-    Task<List<long>> GetActiveQuizIdsForUser();
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>List of all of the current scores for the active quiz</returns>
+    Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId);
 
     Task<ObservableCollection<Quiz>?> GetAllQuizzes();
 
@@ -135,9 +175,9 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// Submits a multiple choice question with its choice.
     /// </summary>
     /// <param name="question">The question you are submitting to</param>
-    /// <param name="choice">The index of the choice the student selected</param>
+    /// <param name="choices">The indexes of the choices the student selected</param>
     /// <returns></returns>
-    Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice);
+    Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices);
 
     /// <summary>
     /// Submits a fill blank question with its answer.
@@ -163,6 +203,16 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// True if the access code is valid otherwise false
     /// </returns>
     Task<bool> ValidateAccessCode(string accessCode);
+    Task<bool> EditQuizTitle(string newQuizTitle);
+    public void RefreshQuestionNums();
+
+    /// <summary>
+    /// Deletes the quiz history data.
+    /// </summary>
+    /// <returns>
+    /// True if it worked
+    /// </returns>
+    Task<bool> DeleteQuizFromActivationHistory(long activeQuizId);
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);

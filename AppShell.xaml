@@ -40,10 +40,10 @@
                           Route="QuizHistory" />
         </Tab>
 
-        <Tab Title="Settings" Icon="settings.png">
-            <ShellContent Title="Settings"
-                          ContentTemplate="{DataTemplate local:Setting}" 
-                          Route="Setting" />
+        <Tab Title="Account" Icon="account.png">
+            <ShellContent Title="Account"
+                          ContentTemplate="{DataTemplate local:Account}" 
+                          Route="Account" />
         </Tab>
         
        

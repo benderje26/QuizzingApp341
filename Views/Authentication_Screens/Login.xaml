@@ -48,14 +48,14 @@
             <Button
                 x:Name="loginButton"
                 Text="Login"
-                Margin="0,30,0,0"
-                Clicked="OnLoginButtonClicked"
-                BackgroundColor="#11017a"/>
+                Margin="0,30,0,5"
+                Clicked="OnLoginButtonClicked"/>
 
             <Button
                 x:Name = "skipLogin"
                 Text="Login as Guest"
                 Clicked="SkipLogin"
+                Margin="0,5,0,0"
                 BackgroundColor="#A9A9A9"/>
         </VerticalStackLayout>
         
