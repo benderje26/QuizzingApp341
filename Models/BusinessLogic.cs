@@ -291,8 +291,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             DeleteQuestionResult.Other => OTHER_ERROR_MESSAGE,
             _ => OTHER_ERROR_MESSAGE
         };
-        
-        if (QuizManager?.Quiz!= null) {
+
+        if (QuizManager?.Quiz != null) {
             await GetQuestions(QuizManager.Quiz.Id);
         }
 
@@ -429,7 +429,110 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
 
     #region Active Quizzes
-    // retrieves active quizes from its access code
+
+    public async Task<bool> DeactivateQuiz() {
+        if (QuizManager?.ActiveQuiz == null) {
+            return false;
+        }
+        var oldActiveQuiz = QuizManager.ActiveQuiz;
+
+        try {
+            // Deactivate the active quiz
+            QuizManager.ActiveQuiz.IsActive = false;
+            QuizManager.ActiveQuiz.AccessCode = null;
+            QuizManager.ActiveQuiz.CurrentQuestionNo = null;
+            QuizManager.ActiveQuiz.EndTime = DateTime.Now;
+            var result = await database.UpdateActiveQuiz(QuizManager.ActiveQuiz);
+            if (result == null) {
+                QuizManager.ActiveQuiz = oldActiveQuiz;
+                return false;
+            }
+            QuizManager.ActiveQuiz = null;
+            QuizManager.CurrentQuestion = null;
+            // remove all the questions from the active questions table
+            await database.DeactivateQuestions(oldActiveQuiz.Id);
+        } catch {
+            QuizManager.ActiveQuiz = oldActiveQuiz;
+            return false;
+        }
+        return true;
+    }
+
+    public async Task<bool> PrepareActiveQuiz() {
+        if (QuizManager?.Quiz == null) {
+            return false;
+        }
+        try {
+            ActiveQuiz? result = null;
+            int maxRetries = 5;
+            for (int i = 0; i < maxRetries && result == null; i++) {
+                result = await database.PrepareActiveQuiz(QuizManager.Quiz, GenerateRandomAccessCode(6));
+            }
+
+            if (result == null) {
+                return false;
+            }
+
+            QuizManager.ActiveQuiz = result;
+            QuizManager.CurrentQuestion = QuizManager.Questions.FirstOrDefault(q => q.QuestionNo == QuizManager.ActiveQuiz.CurrentQuestionNo);
+
+            List<Task<bool>> tasks = [];
+
+            for (int i = 0; i < QuizManager.Questions.Count; i++) {
+                // Add questions to the active questions table
+                tasks.Add(database.ActivateQuestion(new ActiveQuestion(QuizManager.Questions[i], result.Id)));
+            }
+
+            await Task.WhenAll(tasks);
+        } catch {
+            return false;
+        }
+        return true;
+    }
+
+    private static string GenerateRandomAccessCode(int length) {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new();
+
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+
+    public async Task<bool> ActivateActiveQuiz() {
+        if (QuizManager?.ActiveQuiz == null) {
+            return false;
+        }
+
+        ActiveQuiz aq = QuizManager.ActiveQuiz;
+        aq.IsActive = true;
+
+        ActiveQuiz? result = await database.UpdateActiveQuiz(aq);
+
+        return result != null;
+    }
+
+    public async Task<bool> IncrementCurrentQuestion() {
+        if (QuizManager?.ActiveQuiz == null) {
+            return false;
+        }
+        var currentQuestionNo = QuizManager.ActiveQuiz.CurrentQuestionNo;
+        try {
+            // update the active quiz
+            QuizManager.ActiveQuiz.CurrentQuestionNo += 1;
+            var result = await database.UpdateActiveQuiz(QuizManager.ActiveQuiz);
+            if (result == null) {
+                QuizManager.ActiveQuiz.CurrentQuestionNo = currentQuestionNo;
+                return false;
+            }
+            QuizManager.CurrentQuestion = QuizManager.Questions.FirstOrDefault(q => q.QuestionNo == QuizManager.ActiveQuiz.CurrentQuestionNo);
+        } catch {
+            QuizManager.ActiveQuiz.CurrentQuestionNo = currentQuestionNo;
+            return false;
+        }
+        return true;
+    }
+
+    // retrieves active quizzes from its access code
     public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
         return await database.GetActiveQuiz(accessCode);
     }
@@ -447,6 +550,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     // Joins an active quiz using a handler for new questions
     public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler questionHandler, QuizEndedHandler endedHandler) {
         return await database.JoinActiveQuiz(quiz, questionHandler, endedHandler);
+    }
+
+    public void LeaveActiveQuiz() {
+        database.LeaveActiveQuiz();
     }
 
     // validates the access code for the quiz

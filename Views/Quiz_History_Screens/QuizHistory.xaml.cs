@@ -17,7 +17,7 @@ public partial class QuizHistory : ContentPage {
             }
         }
     }
-    private bool takenSelected;
+    private bool takenSelected = true;
     public bool ActivatedSelected {
         get => !TakenSelected;
         set => TakenSelected = !value;
@@ -48,6 +48,8 @@ public partial class QuizHistory : ContentPage {
 
             if (quiz != null) {
                 // Navigate to study page
+                 await DisplayAlert("Sorry", "Study Screen is Not implemeneted yet.", "OK");
+
             }
         }
     }

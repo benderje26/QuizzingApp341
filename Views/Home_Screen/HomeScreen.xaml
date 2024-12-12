@@ -6,35 +6,27 @@
 
     <Grid Padding="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Row for QR code and Search Quiz widget -->
-            <RowDefinition Height="*"/> <!-- Row for Entering Quiz ID -->
+            <RowDefinition Height="Auto"/>
+            <!-- Row for QR code and Search Quiz widget -->
+            <RowDefinition Height="*"/>
+            <!-- Row for Entering Quiz ID -->
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/> 
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <!-- First row with two widgets filling the whole row -->
-        <Button ImageSource="qr_code.png"
-                Grid.Row="0"
-                Grid.Column="0"
-                WidthRequest="150"
-                HeightRequest="150"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand"
-                Margin="5"
-                BackgroundColor="#F5F5F5"/>
-
-        <Button ImageSource="search_bar.png"
+        <!-- First row with search bar -->
+        <Button ImageSource="search.png"
                 Grid.Row="0"
                 Grid.Column="1"
-                WidthRequest="150"
-                HeightRequest="150"
-                HorizontalOptions="FillAndExpand"
+                WidthRequest="40"
+                HeightRequest="40"
+                HorizontalOptions="End"
                 VerticalOptions="FillAndExpand"
-                Margin="5"
-                BackgroundColor="#F5F5F5"
+                Margin="2"
+                BackgroundColor="Transparent"
                 Clicked="OnSearchClicked"/>
 
         <!-- Second row with one widget that expands to fill the entire row -->
@@ -59,14 +51,15 @@
                 CornerRadius="5" 
                 Padding="10" 
                 HasShadow="False">
-                
-                <Entry
+
+                    <Entry
                     x:Name="quizIdEntry"
                     Placeholder="Enter Quiz ID"
+                    TextTransform="Uppercase"
                     WidthRequest="250"
                     HorizontalOptions="Center" 
                     VerticalOptions="Center"/>
-            </Frame>
+                </Frame>
 
                 <Button
                     Padding="10"
