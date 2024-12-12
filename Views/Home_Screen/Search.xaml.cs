@@ -29,10 +29,15 @@ public partial class Search : ContentPage {
                 _allQuizzes.Clear();
                 foreach (var quiz in quizzes) {
                     var favQuizzes = _businessLogic.UserInfo.FavoriteQuizzes;
+                    var creatorName = "Unknown";
+                    var userData = await _businessLogic.GetUserData(quiz.CreatorId);
+                    if (userData != null && !string.IsNullOrWhiteSpace(userData.Username)) {
+                        creatorName = userData.Username;
+                    }
                     if (favQuizzes.Any(f => f.Id == quiz.Id)) {
-                        _allQuizzes.Add(new QuizSearch(quiz.Id, quiz.Title, $"Created by {quiz.CreatorId}", true));
+                        _allQuizzes.Add(new QuizSearch(quiz.Id, quiz.Title, $"Created by {creatorName}", true));
                     } else {
-                        _allQuizzes.Add(new QuizSearch(quiz.Id, quiz.Title, $"Created by {quiz.CreatorId}", false));
+                        _allQuizzes.Add(new QuizSearch(quiz.Id, quiz.Title, $"Created by {creatorName}", false));
                     }
                 }
                 FilterQuizzes(string.Empty); // Load all initially
