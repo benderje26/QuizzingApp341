@@ -7,6 +7,7 @@ using Supabase.Gotrue.Exceptions;
 using Supabase.Postgrest;
 using Supabase.Postgrest.Exceptions;
 using Supabase.Postgrest.Responses;
+using Supabase.Realtime;
 using Supabase.Realtime.PostgresChanges;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -96,7 +97,7 @@ public class SupabaseDatabase : IDatabase {
 
     public SupabaseDatabase() {
         Client = new(REST_URL, API_KEY, new SupabaseOptions {
-            AutoConnectRealtime = true // connects now instead of when they start an active quiz
+            AutoConnectRealtime = false // connects now instead of when they start an active quiz
         });
         _ = Initialize(); // initializes in the background
     }
@@ -533,6 +534,8 @@ public class SupabaseDatabase : IDatabase {
 
     #region Active Quizzes
 
+    Stack<RealtimeChannel> channels = [];
+
     public async Task<bool> DeactivateQuestions(long id) {
         try {
             await Client
@@ -545,11 +548,11 @@ public class SupabaseDatabase : IDatabase {
         return true;
     }
 
-    public async Task<ActiveQuiz?> ActivateQuiz(Quiz quiz, string accessCode) {
+    public async Task<ActiveQuiz?> PrepareActiveQuiz(Quiz quiz, string accessCode) {
         ActiveQuiz activeQuiz = new() {
             StartTime = DateTime.Now,
             QuizId = quiz.Id,
-            IsActive = true,
+            IsActive = false,
             CurrentQuestionNo = 1,
             Activator = UserId,
             AccessCode = accessCode,
@@ -569,8 +572,8 @@ public class SupabaseDatabase : IDatabase {
     public async Task<ActiveQuiz?> UpdateActiveQuiz(ActiveQuiz activeQuiz) {
         try {
             var result = await Client
-            .From<ActiveQuiz>()
-            .Update(activeQuiz);
+                .From<ActiveQuiz>()
+                .Update(activeQuiz);
 
             return result.Model;
         } catch {
@@ -711,31 +714,66 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
         try {
-            // TODO update participants table that we participated!
-            // TODO get current question if it exists
+            // Insert into participant table that we participated
+            Participant participant = new() {
+                ActiveQuizId = quiz.Id,
+                UserId = UserId
+            };
+            await Client.From<Participant>()
+                .Upsert(participant);
+
+            await Client.Realtime.ConnectAsync();
+
             // Create a channel for the active quiz
-            var channel = Client.Realtime.Channel("realtime", "public", "active_quizzes", null, "id=eq." + quiz.Id);
+            RealtimeChannel channel = Client.Realtime.Channel("realtime", "public", "active_quizzes", null, "id=eq." + quiz.Id);
+
+            channels.Push(channel);
 
             // Add a handler to the channel
             channel.AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates, async (channel, response) => {
                 ActiveQuiz? quiz = response.Model<ActiveQuiz>(); // Gets the active quiz with the new change (new question)
 
-                // Get the current active question for the current quiz
-                ActiveQuestion? question = quiz == null ? null : await GetCurrentActiveQuestion(quiz);
-
-                if (question == null) {
-                    return;
+                if (quiz != null) {
+                    await HandleActiveQuizUpdate(quiz, handler);
                 }
-
-                // Populate the question for the users
-                handler(question);
             });
 
             await channel.Subscribe(); // Listen to any changes
+
+            // Attempt to get current question to start it off
+            ActiveQuiz? currentValue = await Client
+                .From<ActiveQuiz>()
+                .Where(x => x.Id == quiz.Id)
+                .Single();
+
+            // Handle current question
+            if (currentValue != null) {
+                await HandleActiveQuizUpdate(currentValue, handler);
+            }
+
             return true;
-        } catch (Exception) {
+        } catch (Exception e) {
             return false;
         }
+    }
+
+    public void LeaveActiveQuiz() {
+        while (channels.Count != 0) {
+            Client.Realtime.Remove(channels.Pop());
+        }
+        Client.Realtime.Disconnect();
+    }
+
+    private async Task HandleActiveQuizUpdate(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
+        // Get the current active question for the current quiz
+        ActiveQuestion? question = await GetCurrentActiveQuestion(quiz);
+
+        if (question == null) {
+            return;
+        }
+
+        // Populate the question for the users
+        handler(question);
     }
 
     public async Task<List<Question>> GetQuizQuestionsByActiveQuizId(long activeQuizId) {
@@ -783,13 +821,13 @@ public class SupabaseDatabase : IDatabase {
             return null;
         }
     }
+
     public async Task<bool> ValidateAccessCode(string accessCode) {
         try {
             // Check if the access code exists in the active quiz table
             int count = await Client
                 .From<ActiveQuiz>()
                 .Where(a => a.AccessCode == accessCode) // Make sure the access code matches
-                .Where(a => a.IsActive == true) // Make sure it is active
                 .Limit(1)
                 .Count(Constants.CountType.Exact); // If count is more than one it exists
 

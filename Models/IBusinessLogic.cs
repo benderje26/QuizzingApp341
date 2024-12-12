@@ -137,7 +137,8 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns>List of quiz IDs if found, otherwise null</returns>
     Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds);
     Task<bool> DeactivateQuiz();
-    Task<bool> ActivateQuiz();
+    Task<bool> PrepareActiveQuiz();
+    Task<bool> ActivateActiveQuiz();
     Task<bool> IncrementCurrentQuestion();
 
     /// <summary>
@@ -197,6 +198,11 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="handler">The handler for when a new active question comes in</param>
     /// <returns></returns>
     Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
+
+    /// <summary>
+    /// Stops listening for new questions for all active quizzes.
+    /// </summary>
+    void LeaveActiveQuiz();
 
     /// <summary>
     /// This makes sure that an access code given by the user is a valid access code by checking the db

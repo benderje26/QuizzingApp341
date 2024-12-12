@@ -458,16 +458,15 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return true;
     }
 
-    public async Task<bool> ActivateQuiz() {
+    public async Task<bool> PrepareActiveQuiz() {
         if (QuizManager?.Quiz == null) {
             return false;
         }
         try {
-
             ActiveQuiz? result = null;
             int maxRetries = 5;
             for (int i = 0; i < maxRetries && result == null; i++) {
-                result = await database.ActivateQuiz(QuizManager.Quiz, GenerateRandomAccessCode(6));
+                result = await database.PrepareActiveQuiz(QuizManager.Quiz, GenerateRandomAccessCode(6));
             }
 
             if (result == null) {
@@ -499,7 +498,23 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 
+    public async Task<bool> ActivateActiveQuiz() {
+        if (QuizManager?.ActiveQuiz == null) {
+            return false;
+        }
+
+        ActiveQuiz aq = QuizManager.ActiveQuiz;
+        aq.IsActive = true;
+
+        ActiveQuiz? result = await database.UpdateActiveQuiz(aq);
+
+        return result != null;
+    }
+
     public async Task<bool> IncrementCurrentQuestion() {
+        if (QuizManager?.ActiveQuiz == null) {
+            return false;
+        }
         var currentQuestionNo = QuizManager.ActiveQuiz.CurrentQuestionNo;
         try {
             // update the active quiz
@@ -535,6 +550,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     // Joins an active quiz using a handler for new questions
     public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
         return await database.JoinActiveQuiz(quiz, handler);
+    }
+
+    public void LeaveActiveQuiz() {
+        database.LeaveActiveQuiz();
     }
 
     // validates the access code for the quiz

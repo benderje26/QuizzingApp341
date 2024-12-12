@@ -28,6 +28,7 @@ public class ActiveQuestion : BaseModel {
     [Column("multiselect")]
     public bool? Multiselect { get; set; }
 
+    [Column(ignoreOnInsert: true)]
     public bool IsStudying { get; set; }
 
     public ActiveQuestion() {}

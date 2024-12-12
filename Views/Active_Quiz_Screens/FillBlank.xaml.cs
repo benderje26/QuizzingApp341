@@ -71,4 +71,17 @@ public partial class FillBlank : ContentPage {
         bool success = await MauiProgram.BusinessLogic.GiveFillBlankQuestionAnswer(currentQuestion, answerGiven);
         await UserInterfaceUtil.ProcessResponseResult(success, this);
     }
+
+    protected override bool OnBackButtonPressed() {
+        // Leave the quiz (you can still get back in by re-entering the code)
+        MauiProgram.BusinessLogic.LeaveActiveQuiz();
+
+        if (base.OnBackButtonPressed()) {
+            Navigation.PopToRootAsync();
+
+            return true;
+        }
+
+        return false;
+    }
 }

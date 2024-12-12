@@ -118,8 +118,8 @@
             Grid.Row="3">
             <ImageButton
                 Source="add_plus_button.png"
-                WidthRequest="20"
-                HeightRequest="20"
+                WidthRequest="40"
+                HeightRequest="40"
                 HorizontalOptions="End"
                 VerticalOptions="End"
                 Clicked="AddQuestionClicked"/>

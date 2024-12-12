@@ -78,10 +78,10 @@ public partial class EditQuiz : ContentPage {
     }
 
     public async void OnActivateQuiz(object sender, EventArgs e) {
-        // Activate the quiz
-        await MauiProgram.BusinessLogic.ActivateQuiz();
-        
-        if (manager?.ActiveQuiz == null) {
+        // Prepare the quiz
+        await MauiProgram.BusinessLogic.PrepareActiveQuiz();
+
+        if (manager?.ActiveQuiz?.AccessCode == null) {
             return;
         }
 
@@ -91,9 +91,8 @@ public partial class EditQuiz : ContentPage {
         // Use this to start the quiz
         bool startQuiz = await DisplayAlert("Access Code:", accessCode, "Start Quiz", "Cancel");
 
-        // If start quiz ---> start Quiz
         if (startQuiz) {
-            // Set the current_question_no in the active quiz to 0
+            await MauiProgram.BusinessLogic.ActivateActiveQuiz();
             // Display the page to start the quiz
             await Navigation.PushAsync(new ActivatorQuiz());
         } else {
