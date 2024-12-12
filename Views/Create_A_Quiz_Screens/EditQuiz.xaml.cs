@@ -8,7 +8,7 @@ public partial class EditQuiz : ContentPage {
     public bool IsNewQuiz { get; set; }
     public double ScreenWidth { get; set; }
     private readonly QuizManager manager;
-    public EditQuiz(QuizManager quizManager) {
+    public EditQuiz() {
         InitializeComponent();
         manager = MauiProgram.BusinessLogic.QuizManager;
         ScreenWidth = DeviceDisplay.MainDisplayInfo.Width;
