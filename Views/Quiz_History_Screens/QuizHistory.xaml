@@ -81,7 +81,7 @@
                                             Grid.Column="0"
                                             FontAttributes="Bold"
                                             Padding="10"
-                                            HorizontalOptions="FillAndExpand"
+                                            HorizontalOptions="Start"
                                             Clicked="OnStudyButtonClicked"/>
 
                                     <!-- View Stats Button -->
@@ -91,7 +91,7 @@
                                             TextColor="White"
                                             FontAttributes="Bold"
                                             Padding="10"
-                                            HorizontalOptions="FillAndExpand"
+                                            HorizontalOptions="Center"
                                             Clicked="OnViewStatsButtonClicked"/>
 
                                     <!-- Delete Button -->
@@ -102,7 +102,7 @@
                                             TextColor="White"
                                             FontAttributes="Bold"
                                             Padding="10"
-                                            HorizontalOptions="FillAndExpand"
+                                            HorizontalOptions="End"
                                             Clicked="OnDeleteButtonClicked"/>
 
                                 </Grid>

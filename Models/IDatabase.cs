@@ -133,6 +133,11 @@ public interface IDatabase {
     /// <returns>The user's info, or null if there is no logged in user</returns>
     UserInfo? GetUserInfo();
 
+    Task<bool> DeactivateQuestions(long id);
+    Task<ActiveQuiz?> PrepareActiveQuiz(Quiz quiz, string accessCode);
+    Task<ActiveQuiz?> UpdateActiveQuiz(ActiveQuiz activeQuiz);
+    Task<bool> ActivateQuestion(ActiveQuestion questions);
+
     /// <summary>
     /// Gets a list of the current user's active quizzes by their IDs.
     /// </summary>
@@ -210,6 +215,11 @@ public interface IDatabase {
     /// <param name="handler">The handler for when a new active question comes in</param>
     /// <returns></returns>
     Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
+
+    /// <summary>
+    /// Stops listening for new questions for all active quizzes.
+    /// </summary>
+    void LeaveActiveQuiz();
 
     /// <summary>
     /// Validates that an access code is currently active.

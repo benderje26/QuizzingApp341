@@ -55,6 +55,7 @@
                     <Entry
                     x:Name="quizIdEntry"
                     Placeholder="Enter Quiz ID"
+                    TextTransform="Uppercase"
                     WidthRequest="250"
                     HorizontalOptions="Center" 
                     VerticalOptions="Center"/>
