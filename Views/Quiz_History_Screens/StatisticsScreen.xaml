@@ -7,7 +7,7 @@ Statistics screen -->
              Padding="7"
              Title="Statistics">
     <ContentPage.Resources>
-        <drawable:Canvas x:Key="MyDrawable" />
+        <drawable:Boxplot x:Key="MyDrawable" />
     </ContentPage.Resources>
 
     <!-- Define a Grid with two rows -->

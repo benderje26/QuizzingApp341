@@ -80,6 +80,90 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         NotifyPropertyChanged(nameof(UserInfo));
     }
 
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(UpdateEmailResult, string?)> UpdateEmail(string emailAddress) {
+        // Checking email format 
+        if (!Regexes.EmailRegex().IsMatch(emailAddress)) {
+            return (UpdateEmailResult.BadEmail, "Email must be in the correct format (ex: example@example.com).");
+        }
+
+        // Update the email in the database
+        UpdateEmailResult result = await database.UpdateEmail(emailAddress);
+        if (result == UpdateEmailResult.Success) {
+            NotifyPropertyChanged(nameof(UserInfo));
+        }
+
+        // Map result to user-friendly messages
+        string? s = result switch {
+            UpdateEmailResult.Success => null,
+            UpdateEmailResult.DuplicateEmail => "Failed to update email. The email you have is likely already used on another account.",
+            UpdateEmailResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            UpdateEmailResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(UpdateUsernameResult, string?)> UpdateUsername(string username) {
+        // Checking username format 
+        if (!Regexes.UsernameRegex().IsMatch(username)) {
+            return (UpdateUsernameResult.BadUsername, "Username must be 5 to 20 characters and only contain A-Z, a-z, 0-9, and _ (underscores).");
+        }
+
+        // Update the username in the database
+        UpdateUsernameResult result = await database.UpdateUsername(username);
+
+        if (result == UpdateUsernameResult.Success) {
+            NotifyPropertyChanged(nameof(UserInfo));
+        }
+
+        // Map result to user-friendly messages
+        string? s = result switch {
+            UpdateUsernameResult.Success => null,
+            UpdateUsernameResult.DuplicateUsername => "That username is already used, pick another one.",
+            UpdateUsernameResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            UpdateUsernameResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(UpdatePasswordResult, string?)> UpdatePassword(string password) {
+        // Checking password format 
+        if (!Regexes.PasswordRegex().IsMatch(password)) {
+            return (UpdatePasswordResult.BadPassword, "Password is not strong enough or invalid. It must be 8 characters with a letter, number, and symbol, or at least 16 characters of any kind.");
+        }
+
+        // Update the password in the database
+        UpdatePasswordResult result = await database.UpdatePassword(password);
+
+        // Map result to user-friendly messages
+        string? s = result switch {
+            UpdatePasswordResult.Success => null,
+            UpdatePasswordResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            UpdatePasswordResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
     // Notify user of changes in user information
     public async Task<(LogoutResult, string?)> Logout() {
         LogoutResult result = await database.Logout();
@@ -101,6 +185,25 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public async Task<UserData?> GetUserData(Guid userId) {
         return await database.GetUserData(userId);
     }
+
+    /// <summary>
+    /// Attempts to delete the users account
+    /// </summary>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    public async Task<(DeleteAccountResult, string?)> DeleteAccount() {
+        DeleteAccountResult result = await database.DeleteAccount();
+
+        // maps user to user friendly messages  
+        string? s = result switch {
+            DeleteAccountResult.Success => null,
+            DeleteAccountResult.NetworkError => NETWORK_ERROR_MESSAGE,
+            DeleteAccountResult.Other => OTHER_ERROR_MESSAGE,
+            _ => OTHER_ERROR_MESSAGE
+        };
+
+        return (result, s);
+    }
+
     #endregion
 
 
@@ -245,26 +348,65 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
     // Get quiz IDs from active quiz IDs
     // Fetch the quiz_id for each active_quiz_id.
-    public async Task<List<(long quizId, DateTime? startTime)>?> GetQuizIdsAndStartTimesByActiveQuizIds(List<long> activeQuizIds) {
-        try {
-            Console.WriteLine($"Fetching quiz data for activeQuizIds: {string.Join(", ", activeQuizIds)}");
+    public async Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds) {
+        return await database.GetActiveQuizzesByActiveQuizIds(activeQuizIds);
+    }
 
-            // Fetch the active quizzes based on the provided IDs
-            var activeQuizzes = await database.GetActiveQuizzesByActiveQuizIds(activeQuizIds);
+    /// <summary>
+    /// Gets the current scores of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>List of all of the current scores for the active quiz</returns>
+    public async Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId) {
+        var questions = await database.GetQuizQuestionsByActiveQuizId(activeQuizId);
+        var responses = await database.GetRepsonsesByActiveQuizId(activeQuizId);
 
-            // Check if there are no active quizzes
-            if (activeQuizzes == null || !activeQuizzes.Any()) {
-                Console.WriteLine("No active quizzes found.");
-                return null;
+        //Create a dictionary to keep track of each student and their respective score
+        Dictionary<Guid, int> studentsScores = [];
+        //Go through all of the reponses
+        foreach (var response in responses) {
+            //If the student doesn't exist yet in the dictionary, add them to it with a score of 0
+            studentsScores.TryAdd(response.UserId, 0);
+            //Get the questions that the response if for
+            Question? question = questions.FirstOrDefault(q => q.QuestionNo == response.QuestionNo);
+            if (question != null) {
+                // Evaluates if the answer given is correct
+                bool correct = false;
+                if (question.QuestionType == QuestionType.MultipleChoice) {
+                    // If the question is multiple choice, get what answers they selected and what are the correct options
+                    int[] correctChoices = question.MultipleChoiceCorrectAnswers ?? [];
+                    int[] givenChoices = response.MultipleChoiceResponse ?? [];
+
+                    if (question.Multiselect ?? false) {
+                        // If it is a multiselect questions, the given and correct choices must be the same, not necessarily ordered the same
+                        correct = new HashSet<int>(correctChoices).SetEquals(givenChoices);
+                    } else if (givenChoices.Length != 0) {
+                        // Otherwise the first (and hopefully only) choice selcted must be in the set of allowed responses
+                        correct = correctChoices.Contains(givenChoices[0]);
+                    }
+                } else if (question.QuestionType == QuestionType.FillBlank) {
+                    // If the question is fill blank, get the acceptable answers and given answers
+                    string[] acceptableAnswers = question.AcceptableAnswers ?? [];
+                    string givenAnswer = response.FillBlankResponse ?? string.Empty;
+                    if (!(question.CaseSensitive ?? false)) {
+                        // If it is not case sensitive, convert both the acceptable answers and given answer to lowercase
+                        acceptableAnswers = acceptableAnswers
+                            .Select(x => x.ToLower())
+                            .ToArray();
+                        givenAnswer = givenAnswer.ToLower();
+                    }
+
+                    // See if the given answer is in the acceptable answers list
+                    correct = acceptableAnswers.Contains(givenAnswer);
+                }
+                
+                if (correct) {
+                    studentsScores[response.UserId] += 1;
+                }
             }
-
-            var quizList = activeQuizzes.Select(q => (q.QuizId, q.StartTime)).ToList();
-
-            return quizList;
-        } catch (Exception ex) {
-            Console.WriteLine($"Error fetching active quizzes: {ex.Message}");
-            return null;
         }
+        //Return the set of all the scores
+        return [.. studentsScores.Values];
     }
 
     // Retrieves all quizes from the database
@@ -395,9 +537,9 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return await database.GetActiveQuiz(accessCode);
     }
 
-    // Submits an answer for a multiple-choice question
-    public async Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
-        return await database.SubmitMultipleChoiceQuestionAnswer(question, choice);
+
+    public async Task<bool> GiveMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices) {
+        return await database.SubmitMultipleChoiceQuestionAnswer(question, choices);
     }
 
     // Submits an answer for a fill-in-the-blank question

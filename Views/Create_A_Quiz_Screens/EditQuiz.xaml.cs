@@ -6,10 +6,13 @@ using CommunityToolkit.Maui.Views;
 public partial class EditQuiz : ContentPage {
     public ICommand QuestionClickedCommand { get; set; }
     public bool IsNewQuiz { get; set; }
-    public double ScreenWidth { get; set; }
+
+    public double ScreenWidth {get; set;}
+    private readonly QuizManager manager;
     public EditQuiz(QuizManager quizManager) {
         InitializeComponent();
-        ScreenWidth = DeviceDisplay.MainDisplayInfo.Width; ;
+        manager = quizManager;
+        ScreenWidth = DeviceDisplay.MainDisplayInfo.Width;;
         QuestionClickedCommand = new Command<Question>(QuestionClicked);
         BindingContext = MauiProgram.BusinessLogic;
     }
@@ -33,12 +36,12 @@ public partial class EditQuiz : ContentPage {
 
         // Make a new question with this current quiz Id
         Question question = new Question();
-        if (MauiProgram.BusinessLogic.QuizManager?.Quiz == null) {
+        if (manager.Quiz == null) {
             return;
         }
 
-        question.QuestionNo = MauiProgram.BusinessLogic.QuizManager.Questions.Count + 1;
-        question.QuizId = MauiProgram.BusinessLogic.QuizManager.Quiz.Id;
+        question.QuestionNo = manager.Questions.Count + 1;
+        question.QuizId = manager.Quiz.Id;
 
         popup.QuestionTypeSelected += async (questionType) => {   // get questionType when clicked
             if (questionType == QuestionType.MultipleChoice) {
@@ -61,10 +64,12 @@ public partial class EditQuiz : ContentPage {
         bool deleteQuestion = await DisplayAlert("Are you sure you want to delete this quiz?", MauiProgram.BusinessLogic.QuizManager.Quiz.Title, "Yes", "No");
 
         if (deleteQuestion) {
-            if (MauiProgram.BusinessLogic.QuizManager.Active) {
-                await DisplayAlert("Could not delete the following quiz because it is still active", MauiProgram.BusinessLogic.QuizManager.Quiz.Title, "Ok");
+            if (manager.Active) {
+                await DisplayAlert("Could not delete the following quiz because it is still active", manager.Quiz?.Title, "Ok");
             } else {
-                await MauiProgram.BusinessLogic.DeleteQuiz(MauiProgram.BusinessLogic.QuizManager.Quiz.Id);
+                if (manager.Quiz != null) {
+                    await MauiProgram.BusinessLogic.DeleteQuiz(manager.Quiz.Id);
+                }
                 await Navigation.PopAsync();
             }
         }

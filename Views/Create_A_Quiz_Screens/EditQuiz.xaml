@@ -57,11 +57,11 @@
             </Frame>
 
             <HorizontalStackLayout>
-                <Label Text="Public"
+                <Label Text="Public:"
                        FontSize="18"
                        HorizontalOptions="Start"
                        VerticalOptions="Center"
-                       Margin="0,0,10,0"></Label>
+                       Margin="0,0,10,0"/>
                 <Switch IsToggled="{Binding QuizManager.Quiz.IsPublic}"
                         HorizontalOptions="End"
                         VerticalOptions="Center"
@@ -122,7 +122,7 @@
                 HeightRequest="20"
                 HorizontalOptions="End"
                 VerticalOptions="End"
-                Clicked="AddQuestionClicked"></ImageButton>
+                Clicked="AddQuestionClicked"/>
         </StackLayout>
     </Grid>
 </ContentPage>

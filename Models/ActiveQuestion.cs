@@ -35,4 +35,8 @@ public class ActiveQuestion : BaseModel {
         Question = question.QuestionText;
         MultipleChoiceOptions = question.MultipleChoiceOptions;
     }
+
+    [Column("multiselect")]
+    public bool? Multiselect { get; set; }
+    public bool IsStudying { get; set; }
 }

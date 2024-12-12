@@ -22,6 +22,28 @@ public interface IDatabase {
     /// <param name="password">The password</param>
     /// <returns>The result of attempting to log in</returns>
     Task<LoginResult> Login(string emailAddress, string password);
+
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result of attempting to update the users email</returns>
+    Task<UpdateEmailResult> UpdateEmail(string emailAddress);
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result of attempting to update the users username</returns>
+    Task<UpdateUsernameResult> UpdateUsername(string username);
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result of attempting to update the users password</returns>
+    Task<UpdatePasswordResult> UpdatePassword(string password);
+
     /// <summary>
     /// Attempts to log the user out.
     /// </summary>
@@ -34,6 +56,12 @@ public interface IDatabase {
     /// <param name="userId">The id of the user you need the UserData for</param>
     /// <returns>A UserData object for the user</returns>
     Task<UserData?> GetUserData(Guid userId);
+
+    /// <summary>
+    /// Attempts to delete the current users account
+    /// </summary>
+    /// <returns>The result of attempting to delete the account</returns>
+    Task<DeleteAccountResult> DeleteAccount();
 
     /// <summary>
     /// Attempts to get a quiz.
@@ -126,6 +154,20 @@ public interface IDatabase {
     Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds);
 
     /// <summary>
+    /// Gets the quiz questions of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>Returns all the quiz questions for the given active quiz</returns>
+    Task<List<Question>> GetQuizQuestionsByActiveQuizId(long activeQuizId);
+
+    /// <summary>
+    /// Gets the responses of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>Returns all the responses for the given active quiz</returns>
+    Task<List<Response>> GetRepsonsesByActiveQuizId(long activeQuizId);
+
+    /// <summary>
     /// Returns all of the users favorite quizzess from the database.
     /// </summary>
     /// <returns>
@@ -162,9 +204,9 @@ public interface IDatabase {
     /// Submits a multiple choice question with its choice.
     /// </summary>
     /// <param name="question">The question you are submitting to</param>
-    /// <param name="choice">The index of the choice the student selected</param>
+    /// <param name="choices">The indexes of the choices the student selected</param>
     /// <returns></returns>
-    Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice);
+    Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices);
 
     /// <summary>
     /// Submits a fill blank question with its answer.

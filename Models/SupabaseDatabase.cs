@@ -1,13 +1,17 @@
 namespace QuizzingApp341.Models;
+
+using QuizzingApp341.Views;
 using Supabase;
 using Supabase.Gotrue;
 using Supabase.Gotrue.Exceptions;
 using Supabase.Postgrest;
+using Supabase.Postgrest.Exceptions;
 using Supabase.Postgrest.Responses;
 using Supabase.Realtime.PostgresChanges;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Text.Json;
 using Client = Supabase.Client;
 using Constants = Supabase.Postgrest.Constants;
 
@@ -70,7 +74,8 @@ public class SupabaseDatabase : IDatabase {
     /// Regenerates the info for the current user.
     /// </summary>
     private async Task GenerateUserInfo() {
-        userInfo = new(UserId, User != null) {
+        UserData? data = await GetUserData(UserId);
+        userInfo = new(UserId, User?.Email ?? string.Empty, data?.Username ?? string.Empty, User != null) {
             CreatedQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetUserCreatedQuizzes(UserId)) ?? []),
             FavoriteQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetFavoriteQuizzes()) ?? [])
         };
@@ -98,28 +103,58 @@ public class SupabaseDatabase : IDatabase {
 
     public async Task<AccountCreationResult> CreateNewUser(string emailAddress, string username, string password) {
         try {
+            bool? alreadyExists = await HasUserData(username);
+            if (alreadyExists == null) {
+                return AccountCreationResult.Other;
+            } else if (alreadyExists.Value) {
+                return AccountCreationResult.DuplicateUsername;
+            }
+
             // Calls Supabase to sign up and then sets the current session to that new user
-            await SetSession(await Client.Auth.SignUp(emailAddress, password));
+            await Client.Auth.SignUp(emailAddress, password);
+            await SetSession(await Client.Auth.SignIn(emailAddress, password));
+        } catch (GotrueException e) {
+            if (e.Reason == Supabase.Gotrue.Exceptions.FailureHint.Reason.UserAlreadyRegistered) {
+                return AccountCreationResult.DuplicateEmail;
+            }
+            return AccountCreationResult.Other;
+        } catch (Exception e) {
+            Console.WriteLine("ERRORRRR:" + e);
+            return AccountCreationResult.Other;
+        }
 
-            if (Session != null) {
-                // If it worked, put the user's data into a UserData object
-                UserData myData = new() {
-                    UserId = UserId,
-                    Username = username
-                };
+        if (Session != null) {
+            // If it worked, put the user's data into a UserData object
+            UserData myData = new() {
+                UserId = UserId,
+                Username = username
+            };
 
-                // Puts it in the USER_DATA table, which is used for storing usernames
+            // Puts it in the USER_DATA table, which is used for storing usernames
+            try {
                 var result = await Client
                     .From<UserData>()
                     .Insert(myData);
 
                 // Returns if it was a success
                 return result?.Model == null ? AccountCreationResult.Other : AccountCreationResult.Success;
+            } catch (Exception e) {
+                Console.WriteLine("ERRORRRR:" + e);
+
+                // If we were unable to assign the username, delete the account
+                await DeleteAccount();
+
+                // Checks to see if it was a uniqueness problem. This would only happen if someone else created
+                // an account inbetween the last check and the time that we inserted into the table
+                if (e is PostgrestException pe) {
+                    if (pe.Reason == Supabase.Postgrest.Exceptions.FailureHint.Reason.UniquenessViolation) {
+                        return AccountCreationResult.DuplicateUsername;
+                    }
+                }
             }
-            return AccountCreationResult.Other;
-        } catch (Exception) {
-            return AccountCreationResult.Other;
         }
+
+        return AccountCreationResult.Other;
     }
 
     public async Task<LoginResult> Login(string emailAddress, string password) {
@@ -131,7 +166,7 @@ public class SupabaseDatabase : IDatabase {
             return Session == null ? LoginResult.Other : LoginResult.Success;
         } catch (Exception e) {
             // Sees if it was a bad credentials error
-            if (e is GotrueException ge && ge.Reason == FailureHint.Reason.UserBadLogin) {
+            if (e is GotrueException ge && ge.Reason == Supabase.Gotrue.Exceptions.FailureHint.Reason.UserBadLogin) {
                 return LoginResult.BadCredentials;
             }
             return LoginResult.Other;
@@ -139,9 +174,9 @@ public class SupabaseDatabase : IDatabase {
     }
 
     public async Task<LogoutResult> Logout() {
-        if (Client == null) {
+        if (Session == null) {
             // Can't log out if already logged out
-            return LogoutResult.Other;
+            return LogoutResult.NotSignedIn;
         }
         try {
             // Signs out with supabase
@@ -155,16 +190,139 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result of attempting to update the users email</returns>
+    public async Task<UpdateEmailResult> UpdateEmail(string emailAddress) {
+        if (Session == null) {
+            return UpdateEmailResult.NotSignedIn;
+        }
+        try {
+            //Update the users email
+            var newEmail = new UserAttributes { Email = emailAddress };
+            var result = await Client.Auth.Update(newEmail);
+
+            if (userInfo != null) {
+                userInfo.Email = emailAddress;
+            }
+            //Return that email was updated successfully
+            return UpdateEmailResult.Success;
+        } catch (GotrueException e) {
+            // Sadly, the exception that is returned when there is a duplicate email
+            // has the reason Reason.Unknown, so it is likely a duplicate email
+            if (e.Reason == Supabase.Gotrue.Exceptions.FailureHint.Reason.Unknown) {
+                return UpdateEmailResult.DuplicateEmail;
+            }
+        } catch (Exception e) {
+            //Write out the error if if occurred
+            Console.Write("ERRORRRRR" + e);
+        }
+        return UpdateEmailResult.Other;
+    }
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result of attempting to update the users username</returns>
+    public async Task<UpdateUsernameResult> UpdateUsername(string username) {
+        if (Session == null) {
+            return UpdateUsernameResult.NotSignedIn;
+        }
+        try {
+            //Update the users username
+            var result = await Client
+                .From<UserData>()
+                .Where(x => x.UserId == UserId)
+                .Set(x => x.Username, username)
+                .Update();
+
+            if (userInfo != null) {
+                userInfo.Username = username;
+            }
+            //Return that it was updated successfully
+            return UpdateUsernameResult.Success;
+        } catch (PostgrestException e) {
+            if (e.Reason == Supabase.Postgrest.Exceptions.FailureHint.Reason.UniquenessViolation) {
+                return UpdateUsernameResult.DuplicateUsername;
+            }
+        } catch (Exception e) {
+            // Write out the error if if occurred
+            Console.Write("ERRORRRRR" + e);
+        }
+        return UpdateUsernameResult.Other;
+    }
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result of attempting to update the users password</returns>
+    public async Task<UpdatePasswordResult> UpdatePassword(string password) {
+        if (Session == null) {
+            return UpdatePasswordResult.NotSignedIn;
+        }
+        try {
+            //Update the users password
+            var newPassword = new UserAttributes { Password = password };
+            var result = await Client.Auth.Update(newPassword);
+
+            //Return that is was updated successfully
+            return UpdatePasswordResult.Success;
+        } catch (Exception e) {
+            //Write out the error if if occurred and return NetworkError to represent a failed update
+            Console.Write("ERRORRRRR" + e);
+            return UpdatePasswordResult.NetworkError;
+        }
+    }
+
     public async Task<UserData?> GetUserData(Guid userId) {
         try {
             // Gets a user's data (used for retrieving usernames currently)
-            return await Client
+            var user = await Client
                 .From<UserData>()
                 .Where(x => x.UserId == userId)
                 .Single();
+            return user;
         } catch (Exception e) {
             Console.Write("ERORRRR" + e.Message);
             return null;
+        }
+    }
+
+    public async Task<bool?> HasUserData(string username) {
+        try {
+            // Gets a user's data by username
+            UserData? data = await Client
+                .From<UserData>()
+                .Where(x => x.Username == username)
+                .Single();
+
+            return data != null;
+        } catch (Exception e) {
+            Console.Write("ERORRRR" + e.Message);
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to delete the current users account
+    /// </summary>
+    /// <returns>The result of attempting to delete the account</returns>
+    public async Task<DeleteAccountResult> DeleteAccount() {
+        if (User == null) {
+            return DeleteAccountResult.NotSignedIn;
+        }
+        try {
+            // Make the delete_account stored procedure call
+            await Client.Rpc("delete_account", null);
+            await SetSession(null);
+            return DeleteAccountResult.Success;
+        } catch (Exception e) {
+            Console.Write("ERRORRRRR" + e);
+            return DeleteAccountResult.Other;
         }
     }
 
@@ -173,7 +331,7 @@ public class SupabaseDatabase : IDatabase {
     #region Quizzes 
 
     #region Normal Quizzes
-    //Get All the Quizzes for user
+    //Get All the Quizzes for the current user
     //From Quiz Models to quizzes table in supabase
     //return List of Quiz 
     public async Task<List<Quiz>?> GetAllQuizzesAsync() {
@@ -484,7 +642,7 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    public async Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int choice) {
+    public async Task<bool> SubmitMultipleChoiceQuestionAnswer(ActiveQuestion question, int[]? choices) {
         try {
             await Client // Insert into the response table according to the choice selected
                 .From<Response>()
@@ -492,15 +650,19 @@ public class SupabaseDatabase : IDatabase {
                     ActiveQuizId = question.ActiveQuizId,
                     UserId = UserId,
                     QuestionNo = question.QuestionNo,
-                    MultipleChoiceResponse = [choice],
+                    MultipleChoiceResponse = choices,
                     FillBlankResponse = null // Null because this is multiple choice
                 }, new QueryOptions() { Returning = QueryOptions.ReturnType.Minimal });
+
             return true;
         } catch (Exception e) {
-            Console.WriteLine("ERRORRRR" + e.Message);
-            return false; // Inserting into responses failed
+
+            Console.WriteLine($"Error occurred while submitting multiple choice answer: {e.Message}");
+            return false;
         }
     }
+
+
 
     public async Task<bool> SubmitFillBlankQuestionAnswer(ActiveQuestion question, string response) {
         try {
@@ -545,6 +707,33 @@ public class SupabaseDatabase : IDatabase {
             return true;
         } catch (Exception) {
             return false;
+        }
+    }
+
+    public async Task<List<Question>> GetQuizQuestionsByActiveQuizId(long activeQuizId) {
+        try {
+            //Get the quiz that corresonds to the active quiz id
+            var activeQuiz = await Client.From<ActiveQuiz>().Where(x => x.Id == activeQuizId).Single();
+            //Get the questions for the quiz
+            var questions = await Client.From<Question>().Where(x => x.QuizId == activeQuiz.QuizId).Get();
+            //Return the questions
+            return questions.Models; 
+        } catch (Exception e) {
+            //Write out the error if if occurred and return an empty collection
+            Console.WriteLine("Error: " + e.Message);
+            return new List<Question>();
+        }
+    }
+
+    public async Task<List<Response>> GetRepsonsesByActiveQuizId(long activeQuizId) {
+        try {
+            //Get the response for the active quiz and return them
+            var responses = await Client.From<Response>().Where(x => x.ActiveQuizId == activeQuizId).Get();
+            return responses.Models;
+        } catch (Exception e) {
+            //Write out the error if if occurred and return an empty collection
+            Console.WriteLine("Error: " + e.Message);
+            return new List<Response>();
         }
     }
 

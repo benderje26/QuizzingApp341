@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 public class Quiz : BaseModel, INotifyPropertyChanged {
     private long id;
     private Guid creatorId;
-    private string? title;
+    private string title = string.Empty;
 
     private bool isPublic;
 
@@ -23,7 +23,7 @@ public class Quiz : BaseModel, INotifyPropertyChanged {
         }
     }
 
-    [Column("created_at")]
+    [Column("created_at", ignoreOnInsert: true)]
     public DateTime DateCreated { 
         get => dateCreated;
         set {
