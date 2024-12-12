@@ -94,7 +94,14 @@ public partial class EditQuiz : ContentPage {
         if (startQuiz) {
             await MauiProgram.BusinessLogic.ActivateActiveQuiz();
             // Display the page to start the quiz
-            await Navigation.PushAsync(new ActivatorQuiz());
+            // Make the current question an active question
+            ActiveQuestion activeQuestion = new ActiveQuestion(MauiProgram.BusinessLogic.QuizManager.CurrentQuestion, MauiProgram.BusinessLogic.QuizManager.ActiveQuiz.Id);
+            if (MauiProgram.BusinessLogic.QuizManager.CurrentQuestion.QuestionType == QuestionType.MultipleChoice) {
+                await Navigation.PushAsync(new MultipleChoice(activeQuestion, true, false));
+            } else {
+                await Navigation.PushAsync(new FillBlank(activeQuestion, true, false));
+            }
+            //await Navigation.PushAsync(new ActivatorQuiz());
         } else {
             await MauiProgram.BusinessLogic.DeactivateQuiz();
         }
