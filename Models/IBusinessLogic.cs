@@ -135,13 +135,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// </summary>
     /// <param name="activeQuizIds">List of active quiz IDs</param>
     /// <returns>List of quiz IDs if found, otherwise null</returns>
-
     Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds);
-    /// <summary>
-    /// Gets the active quiz IDs for a given user from participants tables
-    /// </summary>
-    /// <returns>List of active quiz IDs</returns>
-    Task<List<long>> GetActiveQuizIdsForUser();
 
     /// <summary>
     /// Gets the current scores of the given active quiz
@@ -211,6 +205,14 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     Task<bool> ValidateAccessCode(string accessCode);
     Task<bool> EditQuizTitle(string newQuizTitle);
     public void RefreshQuestionNums();
+
+    /// <summary>
+    /// Deletes the quiz history data.
+    /// </summary>
+    /// <returns>
+    /// True if it worked
+    /// </returns>
+    Task<bool> DeleteQuizFromActivationHistory(long activeQuizId);
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);

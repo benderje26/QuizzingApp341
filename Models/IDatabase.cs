@@ -134,12 +134,6 @@ public interface IDatabase {
     UserInfo? GetUserInfo();
 
     /// <summary>
-    /// Get's the current user's active quizzes' IDs.
-    /// </summary>
-    /// <returns>The IDs of the active quizzes</returns>
-    Task<List<long>> GetActiveQuizIdsByUserId();
-
-    /// <summary>
     /// Gets a list of the current user's active quizzes by their IDs.
     /// </summary>
     /// <param name="activeQuizIds">List of active quiz IDs.</param>
@@ -224,4 +218,13 @@ public interface IDatabase {
     /// <returns>Whether the access code is currently active</returns>
     Task<bool> ValidateAccessCode(string accessCode);
     Task<bool> UpdateQuiz(Quiz quiz);
+
+    /// <summary>
+    /// Delete the active quiz data.
+    /// </summary>
+    /// <returns>
+    /// True if it worked
+    /// </returns>
+    Task<bool> DeleteQuizFromActivationHistory(long activeQuizId);
+
 }
