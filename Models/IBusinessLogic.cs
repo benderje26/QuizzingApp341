@@ -26,6 +26,28 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="password">The password</param>
     /// <returns>The result and a nullable string showing the message if something went wrong</returns>
     Task<(LoginResult, string?)> Login(string emailAddress, string password);
+
+    /// <summary>
+    /// Attempts to update the users email.
+    /// </summary>
+    /// <param name="emailAddress">The email address</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    Task<(UpdateEmailResult, string?)> UpdateEmail(string emailAddress);
+
+    /// <summary>
+    /// Attempts to update the users username.
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    Task<(UpdateUsernameResult, string?)> UpdateUsername(string username);
+
+    /// <summary>
+    /// Attempts to update the users password.
+    /// </summary>
+    /// <param name="password">The password</param>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    Task<(UpdatePasswordResult, string?)> UpdatePassword(string password);
+
     /// <summary>
     /// Attempts to log the user out.
     /// </summary>
@@ -38,6 +60,12 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="userId">The id of the user you need the UserData for</param>
     /// <returns>A UserData object for the user</returns>
     Task<UserData?> GetUserData(Guid userId);
+
+    /// <summary>
+    /// Attempts to delete the users account
+    /// </summary>
+    /// <returns>The result and a nullable string showing the message if something went wrong</returns>
+    Task<(DeleteAccountResult, string?)> DeleteAccount();
 
     /// <summary>
     /// The current quiz manager.
@@ -114,6 +142,13 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// </summary>
     /// <returns>List of active quiz IDs</returns>
     Task<List<long>> GetActiveQuizIdsForUser();
+
+    /// <summary>
+    /// Gets the current scores of the given active quiz
+    /// </summary>
+    /// <param name="activeQuizId">Current active quiz</param>
+    /// <returns>List of all of the current scores for the active quiz</returns>
+    Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId);
 
     Task<ObservableCollection<Quiz>?> GetAllQuizzes();
 
