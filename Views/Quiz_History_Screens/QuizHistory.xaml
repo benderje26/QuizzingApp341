@@ -72,13 +72,13 @@
                                        TextColor="Black"/>
 
                                 <!-- Buttons only visible if the user is the owner -->
-                                <HorizontalStackLayout Spacing="15"
-                                                       HorizontalOptions="CenterAndExpand"
-                                                       IsVisible="{Binding IsUserOwner}">
+                                <Grid ColumnDefinitions="*,10,*,10,*" IsVisible="{Binding IsUserOwner}">
                                     <!-- Study Button -->
                                     <Button Text="Study"
+                                            
                                             BackgroundColor="DarkGreen"
                                             TextColor="White"
+                                            Grid.Column="0"
                                             FontAttributes="Bold"
                                             Padding="10"
                                             HorizontalOptions="Start"
@@ -86,6 +86,7 @@
 
                                     <!-- View Stats Button -->
                                     <Button Text="View Stats"
+                                            Grid.Column="2"
                                             BackgroundColor="DarkGoldenrod"
                                             TextColor="White"
                                             FontAttributes="Bold"
@@ -97,13 +98,14 @@
                                     <Button Text="Delete"
                                             BackgroundColor="DarkRed"
                                             IsEnabled="False"
+                                            Grid.Column="4"
                                             TextColor="White"
                                             FontAttributes="Bold"
                                             Padding="10"
                                             HorizontalOptions="End"
                                             Clicked="OnDeleteButtonClicked"/>
 
-                                </HorizontalStackLayout>
+                                </Grid>
                             </StackLayout>
                         </Frame>
                     </DataTemplate>
@@ -137,40 +139,38 @@
                                        TextColor="Black" />
 
                                 <!-- Buttons only visible if the user is the owner -->
-                                <HorizontalStackLayout Spacing="15"
-                                                       HorizontalOptions="Fill">
-
+                                <Grid ColumnDefinitions="*,10,*,10,*" >
                                     <!-- Study Button -->
                                     <Button Text="Study"
+                                            Grid.Column="0"
                                             BackgroundColor="DarkGreen"
                                             TextColor="White"
                                             FontAttributes="Bold"
                                             Padding="10"
-                                            WidthRequest="100"
-                                            HorizontalOptions="Start"
+                                            HorizontalOptions="FillAndExpand"
                                             Clicked="OnStudyButtonClicked"/>
 
                                     <!-- View Stats Button -->
                                     <Button Text="View Stats"
+                                            Grid.Column="2"
                                             BackgroundColor="DarkGoldenrod"
                                             TextColor="White"
                                             FontAttributes="Bold"
                                             Padding="10"
-                                            WidthRequest="100"
-                                            HorizontalOptions="Center"
+                                            HorizontalOptions="FillAndExpand"
                                             Clicked="OnViewStatsButtonClicked"/>
 
                                     <!-- Delete Button -->
                                     <Button Text="Delete"
                                             BackgroundColor="DarkRed"
+                                            Grid.Column="4"
                                             TextColor="White"
                                             FontAttributes="Bold"
                                             Padding="10"
-                                            WidthRequest="100"
-                                            HorizontalOptions="End"
+                                            HorizontalOptions="FillAndExpand"
                                             Clicked="OnDeleteButtonClicked"/>
 
-                                </HorizontalStackLayout>
+                                </Grid>
                             </StackLayout>
                         </Frame>
                     </DataTemplate>
