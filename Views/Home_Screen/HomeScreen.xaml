@@ -14,19 +14,19 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- First row with search bar -->
-        <Button ImageSource="search_bar.png"
+        <Button ImageSource="search.png"
                 Grid.Row="0"
                 Grid.Column="1"
-                WidthRequest="100"
-                HeightRequest="50"
-                HorizontalOptions="FillAndExpand"
+                WidthRequest="40"
+                HeightRequest="40"
+                HorizontalOptions="End"
                 VerticalOptions="FillAndExpand"
                 Margin="2"
-                BackgroundColor="#F5F5F5"
+                BackgroundColor="Transparent"
                 Clicked="OnSearchClicked"/>
 
         <!-- Second row with one widget that expands to fill the entire row -->
