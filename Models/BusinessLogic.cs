@@ -361,25 +361,52 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         var questions = await database.GetQuizQuestionsByActiveQuizId(activeQuizId);
         var responses = await database.GetRepsonsesByActiveQuizId(activeQuizId);
 
-        Dictionary<Guid, int> studentsScores = new Dictionary<Guid, int>();
+        //Create a dictionary to keep track of each student and their respective score
+        Dictionary<Guid, int> studentsScores = [];
+        //Go through all of the reponses
         foreach (var response in responses) {
-            if (!studentsScores.ContainsKey(response.UserId)) {
-                studentsScores.Add(response.UserId, 0);
-            }
-            Question question = questions.FirstOrDefault(q => q.QuestionNo == response.QuestionNo);
+            //If the student doesn't exist yet in the dictionary, add them to it with a score of 0
+            studentsScores.TryAdd(response.UserId, 0);
+            //Get the questions that the response if for
+            Question? question = questions.FirstOrDefault(q => q.QuestionNo == response.QuestionNo);
             if (question != null) {
-                if (question.AcceptableAnswers != null && question.AcceptableAnswers.Contains(response.FillBlankResponse)) {
-                    studentsScores[response.UserId] += 1;
-                } else if (question.MultipleChoiceCorrectAnswers != null) {
-                    var correctResponses = question.MultipleChoiceCorrectAnswers.Intersect(response.MultipleChoiceResponse).ToArray();
-                    if (correctResponses.Length == question.MultipleChoiceCorrectAnswers.Length) {
-                        studentsScores[response.UserId] += 1;
+                // Evaluates if the answer given is correct
+                bool correct = false;
+                if (question.QuestionType == QuestionType.MultipleChoice) {
+                    // If the question is multiple choice, get what answers they selected and what are the correct options
+                    int[] correctChoices = question.MultipleChoiceCorrectAnswers ?? [];
+                    int[] givenChoices = response.MultipleChoiceResponse ?? [];
+
+                    if (question.Multiselect ?? false) {
+                        // If it is a multiselect questions, the given and correct choices must be the same, not necessarily ordered the same
+                        correct = new HashSet<int>(correctChoices).SetEquals(givenChoices);
+                    } else if (givenChoices.Length != 0) {
+                        // Otherwise the first (and hopefully only) choice selcted must be in the set of allowed responses
+                        correct = correctChoices.Contains(givenChoices[0]);
+                    }
+                } else if (question.QuestionType == QuestionType.FillBlank) {
+                    // If the question is fill blank, get the acceptable answers and given answers
+                    string[] acceptableAnswers = question.AcceptableAnswers ?? [];
+                    string givenAnswer = response.FillBlankResponse ?? string.Empty;
+                    if (!(question.CaseSensitive ?? false)) {
+                        // If it is not case sensitive, convert both the acceptable answers and given answer to lowercase
+                        acceptableAnswers = acceptableAnswers
+                            .Select(x => x.ToLower())
+                            .ToArray();
+                        givenAnswer = givenAnswer.ToLower();
                     }
 
+                    // See if the given answer is in the acceptable answers list
+                    correct = acceptableAnswers.Contains(givenAnswer);
+                }
+                
+                if (correct) {
+                    studentsScores[response.UserId] += 1;
                 }
             }
         }
-        return studentsScores.Values.ToList();
+        //Return the set of all the scores
+        return [.. studentsScores.Values];
     }
 
     // Retrieves all quizes from the database

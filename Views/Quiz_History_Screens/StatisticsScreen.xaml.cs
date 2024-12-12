@@ -8,11 +8,8 @@ using Microsoft.Maui.Graphics;
 using System;
 
 public partial class StatisticsScreen : ContentPage {
-
-    public long ActiveQuizId { get; set; }   
     public StatisticsScreen(long activeQuizId) {
         InitializeComponent();
-        ActiveQuizId = activeQuizId;
     }
 
     // Event handler for button click
@@ -23,8 +20,13 @@ public partial class StatisticsScreen : ContentPage {
 }
 
 // This is a canvas that draws the box plot
-public class Canvas : IDrawable {
-    Statistics scoreStats = new Statistics(0);
+public class Boxplot() : IDrawable {
+//public class Boxplot(Statistics stats) : IDrawable {
+
+    //The above line that passed in a Statistics is commented out for the time being because otherwise an error is thrown in the StatisticsScreen.xaml since
+    //Boxplot is called but doesn't pass in the parameter. Since I commented out the parameter I had to add the below line declaring stats so no errors get
+    //throw in the Draw method, so also delete that line once the parameter issue is fixed.
+    Statistics stats = new Statistics();
     public void Draw(ICanvas canvas, RectF dirtyRect) {
         canvas.StrokeColor = Colors.DarkBlue;
         canvas.StrokeSize = 2;
@@ -35,23 +37,23 @@ public class Canvas : IDrawable {
         canvas.StrokeColor = Colors.DarkBlue;
 
         // Middle line
-        canvas.DrawLine((float)(scoreStats.GetMin() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2,
-            (float)(scoreStats.GetMax() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2);
+        canvas.DrawLine((float)(stats.GetMin() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2,
+            (float)(stats.GetMax() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2);
 
         // draw Min
-        canvas.DrawLine((float)(scoreStats.GetMin() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 10, (float)(scoreStats.GetMin() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 + 10);
+        canvas.DrawLine((float)(stats.GetMin() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 10, (float)(stats.GetMin() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 + 10);
 
 
         // draw Lower Quartile and upper quartile
         canvas.FillColor = Color.FromRgba("#A5ACE1FF");
-        canvas.FillRoundedRectangle((float)(scoreStats.GetLowerQuartile() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 25, (float)((scoreStats.GetUpperQuartile() - scoreStats.GetLowerQuartile()) / 100.0 * dirtyRect.Width), 50, 10);
-        canvas.DrawRoundedRectangle((float)(scoreStats.GetLowerQuartile() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 25, (float)((scoreStats.GetUpperQuartile() - scoreStats.GetLowerQuartile()) / 100.0 * dirtyRect.Width), 50, 10);
+        canvas.FillRoundedRectangle((float)(stats.GetLowerQuartile() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 25, (float)((stats.GetUpperQuartile() - stats.GetLowerQuartile()) / 100.0 * dirtyRect.Width), 50, 10);
+        canvas.DrawRoundedRectangle((float)(stats.GetLowerQuartile() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 25, (float)((stats.GetUpperQuartile() - stats.GetLowerQuartile()) / 100.0 * dirtyRect.Width), 50, 10);
 
         // draw Median line
-        canvas.DrawLine((float)(scoreStats.GetMedian() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 25, (float)(scoreStats.GetMedian() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 + 25);
+        canvas.DrawLine((float)(stats.GetMedian() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 25, (float)(stats.GetMedian() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 + 25);
 
         // draw Max line
-        canvas.DrawLine((float)(scoreStats.GetMax() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 10, (float)(scoreStats.GetMax() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 + 10);
+        canvas.DrawLine((float)(stats.GetMax() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 - 10, (float)(stats.GetMax() / 100.0 * dirtyRect.Width), dirtyRect.Height / 2 + 10);
     }
 }
 
