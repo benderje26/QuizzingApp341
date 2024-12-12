@@ -110,7 +110,9 @@ public interface IDatabase {
     /// </summary>
     /// <returns>The IDs of the active quizzes</returns>
     /// 
-    Task<ActiveQuiz?> ActivateQuiz(Quiz quiz);
+
+    Task<ActiveQuiz?> ActivateQuiz(Quiz quiz, String accessCode);
+    Task<ActiveQuiz?> UpdateActiveQuiz(ActiveQuiz activeQuiz);
     Task<bool> ActivateQuestion(ActiveQuestion questions);
     Task<List<long>> GetActiveQuizIdsByUserId();
 

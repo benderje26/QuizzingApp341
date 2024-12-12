@@ -308,15 +308,19 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             return false;
         }
         try {
-            // Move QuizManager.Quiz to active quizzes table
-            ActiveQuiz? result = await database.ActivateQuiz(QuizManager.Quiz);
+
+            ActiveQuiz? result = null;
+            int maxRetries = 5;
+            for (int i = 0; i < maxRetries && result == null; i++) {
+                result = await database.ActivateQuiz(QuizManager.Quiz, GenerateRandomAccessCode(6));
+            }
 
             if (result == null) {
                 return false;
             }
 
-            // Set access code for quiz manager
             QuizManager.ActiveQuiz = result;
+            QuizManager.CurrentQuestion = QuizManager.Questions.FirstOrDefault(q => q.QuestionNo == QuizManager.ActiveQuiz.CurrentQuestionNo);
 
             List<Task<bool>> tasks = [];
 
@@ -327,6 +331,33 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
             await Task.WhenAll(tasks);
         } catch {
+            return false;
+        }
+        return true;
+    }
+
+    private static string GenerateRandomAccessCode(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+
+    public async Task<bool> IncrementCurrentQuestion() {
+        var currentQuestionNo = QuizManager.ActiveQuiz.CurrentQuestionNo;
+        try {
+            // update the active quiz
+            QuizManager.ActiveQuiz.CurrentQuestionNo += 1;
+            var result = await database.UpdateActiveQuiz(QuizManager.ActiveQuiz);
+            if (result == null) {
+                QuizManager.ActiveQuiz.CurrentQuestionNo = currentQuestionNo;
+                return false;
+            }
+            QuizManager.CurrentQuestion = QuizManager.Questions.FirstOrDefault(q => q.QuestionNo == QuizManager.ActiveQuiz.CurrentQuestionNo);
+        } catch {
+            QuizManager.ActiveQuiz.CurrentQuestionNo = currentQuestionNo;
             return false;
         }
         return true;

@@ -82,7 +82,9 @@ public partial class EditQuiz : ContentPage {
 
         // If start quiz ---> start Quiz
         if (startQuiz) {
+            // Set the current_question_no in the active quiz to 0
             // Display the page to start the quiz
+            await Navigation.PushAsync(new ActivatorQuiz());
         }
     }
 

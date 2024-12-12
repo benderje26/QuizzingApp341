@@ -370,32 +370,31 @@ public class SupabaseDatabase : IDatabase {
 
     #region Active Quizzes
 
-    public async Task<ActiveQuiz?> ActivateQuiz(Quiz quiz) {
-        ActiveQuiz activeQuiz = new() {
-            QuizId = quiz.Id,
-            IsActive = false,
-            CurrentQuestionNo = 0,
-            Activator = UserId
-        };
+
+    public async Task<ActiveQuiz?> ActivateQuiz(Quiz quiz, String accessCode) {
+        ActiveQuiz activeQuiz = new ActiveQuiz();
+        activeQuiz.QuizId = quiz.Id;
+        activeQuiz.IsActive = true;
+        activeQuiz.CurrentQuestionNo = 1;
+        activeQuiz.Activator = UserId;
+        activeQuiz.AccessCode = accessCode;
         try {
             var result = await Client
-                .From<ActiveQuiz>()
-                .Insert(activeQuiz);
+            .From<ActiveQuiz>()
+            .Insert(activeQuiz);
+            // var response = await Client.Rpc("activate_quiz", activeQuiz);
+            return result.Model;
+        } catch {
+            return null;
+        }
+    }
 
-            if (result.Model == null) {
-                return null; // TODO test if the insert returns the active quiz correctly
-            }
+    public async Task<ActiveQuiz?> UpdateActiveQuiz(ActiveQuiz activeQuiz) {
+        try {
+            var result = await Client
+            .From<ActiveQuiz>()
+            .Update(activeQuiz);
 
-            activeQuiz = result.Model;
-
-            var response = await Client.Rpc("activate_quiz", activeQuiz);
-
-            if (response.Content != null) {
-                Console.WriteLine(response.Content); // TODO test what is this?
-            }
-            
-            // TODO Generate random access code...
-            // return result.Model?.AccessCode;
             return result.Model;
         } catch {
             return null;
