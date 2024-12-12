@@ -34,12 +34,16 @@ public partial class Search : ContentPage {
                     if (userData != null && !string.IsNullOrWhiteSpace(userData.Username)) {
                         creatorName = userData.Username;
                     }
-                    if (favQuizzes.Any(f => f.Id == quiz.Id)) {
-                        _allQuizzes.Add(new QuizSearch(quiz.Id, quiz.Title, $"Created by {creatorName}", true));
-                    } else {
-                        _allQuizzes.Add(new QuizSearch(quiz.Id, quiz.Title, $"Created by {creatorName}", false));
-                    }
+                    bool isFavorite = favQuizzes.Any(f => f.Id == quiz.Id);
+                    _allQuizzes.Add(new QuizSearch(quiz.Id, quiz.Title, $"Created by {creatorName}", isFavorite));
                 }
+
+                // Sort quizzes so favorites are first
+                var sortedQuizzes = new ObservableCollection<QuizSearch>(
+                    _allQuizzes.OrderByDescending(q => q.Favorite)
+                );
+
+                _allQuizzes = sortedQuizzes; // Update the internal list
                 FilterQuizzes(string.Empty); // Load all initially
             }
         } catch (Exception ex) {
