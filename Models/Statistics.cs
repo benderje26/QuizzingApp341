@@ -10,14 +10,14 @@ public class Statistics() {
     private List<int> Scores {
         get => _scores;
     }
-    private List<int> _scores;
+    private List<int> _scores = [0];
 
     /// <summary>
     /// Sets the current session, or logs out.
     /// </summary>
     /// <param name="activeQuizId">The new current session or null if logging out</param>
     public async Task SetScores(long activeQuizId) {
-        _scores = await MauiProgram.BusinessLogic.GetQuizScoresForActiveQuizId(activeQuizId); ;
+        _scores = await MauiProgram.BusinessLogic.GetQuizScoresForActiveQuizId(activeQuizId) ?? [0];
     }
 
     // Get the min

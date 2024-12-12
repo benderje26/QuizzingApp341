@@ -1,82 +1,185 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:QuizzingApp341.Views"
+             xmlns:model="clr-namespace:QuizzingApp341.Models"
+             xmlns:converters="clr-namespace:QuizzingApp341.Resources.Converters"
              x:Class="QuizzingApp341.Views.QuizHistory"
+             x:DataType="local:QuizHistory"
              BackgroundColor="#f5f5f5"
              Padding="7">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BooleanColorConverter x:Key="BooleanColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-    <StackLayout Padding="10" Spacing="20">
 
-        <!-- CollectionView for Quizzes -->
-        <CollectionView x:Name="QuizzesCollectionView"
-                        ItemsSource="{Binding Quizzes}"
-                        SelectionMode="None">
+    <ScrollView>
+        <StackLayout Padding="10" Spacing="20">
+            <Frame CornerRadius="25" HeightRequest="50" Padding="2" HorizontalOptions="Center">
+                <Grid ColumnDefinitions="Auto,Auto">
+                    <Button
+                        Clicked="OnTakenButtonClicked"
+                        Grid.Column="0"
+                        CornerRadius="21"
+                        Text="Taken"
+                        FontSize="18"
+                        BackgroundColor="{Binding TakenSelected,
+                            Converter={StaticResource BooleanColorConverter},
+                            ConverterParameter='#54D,#0000'}"
+                        TextColor="{Binding TakenSelected,
+                            Converter={StaticResource BooleanColorConverter},
+                            ConverterParameter='#FFF,#000'}"/>
+                    <Button
+                        Clicked="OnActivatedButtonClicked"
+                        Grid.Column="1"
+                        CornerRadius="21"
+                        Text="Activated"
+                        FontSize="18"
+                        BackgroundColor="{Binding ActivatedSelected,
+                            Converter={StaticResource BooleanColorConverter},
+                            ConverterParameter='#54D,#0000'}"
+                        TextColor="{Binding ActivatedSelected,
+                            Converter={StaticResource BooleanColorConverter},
+                            ConverterParameter='#FFF,#000'}"/>
+                </Grid>
+            </Frame>
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Padding="15"
-                           CornerRadius="10"
-                           HasShadow="True"
-                           BackgroundColor="White"
-                           Margin="0,10">
-                        <StackLayout Spacing="8">
+            <!-- CollectionView for Quizzes the User Took -->
+            <CollectionView ItemsSource="{Binding BusinessLogic.UserInfo.ParticipatedQuizzes}"
+                            SelectionMode="None"
+                            IsVisible="{Binding TakenSelected}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Participant">
+                        <Frame Padding="15"
+                               CornerRadius="10"
+                               HasShadow="True"
+                               BackgroundColor="White"
+                               Margin="0,10">
+                            <StackLayout Spacing="8">
 
-                            <!-- Quiz Title -->
-                            <Label Text="{Binding QuizTitle}"
-                                   FontAttributes="Bold"
-                                   FontSize="22"
-                                   TextColor="DarkCyan"
-                                   LineBreakMode="TailTruncation"
-                                   HorizontalOptions="Start" />
+                                <!-- Quiz Title -->
+                                <Label Text="{Binding ActiveQuiz.QuizTitle}"
+                                       FontAttributes="Bold"
+                                       FontSize="22"
+                                       TextColor="DarkCyan"
+                                       LineBreakMode="TailTruncation"
+                                       HorizontalOptions="Start"/>
 
-                            <!-- Start Time -->
-                            <Label Text="{Binding StartTime, StringFormat='{0:MMMM d, yyyy} at {0:t}'}"
-                                   FontSize="14"
-                                   TextColor="black" />
+                                <!-- Start Time -->
+                                <Label Text="{Binding ActiveQuiz.StartTime, StringFormat='{0:MMMM d, yyyy} at {0:t}'}"
+                                       FontSize="14"
+                                       TextColor="Black"/>
 
-                            <!-- Buttons -->
-                            <HorizontalStackLayout Spacing="15"
-                                                   HorizontalOptions="Fill"
-                                                   VerticalOptions="Center">
+                                <!-- Buttons only visible if the user is the owner -->
+                                <HorizontalStackLayout Spacing="15"
+                                                       HorizontalOptions="Fill"
+                                                       IsVisible="{Binding IsUserOwner}">
+                                    <!-- Study Button -->
+                                    <Button Text="Study"
+                                            BackgroundColor="DarkGreen"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            Padding="10"
+                                            WidthRequest="100"
+                                            HorizontalOptions="Start"
+                                            Clicked="OnStudyButtonClicked"/>
 
-                                <!-- Study Button -->
-                                <Button Text="Study"
-                                        BackgroundColor="DarkGreen"
-                                        TextColor="White"
-                                        FontAttributes="Bold"
-                                        Padding="10"
-                                        WidthRequest="100"
-                                        HorizontalOptions="Start"
-                                        Clicked="OnStudyButtonClicked"
-                                        CommandParameter="{Binding ActiveQuizId}" />
+                                    <!-- View Stats Button -->
+                                    <Button Text="View Stats"
+                                            BackgroundColor="DarkGoldenrod"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            Padding="10"
+                                            WidthRequest="100"
+                                            HorizontalOptions="Center"
+                                            Clicked="OnViewStatsButtonClicked"/>
 
-                                <!-- View Stats Button -->
-                                <Button Text="View Stats"
-                                        BackgroundColor="DarkGoldenrod"
-                                        TextColor="White"
-                                        FontAttributes="Bold"
-                                        Padding="10"
-                                        WidthRequest="100"
-                                        HorizontalOptions="Center"
-                                        Clicked="OnViewStatsButtonClicked"
-                                        CommandParameter="{Binding}" />  
+                                    <!-- Delete Button -->
+                                    <Button Text="Delete"
+                                            BackgroundColor="DarkRed"
+                                            IsEnabled="False"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            Padding="10"
+                                            WidthRequest="100"
+                                            HorizontalOptions="End"
+                                            Clicked="OnDeleteButtonClicked"/>
 
-                                <!-- Delete Button -->
-                                <Button Text="Delete"
-                                        BackgroundColor="DarkRed"
-                                        TextColor="White"
-                                        FontAttributes="Bold"
-                                        Padding="10"
-                                        WidthRequest="100"
-                                        HorizontalOptions="End"
-                                        Clicked="OnDeleteButtonClicked"
-                                        CommandParameter="{Binding ActiveQuizId}" />
+                                </HorizontalStackLayout>
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-                            </HorizontalStackLayout>
-                        </StackLayout>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            <!-- CollectionView for Quizzes the User Activated -->
+            <CollectionView ItemsSource="{Binding BusinessLogic.UserInfo.ActivatedQuizzes}"
+                            SelectionMode="None"
+                            IsVisible="{Binding ActivatedSelected}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:ActiveQuiz">
+                        <Frame Padding="15"
+                               CornerRadius="10"
+                               HasShadow="True"
+                               BackgroundColor="White"
+                               Margin="0,10">
+                            <StackLayout Spacing="8">
 
-    </StackLayout>
+                                <!-- Quiz Title -->
+                                <Label Text="{Binding QuizTitle}"
+                                       FontAttributes="Bold"
+                                       FontSize="22"
+                                       TextColor="DarkCyan"
+                                       LineBreakMode="TailTruncation"
+                                       HorizontalOptions="Start"/>
+
+                                <!-- Start Time -->
+                                <Label Text="{Binding StartTime, StringFormat='{0:MMMM d, yyyy} at {0:t}'}"
+                                       FontSize="14"
+                                       TextColor="Black" />
+
+                                <!-- Buttons only visible if the user is the owner -->
+                                <HorizontalStackLayout Spacing="15"
+                                                       HorizontalOptions="Fill">
+
+                                    <!-- Study Button -->
+                                    <Button Text="Study"
+                                            BackgroundColor="DarkGreen"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            Padding="10"
+                                            WidthRequest="100"
+                                            HorizontalOptions="Start"
+                                            Clicked="OnStudyButtonClicked"/>
+
+                                    <!-- View Stats Button -->
+                                    <Button Text="View Stats"
+                                            BackgroundColor="DarkGoldenrod"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            Padding="10"
+                                            WidthRequest="100"
+                                            HorizontalOptions="Center"
+                                            Clicked="OnViewStatsButtonClicked"/>
+
+                                    <!-- Delete Button -->
+                                    <Button Text="Delete"
+                                            BackgroundColor="DarkRed"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            Padding="10"
+                                            WidthRequest="100"
+                                            HorizontalOptions="End"
+                                            Clicked="OnDeleteButtonClicked"/>
+
+                                </HorizontalStackLayout>
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

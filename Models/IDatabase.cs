@@ -134,12 +134,6 @@ public interface IDatabase {
     UserInfo? GetUserInfo();
 
     /// <summary>
-    /// Get's the current user's active quizzes' IDs.
-    /// </summary>
-    /// <returns>The IDs of the active quizzes</returns>
-    Task<List<long>> GetActiveQuizIdsByUserId();
-
-    /// <summary>
     /// Gets a list of the current user's active quizzes by their IDs.
     /// </summary>
     /// <param name="activeQuizIds">List of active quiz IDs.</param>
@@ -226,12 +220,11 @@ public interface IDatabase {
     Task<bool> UpdateQuiz(Quiz quiz);
 
     /// <summary>
-    /// delete the quiz data from History screen 
+    /// Delete the active quiz data.
     /// </summary>
-    /// <param name="quizTitle"></param>
     /// <returns>
-    /// True if the quizTitlee got deleted otherwise false
+    /// True if it worked
     /// </returns>
-    Task<bool> DeleteQuizFromHistory(long activeQuizId);
+    Task<bool> DeleteQuizFromActivationHistory(long activeQuizId);
 
 }

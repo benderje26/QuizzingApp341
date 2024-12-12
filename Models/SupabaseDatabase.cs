@@ -74,10 +74,16 @@ public class SupabaseDatabase : IDatabase {
     /// </summary>
     private async Task GenerateUserInfo() {
         UserData? data = await GetUserData(UserId);
-        userInfo = new(UserId, User?.Email ?? string.Empty, data?.Username ?? string.Empty, User != null) {
-            CreatedQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetUserCreatedQuizzes(UserId)) ?? []),
-            FavoriteQuizzes = new ObservableCollection<Quiz>((User == null ? null : await GetFavoriteQuizzes()) ?? [])
-        };
+        if (User == null) {
+            userInfo = new(UserId, string.Empty, string.Empty, false);
+        } else {
+            userInfo = new(UserId, User?.Email ?? string.Empty, data?.Username ?? string.Empty, User != null) {
+                CreatedQuizzes = new ObservableCollection<Quiz>(await GetUserCreatedQuizzes(UserId) ?? []),
+                FavoriteQuizzes = new ObservableCollection<Quiz>(await GetFavoriteQuizzes() ?? []),
+                ParticipatedQuizzes = new ObservableCollection<Participant>(await GetUserParticipatedQuizzes(true) ?? []),
+                ActivatedQuizzes = new ObservableCollection<ActiveQuiz>(await GetUserActivatedQuizzes() ?? [])
+            };
+        }
     }
 
     public async Task SkipLogin() {
@@ -536,43 +542,67 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
-    // Get active_quiz_id by pass in user_id to participants table
-    public async Task<List<long>> GetActiveQuizIdsByUserId() {
+    public async Task<List<Participant>?> GetUserParticipatedQuizzes(bool populateActiveQuizzes) {
+        if (User == null) {
+            return null;
+        }
         try {
-            // Log the userId being passed to the method
-            Console.WriteLine($"Fetching active quiz IDs for user: {UserId}");
-
             // Query the participants table for the provided userId
-            var participants = await Client
-                .From<Participants>()
+            ModeledResponse<Participant> response = await Client
+                .From<Participant>()
                 .Where(p => p.UserId == UserId)
                 .Get();
 
-            Console.WriteLine($"Supabase Response: {participants?.Models?.Count} records returned");
-            Console.WriteLine($"active_quiz_id:{participants?.Models}");
+            List<Participant> participants = response.Models;
+            if (populateActiveQuizzes) {
+                List<long> activeQuizIds = participants.Select(x => x.ActiveQuizId).Distinct().ToList();
+                List<ActiveQuiz> activeQuizzes = await GetActiveQuizzesByActiveQuizIds(activeQuizIds);
 
-            if (participants?.Models == null || !participants.Models.Any()) {
-                Console.WriteLine($"No participants found for user {UserId}");
-                return []; // No active quizzes found for the user
+                Dictionary<long, ActiveQuiz> map = activeQuizzes.ToDictionary(x => x.Id, x => x);
+
+                foreach (Participant participant in participants) {
+                    if (map.TryGetValue(participant.ActiveQuizId, out ActiveQuiz? value)) {
+                        participant.ActiveQuiz = value;
+                        participant.IsUserOwner = value.Activator == UserId;
+                    } else {
+                        participant.IsUserOwner = false;
+                    }
+                }
             }
 
-            // Return the list of ActiveQuizIds
-            return participants.Models.Select(p => p.ActiveQuizId).ToList();
+            // Return the list of Participant objects
+            return participants;
         } catch (Exception ex) {
             Console.WriteLine($"Error fetching active quiz ids for user {UserId}: {ex.Message}");
             return null;
         }
     }
 
+    public async Task<List<ActiveQuiz>?> GetUserActivatedQuizzes() {
+        if (User == null) {
+            return null;
+        }
+        try {
+            ModeledResponse<ActiveQuiz> response = await Client
+                .From<ActiveQuiz>()
+                .Where(x => x.Activator == UserId)
+                .Get();
+
+            return response.Models;
+        } catch (Exception ex) {
+            Console.WriteLine("ERRORRRR:" + ex);
+            return null;
+        }
+    }
+
     public async Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds) {
         try {
-            if (activeQuizIds == null || activeQuizIds.Count == 0) { // if the list is empty no need requesting to db
+            if (activeQuizIds.Count == 0) { // if the list is empty no need requesting to db
                 return [];
             }
             var result = await Client
                 .From<ActiveQuiz>()
-                .Where(x => x.Activator == UserId) // only activated by current user
-                .Filter(x => x.Id, Supabase.Postgrest.Constants.Operator.In, activeQuizIds) // they are in the list of the IDs
+                .Filter(x => x.Id, Constants.Operator.In, activeQuizIds) // they are in the list of the IDs
                 .Get();
 
             return result.Models;
@@ -601,8 +631,6 @@ public class SupabaseDatabase : IDatabase {
             return false;
         }
     }
-
-
 
     public async Task<bool> SubmitFillBlankQuestionAnswer(ActiveQuestion question, string response) {
         try {
@@ -714,21 +742,20 @@ public class SupabaseDatabase : IDatabase {
 
     }
 
-    public async Task<bool> DeleteQuizFromHistory(long activeQuizId) {
+    public async Task<bool> DeleteQuizFromActivationHistory(long activeQuizId) {
         try {
-            Console.WriteLine($"Attempting to delete quiz: {activeQuizId}");
-            Console.WriteLine($"Using UserId: {UserId}");
-
             await Client
-                .From<Participants>()
-                .Where(x => x.UserId == UserId)
-                .Where(x => x.ActiveQuizId == activeQuizId)
+                .From<ActiveQuiz>()
+                .Where(x => x.Activator == UserId)
+                .Where(x => x.Id == activeQuizId)
                 .Delete();
 
-            Console.WriteLine($"Successfully deleted quiz: {activeQuizId}");
+            if (userInfo?.ActivatedQuizzes.FirstOrDefault(x => x.Id == activeQuizId) is ActiveQuiz quiz) {
+                userInfo?.ActivatedQuizzes.Remove(quiz);
+            }
+
             return true;
         } catch (Exception ex) {
-
             Console.WriteLine($"Error while deleting quiz '{activeQuizId}': {ex.Message}\n{ex.StackTrace}");
             return false;
         }

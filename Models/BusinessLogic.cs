@@ -327,29 +327,9 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return null;
     }
 
-    // Get active quiz IDs for a user from participants table
-    // Fetch the active_quiz_ids for a user by querying the participants table.
-    public async Task<List<long>> GetActiveQuizIdsForUser() {
-        try {
-            var activeQuizIds = await database.GetActiveQuizIdsByUserId(); // Get from participants table
-
-            if (activeQuizIds == null || activeQuizIds.Count() == 0) {
-                return [];
-            }
-
-            return activeQuizIds;
-        } catch (Exception ex) {
-            Console.WriteLine($"Error in business logic: {ex.Message}");
-            return null;
-        }
+    public async Task<bool> DeleteQuizFromActivationHistory(long activeQuizId) {
+        return await database.DeleteQuizFromActivationHistory(activeQuizId);
     }
-
-    //Detele quiz by QuizTitle from History Screen
-    public async Task<bool> DeleteQuizFromHistory(long activeQuizId) {
-        return await database.DeleteQuizFromHistory(activeQuizId);
-    }
-
-
 
     // Get quiz IDs from active quiz IDs
     // Fetch the quiz_id for each active_quiz_id.

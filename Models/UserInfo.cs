@@ -10,13 +10,13 @@ public class UserInfo(Guid id, string email, string username, bool isSignedIn) :
     public Guid? Id { get; set; } = id;
     public string Email { get; set; } = email;
     public string Username { get; set; } = username;
-    public bool IsSignedIn { get; private set; } = isSignedIn;
+    public bool IsSignedIn { get; set; } = isSignedIn;
 
-    public ObservableCollection<Quiz>? createdQuizzes;
-    public ObservableCollection<Quiz>? favoriteQuizzes;
-    public ObservableCollection<Quiz>? activatedQuizzes;
-    public ObservableCollection<Quiz>? quizHistory;
-    public ObservableCollection<object>? quizScores;
+    private ObservableCollection<Quiz>? createdQuizzes;
+    private ObservableCollection<Quiz>? favoriteQuizzes;
+    private ObservableCollection<ActiveQuiz>? activatedQuizzes;
+    private ObservableCollection<Participant>? participatedQuizzes;
+    private ObservableCollection<object>? quizScores;
     public ObservableCollection<Quiz> CreatedQuizzes {
         get => createdQuizzes ?? [];
         set {
@@ -31,21 +31,22 @@ public class UserInfo(Guid id, string email, string username, bool isSignedIn) :
             OnPropertyChanged();
         }
     }
-    public ObservableCollection<Quiz> ActivatedQuizzes { 
+    public ObservableCollection<ActiveQuiz> ActivatedQuizzes {
         get => activatedQuizzes ?? [];
         set {
             activatedQuizzes = value;
             OnPropertyChanged();
         }
-     }
-    public ObservableCollection<Quiz> QuizHistory {
-        get => quizHistory ?? [];
+    }
+    
+    public ObservableCollection<Participant> ParticipatedQuizzes {
+        get => participatedQuizzes ?? [];
         set {
-            quizHistory = value;
+            participatedQuizzes = value;
             OnPropertyChanged();
         }
     }
-    public ObservableCollection<Object>? QuizScores {
+    public ObservableCollection<object>? QuizScores {
         get => quizScores;
         set {
             quizScores = value;

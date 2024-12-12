@@ -1,134 +1,96 @@
 namespace QuizzingApp341.Views;
 using QuizzingApp341.Models;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 public partial class QuizHistory : ContentPage {
     private readonly IBusinessLogic _businessLogic;
+    public IBusinessLogic BusinessLogic => _businessLogic;
 
-    public ObservableCollection<History> Quizzes { get; set; }
+    public bool TakenSelected {
+        get => takenSelected;
+        set {
+            if (takenSelected != value) {
+                takenSelected = value;
+                OnPropertyChanged(nameof(TakenSelected));
+                OnPropertyChanged(nameof(ActivatedSelected));
+            }
+        }
+    }
+    private bool takenSelected;
+    public bool ActivatedSelected {
+        get => !TakenSelected;
+        set => TakenSelected = !value;
+    }
 
     public QuizHistory() {
+        _businessLogic = MauiProgram.BusinessLogic;
         InitializeComponent();
-        Quizzes = new ObservableCollection<History>();
         BindingContext = this;
-
-        LoadActiveQuizIdFromParticipants();
     }
 
-    private async void LoadActiveQuizIdFromParticipants() {
-        try {
-            var activeQuizIds = await MauiProgram.BusinessLogic.GetActiveQuizIdsForUser();
-            await LoadQuizIdFromActiveQuiz(activeQuizIds);
-        } catch (Exception ex) {
-            await DisplayAlert("Error", $"Failed to load active_quiz_id: {ex.Message}", "OK");
-        }
+    private void OnTakenButtonClicked(object sender, EventArgs e) {
+        TakenSelected = true;
     }
 
-    private async Task LoadQuizIdFromActiveQuiz(List<long> activeQuizIds) {
-        try {
-            // Fetch QuizId and StartTime
-            List<ActiveQuiz> quizIdAndTime = await MauiProgram.BusinessLogic.GetActiveQuizzesByActiveQuizIds(activeQuizIds);
-
-            // Check if data was found
-            if (quizIdAndTime.Count > 0) {
-                // Sort the quizzes by StartTime from most recent to oldest
-                var sortedQuizList = quizIdAndTime.OrderByDescending(q => q.StartTime ?? DateTime.MinValue).ToList();
-
-                Quizzes.Clear();
-
-                foreach (ActiveQuiz activeQuiz in sortedQuizList) {
-                    // Create a new History object for each quiz - storing QuizId and StartTime and quizTitle
-                    Quizzes.Add(new History(activeQuiz.QuizId, activeQuiz.StartTime, activeQuiz.QuizTitle ?? string.Empty, activeQuiz.Id));
-                }
-            } else {
-                await DisplayAlert("No Quizzes", "No quizzes found for the active quizzes.", "OK");
-            }
-
-        } catch (Exception ex) {
-            await DisplayAlert("Error", $"Failed to load QuizId: {ex.Message}", "OK");
-        }
+    private void OnActivatedButtonClicked(object sender, EventArgs e) {
+        ActivatedSelected = true;
     }
 
     private async void OnStudyButtonClicked(object sender, EventArgs e) {
-        var button = sender as Button;
-        var activeQuizId = button?.CommandParameter as long?;
+        if (sender is Button button) {
+            ActiveQuiz? quiz = null;
+            if (button.BindingContext is Models.Participant p && p.IsUserOwner) {
+                quiz = p.ActiveQuiz;
+            } else if (button.BindingContext is ActiveQuiz aq) {
+                quiz = aq;
+            }
 
-        if (activeQuizId.HasValue) {
-            var quizTitle = Quizzes.FirstOrDefault(q => q.ActiveQuizId == activeQuizId.Value)?.QuizTitle;
-            await DisplayAlert("Study", $"Start studying {quizTitle}?", "OK");
+            if (quiz != null) {
+                // Navigate to study page
+            }
         }
     }
 
-
     private async void OnViewStatsButtonClicked(object sender, EventArgs e) {
-        var button = sender as Button;
-        // Retrieve the CommandParameter
-        var historyItem = button?.CommandParameter as History;
+        if (sender is Button button) {
+            ActiveQuiz? quiz = null;
+            if (button.BindingContext is Models.Participant p && p.IsUserOwner) {
+                quiz = p.ActiveQuiz;
+            } else if (button.BindingContext is ActiveQuiz aq) {
+                quiz = aq;
+            }
 
-        // Check if the historyItem is not null
-        if (historyItem != null) {
-            // Display an alert to the user to confirm that they want to view the quiz statistics
-            await DisplayAlert("View", $"Show Quiz {historyItem.QuizTitle} statistics?", "OK");
-
-            Console.WriteLine($"View Stats button clicked for quiz: {historyItem.QuizTitle}");
-
-            // Create a new StatisticsScreen instance (this is your destination page)
-            var statisticsScreen = new StatisticsScreen();
-
-            // pass the quiz title and active quiz ID
-            statisticsScreen.BindingContext = new { QuizTitle = historyItem.QuizTitle, ActiveQuizId = historyItem.ActiveQuizId };
-
-            // Navigate to the StatisticsScreen page
-            await Navigation.PushAsync(statisticsScreen);
+            if (quiz != null) {
+                // Create a new StatisticsScreen instance and push it on the stack
+                await Navigation.PushAsync(new StatisticsScreen(quiz.Id));
+            }
         }
     }
 
 
     private async void OnDeleteButtonClicked(object sender, EventArgs e) {
-        var button = sender as Button;
-        var activeQuizId = button?.CommandParameter as long?;
-
-        if (activeQuizId.HasValue) {
-            bool success = await DeleteQuizFromHistory(activeQuizId.Value);
-
-            if (success) {
-                //remove the quiz from the Quizzes collection 
-                Quizzes.Remove(Quizzes.FirstOrDefault(q => q.ActiveQuizId == activeQuizId.Value));
-                await DisplayAlert("Deleted", $"Quiz '{activeQuizId}' has been deleted.", "OK");
-            } else {
-                await DisplayAlert("Error", $"Failed to delete quiz '{activeQuizId}'.", "OK");
+        if (sender is Button button) {
+            ActiveQuiz? quiz = null;
+            if (button.BindingContext is Models.Participant p) {
+                await DisplayAlert("Sorry", "You cannot delete your participant record.", "OK");
+            } else if (button.BindingContext is ActiveQuiz aq) {
+                quiz = aq;
             }
-        } else {
-            await DisplayAlert("Error", "Invalid Quiz ID.", "OK");
+
+            if (quiz != null) {
+                // Double check they want to delete it
+                bool shouldDelete = await DisplayAlert("Are you sure?", "Are you sure you want to delete this quiz record? This cannot be undone.", "YES", "NO");
+                
+                if (shouldDelete) {
+                    // Attempt to delete it
+                    bool quizDeleted = await MauiProgram.BusinessLogic.DeleteQuizFromActivationHistory(quiz.Id);
+                    if (!quizDeleted) {
+                        await DisplayAlert("Uh Oh!", "Could not delete the quiz record. Something went wrong.", "OK");
+                    }
+                }
+            }
         }
-    }
-
-    public async Task<bool> DeleteQuizFromHistory(long activeQuizId) {
-        try {
-            Console.WriteLine($"Attempting to delete quiz: {activeQuizId}");
-
-            bool quizDeleted = await MauiProgram.BusinessLogic.DeleteQuizFromHistory(activeQuizId);
-
-            return quizDeleted;
-        } catch (Exception ex) {
-            Console.WriteLine($"Error while deleting quiz '{activeQuizId}': {ex.Message}\n{ex.StackTrace}");
-            return false;
-        }
-    }
-
-
-
-    /// <summary>
-    /// History class to store quiz information
-    /// </summary>
-    public class History(long quizId, DateTime? startTime, string quizTitle, long Id) {
-        public DateTime? StartTime { get; set; } = startTime;
-        public long QuizId { get; set; } = quizId;
-        public string QuizTitle { get; set; } = quizTitle;
-
-        public long ActiveQuizId { get; set; } = Id; 
     }
 
 }

@@ -135,13 +135,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// </summary>
     /// <param name="activeQuizIds">List of active quiz IDs</param>
     /// <returns>List of quiz IDs if found, otherwise null</returns>
-
     Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds);
-    /// <summary>
-    /// Gets the active quiz IDs for a given user from participants tables
-    /// </summary>
-    /// <returns>List of active quiz IDs</returns>
-    Task<List<long>> GetActiveQuizIdsForUser();
 
     /// <summary>
     /// Gets the current scores of the given active quiz
@@ -213,13 +207,12 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     public void RefreshQuestionNums();
 
     /// <summary>
-    /// delete the quiz data from History screen by quiz_Id
+    /// Deletes the quiz history data.
     /// </summary>
-    /// <param name="activeQuizId"></param>
     /// <returns>
-    /// True if the quizTitlee got deleted otherwise false
+    /// True if it worked
     /// </returns>
-    Task<bool> DeleteQuizFromHistory(long activeQuizId);
+    Task<bool> DeleteQuizFromActivationHistory(long activeQuizId);
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);
