@@ -73,7 +73,7 @@
 
                                 <!-- Buttons only visible if the user is the owner -->
                                 <HorizontalStackLayout Spacing="15"
-                                                       HorizontalOptions="Fill"
+                                                       HorizontalOptions="CenterAndExpand"
                                                        IsVisible="{Binding IsUserOwner}">
                                     <!-- Study Button -->
                                     <Button Text="Study"
@@ -81,7 +81,6 @@
                                             TextColor="White"
                                             FontAttributes="Bold"
                                             Padding="10"
-                                            WidthRequest="100"
                                             HorizontalOptions="Start"
                                             Clicked="OnStudyButtonClicked"/>
 
@@ -91,7 +90,6 @@
                                             TextColor="White"
                                             FontAttributes="Bold"
                                             Padding="10"
-                                            WidthRequest="100"
                                             HorizontalOptions="Center"
                                             Clicked="OnViewStatsButtonClicked"/>
 
@@ -102,7 +100,6 @@
                                             TextColor="White"
                                             FontAttributes="Bold"
                                             Padding="10"
-                                            WidthRequest="100"
                                             HorizontalOptions="End"
                                             Clicked="OnDeleteButtonClicked"/>
 

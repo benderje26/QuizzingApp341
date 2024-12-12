@@ -76,8 +76,8 @@
 
             <!-- Add Quiz Button in the bottom right corner -->
             <ImageButton Source="add_plus_button.png"
-                         WidthRequest="20"
-                         HeightRequest="20"
+                         WidthRequest="40"
+                         HeightRequest="40"
                          AbsoluteLayout.LayoutBounds="1,1"
                          AbsoluteLayout.LayoutFlags="PositionProportional"
                          Margin="0,0,10,10"

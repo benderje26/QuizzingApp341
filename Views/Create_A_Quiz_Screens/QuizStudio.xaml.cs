@@ -13,21 +13,21 @@ public partial class QuizStudio : ContentPage {
         BindingContext = MauiProgram.BusinessLogic;
     }
     private async void EditQuiz(Quiz quiz) {
-        QuizManager quizManager = new QuizManager(quiz);
+        QuizManager quizManager = new(quiz);
         await quizManager.GetQuestions();
         MauiProgram.BusinessLogic.QuizManager = quizManager;
-
-        await Navigation.PushAsync(new EditQuiz(quizManager));
+        await Navigation.PushAsync(new EditQuiz());
     }
 
 
     private async void OnCreateNewQuizButtonClicked(object sender, EventArgs e) {
-        Quiz newQuiz = new Quiz();
-        newQuiz.Title = "New Quiz";
-        QuizManager quizManager = new QuizManager(newQuiz);
+        Quiz newQuiz = new() {
+            Title = "New Quiz"
+        };
+        QuizManager quizManager = new(newQuiz);
         MauiProgram.BusinessLogic.QuizManager = quizManager;
-        await MauiProgram.BusinessLogic.AddQuiz(quizManager.Quiz);
-        await Navigation.PushAsync(new EditQuiz(quizManager));
+        await MauiProgram.BusinessLogic.AddQuiz(newQuiz);
+        await Navigation.PushAsync(new EditQuiz());
     }
 
 }

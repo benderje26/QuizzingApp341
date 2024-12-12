@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.ActivatorQuiz"
+             xmlns:local="clr-namespace:QuizzingApp341.Views"
              Padding="7">
 
     <!-- Define a Grid with two rows -->
@@ -9,18 +10,18 @@
         <!-- Scrollable content goes in the first row -->
         <ScrollView x:Name="scrollView" Grid.Row="0">
             <StackLayout x:Name="question" Padding="10" Spacing="20">
-                <Label Text="How many CS students does it take to screw in a lightbulb?" 
+                <Label Text="{Binding QuizManager.CurrentQuestion.QuestionText}" 
                        FontSize="24"
                        HorizontalOptions="Center"
                        TextColor="#11017a" />
 
                 <!-- RadioButton Group for Multiple Choice -->
-                <StackLayout>
+                <!-- <StackLayout>
                     <RadioButton Content="1" GroupName="question1" />
                     <RadioButton Content="20" GroupName="question1" />
                     <RadioButton Content="15" GroupName="question1" />
                     <RadioButton Content="25" GroupName="question1" />
-                </StackLayout>
+                </StackLayout> -->
             </StackLayout>
         </ScrollView>
 

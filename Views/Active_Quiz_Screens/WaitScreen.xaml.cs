@@ -6,4 +6,17 @@ public partial class WaitScreen : ContentPage {
         BindingContext = this;
         InitializeComponent();
     }
+
+    protected override bool OnBackButtonPressed() {
+        // Leave the quiz (you can still get back in by re-entering the code)
+        MauiProgram.BusinessLogic.LeaveActiveQuiz();
+
+        if (base.OnBackButtonPressed()) {
+            Navigation.PopToRootAsync();
+
+            return true;
+        }
+
+        return false;
+    }
 }
