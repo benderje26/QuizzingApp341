@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuizzingApp341.Views.CreateFillBlank"
-             Title="Edit Question">
+             Title="{Binding ScreenTitle}">
     <ScrollView HorizontalOptions="Fill">
         <StackLayout HorizontalOptions="Fill" Padding="20">
             <Label Text="Question:"
@@ -14,28 +14,20 @@
                    Margin="0,30,0,15"
                    Padding="10"
                    IsVisible="{Binding NoQuestionPresent}"/>
-              <VerticalStackLayout Padding="10">
-                     <Label
-                            VerticalOptions="Start"
-                            FontSize="20" 
-                            TextColor="DarkBlue"
-                            IsVisible="{Binding QuestionPresent}">
-                            <Label.FormattedText>
-                                   <FormattedString>
-                                          <Span Text ="Question: " FontAttributes="Bold"></Span>
-                                          <Span Text ="{Binding QuestionText}"></Span>
-                                   </FormattedString>
-                            </Label.FormattedText>
-                     </Label>
-                     
-              <Label Text="Please make your changes in the box below if you would like to change your current question:"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Start"
-                   FontSize="15" 
-                   TextColor="DarkBlue"
-
-                   IsVisible="{Binding QuestionPresent}"/>
-              </VerticalStackLayout>
+            <VerticalStackLayout Padding="10">
+                <Label
+                    VerticalOptions="Start"
+                    FontSize="20" 
+                    TextColor="DarkBlue"
+                    IsVisible="{Binding QuestionPresent}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Question: " FontAttributes="Bold"/>
+                            <Span Text="{Binding QuestionText}"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
 
             <Frame BorderColor="Black"
                    CornerRadius="5"
@@ -43,7 +35,7 @@
                    Margin="0,10"
                    HorizontalOptions="Center">
                 <Editor Placeholder="Type your question here..."
-                            x:Name="QuestionFillBlank"
+                        x:Name="questionName"
                         HeightRequest="200"
                         WidthRequest="300"
                         FontSize="20"
@@ -59,26 +51,20 @@
                    Margin="0,30,0,15"
                    Padding="10"
                    IsVisible="{Binding NoQuestionPresent}"/>
-              <VerticalStackLayout Padding="10">
-                     <Label
-                            VerticalOptions="Start"
-                            FontSize="20" 
-                            TextColor="DarkBlue"
-                            IsVisible="{Binding AnswerPresent}">
-                            <Label.FormattedText>
-                                   <FormattedString>
-                                          <Span Text ="Acceptable Answers: " FontAttributes="Bold"></Span>
-                                          <Span Text ="{Binding Answers}"></Span>
-                                   </FormattedString>
-                            </Label.FormattedText>
-                     </Label>
-              <Label Text="Please make your changes in the box below if you would like to change your answers (separate each acceptable answer with a comma):"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Start"
-                   FontSize="15" 
-                   TextColor="DarkBlue"
-                   IsVisible="{Binding AnswerPresent}"/>
-              </VerticalStackLayout>
+            <VerticalStackLayout Padding="10">
+                <Label
+                    VerticalOptions="Start"
+                    FontSize="20" 
+                    TextColor="DarkBlue"
+                    IsVisible="{Binding AnswerPresent}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Acceptable Answers: " FontAttributes="Bold"/>
+                            <Span Text="{Binding Answers}"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
               
 
             <Frame BorderColor="Black"
@@ -90,10 +76,19 @@
                         HeightRequest="200"
                         WidthRequest="300"
                         FontSize="20"
-                        x:Name="AnswerFillBlank"
+                        x:Name="answerText"
                         Text="{Binding Answers}"/>
             </Frame>
 
+            <HorizontalStackLayout>
+                <Label Text="Case Sensitive:"
+                       FontSize="18"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Center"
+                       Margin="0,0,10,0"/>
+                <Switch IsToggled="{Binding CaseSensitive, Mode=TwoWay}"/>
+            </HorizontalStackLayout>
+            
             <!-- Save Button -->
             <Button Text="Save"
                 HorizontalOptions="Center"
@@ -101,14 +96,13 @@
                 Clicked="OnSaveClicked"
                 WidthRequest="200"/>
 
-              <StackLayout Padding="20">
+            <StackLayout Padding="20">
                 <Button
-                Text="Delete Question"
-                BackgroundColor="Red"
-                Clicked="OnDeleteQuestionClicked"
-                IsVisible="{Binding IsEditQuestion}"
-                WidthRequest="200"
-                ></Button>
+                    Text="Delete Question"
+                    BackgroundColor="Red"
+                    Clicked="OnDeleteQuestionClicked"
+                    IsVisible="{Binding IsEditQuestion}"
+                    WidthRequest="200"/>
             </StackLayout>
         </StackLayout>
     </ScrollView>
