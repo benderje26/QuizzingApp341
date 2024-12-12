@@ -111,6 +111,8 @@ public interface IDatabase {
     /// <returns>The IDs of the active quizzes</returns>
     /// 
 
+
+    Task<bool> DeactivateQuestions(long id);
     Task<ActiveQuiz?> ActivateQuiz(Quiz quiz, String accessCode);
     Task<ActiveQuiz?> UpdateActiveQuiz(ActiveQuiz activeQuiz);
     Task<bool> ActivateQuestion(ActiveQuestion questions);

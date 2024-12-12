@@ -14,6 +14,7 @@ public partial class ActivatorQuiz : ContentPage {
         await MauiProgram.BusinessLogic.IncrementCurrentQuestion();
         if (MauiProgram.BusinessLogic.QuizManager.CurrentQuestion == null) {
             // deactivate the quiz
+            await MauiProgram.BusinessLogic.DeactivateQuiz();
             // pop off back to the edit quiz screen
             await Navigation.PopAsync();
         }

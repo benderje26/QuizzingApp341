@@ -85,6 +85,8 @@ public partial class EditQuiz : ContentPage {
             // Set the current_question_no in the active quiz to 0
             // Display the page to start the quiz
             await Navigation.PushAsync(new ActivatorQuiz());
+        } else {
+            await MauiProgram.BusinessLogic.DeactivateQuiz();
         }
     }
 

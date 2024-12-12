@@ -303,6 +303,34 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
 
     #region Active Quizzes
 
+    public async Task<bool> DeactivateQuiz() {
+        if (QuizManager?.ActiveQuiz == null) {
+            return false;
+        }
+        var oldActiveQuiz = QuizManager.ActiveQuiz;
+
+        try {
+            // Deactivate the active quiz
+            QuizManager.ActiveQuiz.IsActive = false;
+            QuizManager.ActiveQuiz.AccessCode = null;
+            QuizManager.ActiveQuiz.CurrentQuestionNo = null;
+            QuizManager.ActiveQuiz.EndTime = DateTime.Now;
+            var result = await database.UpdateActiveQuiz(QuizManager.ActiveQuiz);
+            if (result == null) {
+                QuizManager.ActiveQuiz = oldActiveQuiz;
+                return false;
+            }
+            QuizManager.ActiveQuiz = null;
+            QuizManager.CurrentQuestion = null;
+            // remove all the questions from the active questions table
+            await database.DeactivateQuestions(oldActiveQuiz.Id);
+        } catch {
+            QuizManager.ActiveQuiz = oldActiveQuiz;
+            return false;
+        }
+        return true;
+    }
+
     public async Task<bool> ActivateQuiz() {
         if (QuizManager?.Quiz == null) {
             return false;
@@ -336,8 +364,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return true;
     }
 
-    private static string GenerateRandomAccessCode(int length)
-    {
+    private static string GenerateRandomAccessCode(int length) {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
 

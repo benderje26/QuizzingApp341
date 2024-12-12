@@ -370,9 +370,22 @@ public class SupabaseDatabase : IDatabase {
 
     #region Active Quizzes
 
+    public async Task<bool> DeactivateQuestions(long id) {
+        try {
+            await Client
+            .From<ActiveQuestion>()
+            .Where(q => q.ActiveQuizId == id)
+            .Delete();
+        } catch {
+            return false;
+        }
+        return true;
+    }
+
 
     public async Task<ActiveQuiz?> ActivateQuiz(Quiz quiz, String accessCode) {
         ActiveQuiz activeQuiz = new ActiveQuiz();
+        activeQuiz.StartTime = DateTime.Now;
         activeQuiz.QuizId = quiz.Id;
         activeQuiz.IsActive = true;
         activeQuiz.CurrentQuestionNo = 1;
