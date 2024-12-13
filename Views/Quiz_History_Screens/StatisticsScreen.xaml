@@ -23,32 +23,13 @@ Statistics screen -->
 
                 <!-- Show user's score if just one user -->
                 <HorizontalStackLayout
-                    IsVisible="{Binding IsStudying}">
+                    IsVisible="{Binding ShowQuizResponse}">
                     <Label Text ="Score: "></Label>
                     <Label Text="{Binding UserScore}"/>
                     <Label Text ="/"></Label>
                     <Label Text="{Binding TotalQuestions}"/>
                 </HorizontalStackLayout>
-                <ScrollView>
-                    <CollectionView ItemsSource="{Binding Answers}">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <StackLayout Padding="10">
-                                    <Label Text="{Binding Question.QuestionText}"
-                                        FontAttributes="Bold"></Label>
-                                    <HorizontalStackLayout>
-                                        <Label Text ="Your Response: "></Label>
-                                        <Label Text="{Binding Response}"></Label>
-                                    </HorizontalStackLayout>
-                                    <HorizontalStackLayout>
-                                        <Label Text ="Correct Answer: "></Label>
-                                        <Label Text ="{Binding CorrectAnswer}"/>
-                                    </HorizontalStackLayout>
-                                </StackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </ScrollView>
+                
                 <!-- SHOW BOX PLOT IF THE QUIZ HAS MULTIPLE PARTICIPANTS -->
                 <!-- Box plot chart -->
                 <GraphicsView 
@@ -109,7 +90,29 @@ Statistics screen -->
                         <Label Text="{Binding QuizStatistics.UpperQuartile}"
                             FontSize="15"/>
                     </StackLayout>
+                    
                 </StackLayout>
+                <ScrollView
+                    IsVisible="{Binding ShowQuizResponse}">
+                    <CollectionView ItemsSource="{Binding Answers}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Padding="10">
+                                    <Label Text="{Binding Question.QuestionText}"
+                                        FontAttributes="Bold"></Label>
+                                    <HorizontalStackLayout>
+                                        <Label Text ="Your Response: "></Label>
+                                        <Label Text="{Binding Response}"></Label>
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout>
+                                        <Label Text ="Correct Answer: "></Label>
+                                        <Label Text ="{Binding CorrectAnswer}"/>
+                                    </HorizontalStackLayout>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
             </StackLayout>
 
         </ScrollView>

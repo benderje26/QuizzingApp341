@@ -4,6 +4,8 @@ Description: This instantiates the statistics screen and draws the box plot
 Name: Pachia
 */
 namespace QuizzingApp341.Views;
+
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Maui.Graphics;
 using QuizzingApp341.Models;
 using System;
@@ -30,6 +32,8 @@ public partial class StatisticsScreen : ContentPage {
 
     public List<Answer>? Answers { get; set; } = [];
 
+    public bool ShowQuizResponse {get; set;}
+
     public StatisticsScreen(Dictionary<string, int> userStats, int totalQuestions, Quiz quiz, List<Response> responses, ObservableCollection<Question> questions, DateTime? date) {
         InitializeComponent();
         Quiz = quiz;
@@ -38,11 +42,13 @@ public partial class StatisticsScreen : ContentPage {
         UserStats = userStats;
         TotalQuestions = totalQuestions;
         IsStudying = userStats.Count() == 1;
+        List<Response> userResponse = responses.Where(r => r.UserId == MauiProgram.BusinessLogic.UserInfo?.Id).ToList();
+        ShowQuizResponse = !userResponse.IsNullOrEmpty();
         ShowBoxPlot = !IsStudying;
         if (IsStudying) {
             UserScore = userStats[userStats.Keys.ToList()[0]];
-            EditResponses(responses);
         }
+        EditResponses(userResponse);
         QuizStatistics = new Statistics(userStats.Values.ToList());
         QuizStatsBoxplot = new Boxplot(QuizStatistics, totalQuestions);
         BindingContext = this;
