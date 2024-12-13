@@ -145,8 +145,8 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// Gets the current scores of the given active quiz
     /// </summary>
     /// <param name="activeQuizId">Current active quiz</param>
-    /// <returns>List of all of the current scores for the active quiz</returns>
-    Task<Dictionary<string, int>?> GetQuizScoresForActiveQuizId(long activeQuizId);
+    /// <returns>List of all of the current scores for the active quiz and the total number of questions</returns>
+    Task<(Dictionary<string, int>?, int)> GetQuizScoresForActiveQuizId(long activeQuizId);
 
     Task<ObservableCollection<Quiz>?> GetAllPublicQuizzes();
 
