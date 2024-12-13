@@ -610,6 +610,19 @@ public class SupabaseDatabase : IDatabase {
         }
     }
 
+    public async Task<ActiveQuiz?> GetActiveQuiz(long activeQuizId) {
+        try {
+            // Get an active quiz from the table based on the access code
+            return await Client
+                .From<ActiveQuiz>()
+                .Where(q => q.Id == activeQuizId) // Make sure the access code matches
+                .Single(); // Return the first active quiz
+
+        } catch (Exception) {
+            return null; // There was no active quiz
+        }
+    }
+
     public async Task<List<Participant>?> GetUserParticipatedQuizzes(bool populateActiveQuizzes) {
         if (User == null) {
             return null;

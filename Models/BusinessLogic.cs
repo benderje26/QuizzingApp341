@@ -408,6 +408,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return (usernameScores, totalQuestions);
     }
 
+    public async Task<List<Response>> GetResponses(long activeQuizId) {
+        return await database.GetRepsonsesByActiveQuizId(activeQuizId);
+    }
+
     // Retrieves all quizes from the database
     public async Task<ObservableCollection<Quiz>?> GetAllPublicQuizzes() {
         var result = await database.GetAllPublicQuizzes();
@@ -550,6 +554,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     // retrieves active quizzes from its access code
     public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
         return await database.GetActiveQuiz(accessCode);
+    }
+
+    public async Task<ActiveQuiz?> GetActiveQuiz(long activeQuizId) {
+        return await database.GetActiveQuiz(activeQuizId);
     }
 
 

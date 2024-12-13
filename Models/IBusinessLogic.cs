@@ -110,6 +110,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// Returns true if successfully deleted otherwise null
     /// </returns>
     Task<(DeleteQuestionResult, string?)> DeleteQuestion(long id);
+    Task<ActiveQuiz?> GetActiveQuiz(long activeQuizId);
 
     /// <summary>
     /// Edits a question by updating it in the db
@@ -147,6 +148,8 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="activeQuizId">Current active quiz</param>
     /// <returns>List of all of the current scores for the active quiz and the total number of questions</returns>
     Task<(Dictionary<string, int>?, int)> GetQuizScoresForActiveQuizId(long activeQuizId);
+
+    Task<List<Response>> GetResponses(long activeQuizId);
 
     Task<ObservableCollection<Quiz>?> GetAllPublicQuizzes();
 
