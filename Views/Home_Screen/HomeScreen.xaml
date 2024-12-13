@@ -4,12 +4,12 @@
              x:Class="QuizzingApp341.Views.HomeScreen"
              Title="Home">
 
-    <Grid Padding="20">
+    <Grid Padding="20,20,20,80">
         <Grid.RowDefinitions>
+            <!-- Search Quiz widget -->
             <RowDefinition Height="Auto"/>
-            <!-- Row for QR code and Search Quiz widget -->
-            <RowDefinition Height="*"/>
             <!-- Row for Entering Quiz ID -->
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -33,7 +33,7 @@
         <VerticalStackLayout Grid.Row="1"
                              Grid.ColumnSpan="2"
                              HorizontalOptions="FillAndExpand"
-                             VerticalOptions="FillAndExpand"
+                             VerticalOptions="Center"
                              Margin="5"
                              BackgroundColor="Transparent">
             <Label
@@ -42,7 +42,7 @@
                 VerticalTextAlignment="Center"
                 HorizontalTextAlignment="Center"
                 TextColor="Black"
-                Margin="0,150,0,0"
+                Margin="0,0,0,0"
                 FontSize="30"
                 />
 
