@@ -122,7 +122,7 @@ public interface IDatabase {
     /// Gets all the public quizzes from the database and the user's quizzes.
     /// </summary>
     /// <returns>All public and user's quizzes</returns>
-    Task<List<Quiz>?> GetAllQuizzesAsync();
+    Task<List<Quiz>?> GetAllPublicQuizzes();
     Task<long?> AddQuiz(Quiz quiz);
     Task<bool> DeleteQuiz(long quizId);
 
@@ -134,7 +134,7 @@ public interface IDatabase {
     UserInfo? GetUserInfo();
 
     Task<bool> DeactivateQuestions(long id);
-    Task<ActiveQuiz?> PrepareActiveQuiz(Quiz quiz, string accessCode);
+    Task<ActiveQuiz?> PrepareActiveQuiz(Quiz quiz, string? accessCode);
     Task<ActiveQuiz?> UpdateActiveQuiz(ActiveQuiz activeQuiz);
     Task<bool> ActivateQuestion(ActiveQuestion questions);
 

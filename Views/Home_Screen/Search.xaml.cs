@@ -24,7 +24,7 @@ public partial class Search : ContentPage {
     private async void LoadQuizzesAsync() {
         try {
             // Fetch quizzes from the database
-            var quizzes = await _businessLogic.GetAllQuizzes();
+            var quizzes = await _businessLogic.GetAllPublicQuizzes();
             if (quizzes != null) {
                 _allQuizzes.Clear();
                 foreach (var quiz in quizzes) {
@@ -70,8 +70,7 @@ public partial class Search : ContentPage {
 
     // Command for study button
     public Command<QuizSearch> StudyCommand => new(async quiz => {
-        await DisplayAlert("Study", $"Start studying {quiz.Title}?", "OK");
-        // Navigate to the study page here if needed
+        await UserInterfaceUtil.StudyQuiz(quiz.Id, Navigation);
     });
 
     // Command for Favorite button

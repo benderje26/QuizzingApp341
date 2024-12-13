@@ -137,7 +137,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns>List of quiz IDs if found, otherwise null</returns>
     Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds);
     Task<bool> DeactivateQuiz();
-    Task<bool> PrepareActiveQuiz();
+    Task<bool> PrepareActiveQuiz(bool isLive = true);
     Task<bool> ActivateActiveQuiz();
     Task<bool> IncrementCurrentQuestion();
 
@@ -148,7 +148,7 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <returns>List of all of the current scores for the active quiz</returns>
     Task<Dictionary<string, int>?> GetQuizScoresForActiveQuizId(long activeQuizId);
 
-    Task<ObservableCollection<Quiz>?> GetAllQuizzes();
+    Task<ObservableCollection<Quiz>?> GetAllPublicQuizzes();
 
     /// <summary>
     /// Adds a favorite quiz to the questions table 

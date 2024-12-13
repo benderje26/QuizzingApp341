@@ -171,9 +171,12 @@ public class SupabaseDatabase : IDatabase {
             // Retuns if it was a success
             return Session == null ? LoginResult.Other : LoginResult.Success;
         } catch (Exception e) {
-            // Sees if it was a bad credentials error
-            if (e is GotrueException ge && ge.Reason == Supabase.Gotrue.Exceptions.FailureHint.Reason.UserBadLogin) {
-                return LoginResult.BadCredentials;
+            if (e is GotrueException ge) { // attempts to find the reason
+                return ge.Reason switch {
+                    Supabase.Gotrue.Exceptions.FailureHint.Reason.UserBadLogin => LoginResult.BadCredentials,
+                    Supabase.Gotrue.Exceptions.FailureHint.Reason.Offline => LoginResult.NetworkError,
+                    _ => LoginResult.Other
+                };
             }
             return LoginResult.Other;
         }
@@ -337,15 +340,16 @@ public class SupabaseDatabase : IDatabase {
     #region Quizzes 
 
     #region Normal Quizzes
-    //Get All the Quizzes for user
     //From Quiz Models to quizzes table in supabase
-    //return List of Quiz 
-    public async Task<List<Quiz>?> GetAllQuizzesAsync() {
+    //return List of Quiz
+    public async Task<List<Quiz>?> GetAllPublicQuizzes() {
         try {
-            var result = await Client.From<Quiz>().Get();    //get all quizzes 
+            var result = await Client.From<Quiz>()
+                .Where(x => x.Public == true)
+                .Get();    //get all public quizzes 
             return result?.Models;
         } catch {
-            return null;                                // failed
+            return null; // failed
         }
     }
   
@@ -534,7 +538,7 @@ public class SupabaseDatabase : IDatabase {
 
     #region Active Quizzes
 
-    Stack<RealtimeChannel> channels = [];
+    private readonly Stack<RealtimeChannel> channels = [];
 
     public async Task<bool> DeactivateQuestions(long id) {
         try {
@@ -548,7 +552,7 @@ public class SupabaseDatabase : IDatabase {
         return true;
     }
 
-    public async Task<ActiveQuiz?> PrepareActiveQuiz(Quiz quiz, string accessCode) {
+    public async Task<ActiveQuiz?> PrepareActiveQuiz(Quiz quiz, string? accessCode) {
         ActiveQuiz activeQuiz = new() {
             StartTime = DateTime.Now,
             QuizId = quiz.Id,
@@ -560,11 +564,12 @@ public class SupabaseDatabase : IDatabase {
         };
         try {
             var result = await Client
-            .From<ActiveQuiz>()
-            .Insert(activeQuiz);
+                .From<ActiveQuiz>()
+                .Insert(activeQuiz);
 
             return result.Model;
-        } catch {
+        } catch (Exception e) {
+            Console.WriteLine("Error preparing active quiz: " + e);
             return null;
         }
     }
@@ -733,7 +738,7 @@ public class SupabaseDatabase : IDatabase {
             channel.AddPostgresChangeHandler(PostgresChangesOptions.ListenType.Updates, async (channel, response) => {
                 ActiveQuiz? quiz = response.Model<ActiveQuiz>(); // Gets the active quiz with the new change (new question)
 
-                if (quiz != null) {
+                if (quiz != null && (quiz.IsActive ?? false)) {
                     await HandleActiveQuizUpdate(quiz, handler);
                 } else {
                     endedHandler();
