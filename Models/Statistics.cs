@@ -4,7 +4,7 @@ public class Statistics(List<int> scores) {
     public List<int>? Scores { get { return scores; } }
     public double Minimum { get { return GetMin(scores); } }
     public double Maximum { get { return GetMax(scores); } }
-    public double Mean { get { return GetMean(scores); } }
+    public double Mean { get { return ((int)(GetMean(scores) * 100)) / 100d; } }
     public double Median { get { return GetMedian(scores); } }
     public double LowerQuartile { get { return GetLowerQuartile(scores); } }
     public double UpperQuartile { get { return GetUpperQuartile(scores); } }
