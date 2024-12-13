@@ -30,7 +30,7 @@ public partial class Login : ContentPage {
         if (result == LoginResult.Success) {
             // Set variables for user ahead of time
             // Navigate to HomeScreen and make TabBar visible
-            await Shell.Current.GoToAsync("//HomeScreen", true);  //TODO: change HomeScreen to UserHome once UserHome got proved 
+            await Shell.Current.GoToAsync("//HomeScreen", true);
         } else {
             await DisplayAlert("Login Failed", errorMessage, "OK");
         }

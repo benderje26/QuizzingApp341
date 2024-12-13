@@ -8,15 +8,9 @@ public partial class WaitScreen : ContentPage {
     }
 
     protected override bool OnBackButtonPressed() {
-        // Leave the quiz (you can still get back in by re-entering the code)
-        MauiProgram.BusinessLogic.LeaveActiveQuiz();
-
-        if (base.OnBackButtonPressed()) {
-            Navigation.PopToRootAsync();
-
-            return true;
-        }
-
-        return false;
+        _ = UserInterfaceUtil.ProcessActiveQuizEnded(Navigation);
+        return true;
     }
+
+    
 }

@@ -75,7 +75,6 @@
                                 <Grid ColumnDefinitions="*,10,*,10,*" IsVisible="{Binding IsUserOwner}">
                                     <!-- Study Button -->
                                     <Button Text="Study"
-                                            
                                             BackgroundColor="DarkGreen"
                                             TextColor="White"
                                             Grid.Column="0"
