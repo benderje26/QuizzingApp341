@@ -6,9 +6,6 @@ Statistics screen -->
              xmlns:drawable="clr-namespace:QuizzingApp341.Views"
              Padding="7"
              Title="Statistics">
-    <ContentPage.Resources>
-        <drawable:Boxplot x:Key="MyDrawable" />
-    </ContentPage.Resources>
 
     <!-- Define a Grid with two rows -->
     <Grid RowDefinitions="*, Auto">
@@ -28,7 +25,7 @@ Statistics screen -->
                 <GraphicsView 
                     x:Name="Canvas"                 
                     HorizontalOptions="Fill"
-                    Drawable="{StaticResource MyDrawable}" 
+                    Drawable="{Binding QuizStatsBoxplot}" 
                     HeightRequest="100"       
                     Grid.Row="1"/>
 
@@ -39,7 +36,7 @@ Statistics screen -->
                         <Label Text="Mean: "
                                FontAttributes="Bold"
                                FontSize="15"/>
-                        <Label Text="75"
+                        <Label Text="{Binding QuizStatistics.Mean}"
                             FontSize="15"/>
                     </StackLayout>
 
@@ -47,7 +44,7 @@ Statistics screen -->
                         <Label Text="Median: "
                                FontAttributes="Bold"
                                FontSize="15"/>
-                        <Label Text="83"
+                        <Label Text="{Binding QuizStatistics.Median}"
                                FontSize="15"/>
                     </StackLayout>
 
@@ -55,7 +52,7 @@ Statistics screen -->
                         <Label Text="High: "
                                FontAttributes="Bold"
                                FontSize="15"/>
-                        <Label Text="89"
+                        <Label Text="{Binding QuizStatistics.Maximum}"
                             FontSize="15"/>
                     </StackLayout>
 
@@ -63,7 +60,7 @@ Statistics screen -->
                         <Label Text="Low: "
                                FontAttributes="Bold"
                                FontSize="15"/>
-                        <Label Text="55"
+                        <Label Text="{Binding QuizStatistics.Minimum}"
                             FontSize="15"/>
                     </StackLayout>
 
@@ -71,7 +68,7 @@ Statistics screen -->
                         <Label Text="Lower Quartile: "
                                FontAttributes="Bold"
                                FontSize="15"/>
-                        <Label Text="60"
+                        <Label Text="{Binding QuizStatistics.LowerQuartile}"
                             FontSize="15"/>
                     </StackLayout>
 
@@ -79,7 +76,7 @@ Statistics screen -->
                         <Label Text="Upper Quartile: "
                                FontAttributes="Bold"
                                FontSize="15"/>
-                        <Label Text="89"
+                        <Label Text="{Binding QuizStatistics.UpperQuartile}"
                             FontSize="15"/>
                     </StackLayout>
                 </StackLayout>

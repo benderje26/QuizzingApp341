@@ -63,7 +63,8 @@ public partial class QuizHistory : ContentPage {
 
             if (quiz != null) {
                 // Create a new StatisticsScreen instance and push it on the stack
-                await Navigation.PushAsync(new StatisticsScreen(quiz.Id));
+                var quizStats = await MauiProgram.BusinessLogic.GetQuizScoresForActiveQuizId(quiz.Id);
+                await Navigation.PushAsync(new StatisticsScreen(quizStats));
             }
         }
     }

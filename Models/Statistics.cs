@@ -2,55 +2,51 @@
 using QuizzingApp341;
 using Supabase.Gotrue;
 
-public class Statistics() {
+public class Statistics(List<int> scores) {
 
-    /// <summary>
-    /// The scores of the quiz takers
-    /// </summary>
-    private List<int> Scores {
-        get => _scores;
-    }
-    private List<int> _scores = [0];
-
-    /// <summary>
-    /// Sets the current session, or logs out.
-    /// </summary>
-    /// <param name="activeQuizId">The new current session or null if logging out</param>
-    public async Task SetScores(long activeQuizId) {
-        _scores = await MauiProgram.BusinessLogic.GetQuizScoresForActiveQuizId(activeQuizId) ?? [0];
-    }
+    public List<int>? Scores { get { return scores; } }
+    public double Minimum { get { return GetMin(scores); } }
+    public double Maximum { get { return GetMax(scores); } }
+    public double Mean { get { return GetMean(scores); } }
+    public double Median { get { return GetMedian(scores); } }
+    public double LowerQuartile { get { return GetLowerQuartile(scores); } }
+    public double UpperQuartile { get { return GetUpperQuartile(scores); } }
 
     // Get the min
-    public double GetMin() {
-        return Scores.Min();
+    public double GetMin(List<int> scores) {
+        return scores.Min();
     }
 
     // Get the max
-    public double GetMax() {
-        return Scores.Max();
+    public double GetMax(List<int> scores) {
+        return scores.Max();
     }
 
     // Get the median
-    public double GetMedian() {
-        Scores.Sort();
+    public double GetMedian(List<int> scores) {
+        scores.Sort();
         // If there is an even number of scores
-        if (Scores.Count % 2 == 0) {
+        if (scores.Count % 2 == 0) {
             // Get the average of the two middle elements
-            return ((Scores[Scores.Count / 2 - 1]) + (Scores[Scores.Count / 2])) / 2;
+            return ((scores[scores.Count / 2 - 1]) + (scores[scores.Count / 2])) / 2;
 
         } else { // If there is an odd number of scores
             // return the center element
-            return Scores[Scores.Count / 2];
+            return scores[scores.Count / 2];
         }
     }
 
-    public double GetLowerQuartile() {
-        Scores.Sort(); // Sort
-        return Scores[Scores.Count / 4]; // Get the first quarter element
+    public double GetMean(List<int> scores) {
+        return scores.Average();
     }
 
-    public double GetUpperQuartile() {
-        Scores.Sort(); // Sort
-        return Scores[Scores.Count * 3 / 4]; // Get the third quarter element
+    public double GetLowerQuartile(List<int> scores) {
+        scores.Sort(); // Sort
+        return scores[scores.Count / 4]; // Get the first quarter element
+    }
+
+    public double GetUpperQuartile(List<int> scores) {
+        scores.Sort(); // Sort
+        return scores[scores.Count * 3 / 4]; // Get the third quarter element
     }
 }
