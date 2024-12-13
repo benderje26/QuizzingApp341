@@ -1,5 +1,6 @@
 ﻿using QuizzingApp341.Models;
 using QuizzingApp341.Views;
+using System.Collections.ObjectModel;
 
 namespace QuizzingApp341;
 
@@ -34,12 +35,25 @@ public class UserInterfaceUtil {
     }
 
     public static async Task ShowQuizResults(long activeQuizId, Page page, bool shouldRemoveCurrentPage = false) {
+        // Get the active quiz object from the database using the id
+        ActiveQuiz activeQuiz = await MauiProgram.BusinessLogic.GetActiveQuiz(activeQuizId);
+
+        // Get the quiz object from the database using the quiz id from the active quiz
+        Quiz quiz = await MauiProgram.BusinessLogic.GetQuiz(activeQuiz.QuizId);
+
+        // Get the responses from the responses table using the active quiz id
+        var responses = await MauiProgram.BusinessLogic.GetResponses(activeQuizId);
+
+        // Get the questions from the questions table using the quiz id
+        ObservableCollection<Question> questions = await MauiProgram.BusinessLogic.GetQuestions(quiz.Id);
+
         // Create a new StatisticsScreen instance and push it on the stack
         var quizStats = await MauiProgram.BusinessLogic.GetQuizScoresForActiveQuizId(activeQuizId);
+
         var scores = quizStats.Item1;
         var totalQuestions = quizStats.Item2;
         if (scores != null && scores.Count > 0) {
-            await page.Navigation.PushAsync(new StatisticsScreen(scores, totalQuestions));
+            await page.Navigation.PushAsync(new StatisticsScreen(scores, totalQuestions, quiz, responses, questions, activeQuiz.EndTime));
         } else {
             _ = page.DisplayAlert("Oh No", "No responses were found for the quiz.", "OK");
         }

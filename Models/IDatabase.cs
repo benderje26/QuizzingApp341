@@ -192,6 +192,8 @@ public interface IDatabase {
     /// <returns>The active quiz</returns>
     Task<ActiveQuiz?> GetActiveQuiz(string accessCode);
 
+    Task<ActiveQuiz?> GetActiveQuiz(long activeQuizId);
+
     /// <summary>
     /// Submits a multiple choice question with its choice.
     /// </summary>

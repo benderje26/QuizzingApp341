@@ -1,7 +1,5 @@
 namespace QuizzingApp341.Views;
 using QuizzingApp341.Models;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Input;
 
 public partial class QuizStudio : ContentPage {

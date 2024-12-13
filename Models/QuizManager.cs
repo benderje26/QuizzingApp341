@@ -7,19 +7,16 @@ namespace QuizzingApp341.Models;
 public class QuizManager : INotifyPropertyChanged {
 
     public event PropertyChangedEventHandler? PropertyChanged;
-     private void OnPropertyChanged(string propertyName) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    private void OnPropertyChanged(string propertyName) =>
+       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     // The quiz table from supabase that has columns Id, created_at, creator, title
     public Quiz? Quiz { get; set; }
     private ObservableCollection<Question> questions = [];
-    public ObservableCollection<Question> Questions
-    {
+    public ObservableCollection<Question> Questions {
         get => questions;
-        set
-        {
-            if (questions != value)
-            {
+        set {
+            if (questions != value) {
                 questions = value;
                 OnPropertyChanged(nameof(Questions));
             }
@@ -28,13 +25,10 @@ public class QuizManager : INotifyPropertyChanged {
 
     private Question? currentQuestion;
 
-    public Question? CurrentQuestion
-    {
+    public Question? CurrentQuestion {
         get => currentQuestion;
-        set
-        {
-            if (currentQuestion != value)
-            {
+        set {
+            if (currentQuestion != value) {
                 currentQuestion = value;
                 OnPropertyChanged(nameof(CurrentQuestion));
             }
@@ -48,14 +42,14 @@ public class QuizManager : INotifyPropertyChanged {
 
     // Constructor for setting a quiz
     public QuizManager(Quiz? quiz) {
-        Active  = false;
+        Active = false;
         Quiz = quiz;
         Questions = [];
     }
 
     /// <summary>
     /// Sets an active quiz, if a user is about to take a quiz, it also needs to set the Quiz and Questions
-    /// Call SetActiveQuizInfo() after this constructor
+    /// Call SetActiveQuizInfo() after this constructor, like this:
     /// Quiz quiz = new Quiz(ActiveQuiz);
     /// await quiz.SetActiveQuizInfo();
     /// </summary>

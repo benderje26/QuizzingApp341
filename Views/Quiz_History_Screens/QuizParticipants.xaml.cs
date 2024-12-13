@@ -1,9 +1,5 @@
 using CommunityToolkit.Maui.Storage;
-using Microsoft.Maui.Controls.PlatformConfiguration;
 using System.Text;
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using System.Threading;
 
 namespace QuizzingApp341.Views;
 // This screen initializes and displays the list of participants of a quiz
@@ -55,7 +51,7 @@ public partial class QuizParticipants : ContentPage {
                 fileContent.AppendLine($"{participant.User},{participant.Score}");
             }
 
-       
+
             Console.WriteLine("Generated file content:");
             Console.WriteLine(fileContent.ToString());
 

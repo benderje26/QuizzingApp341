@@ -1,5 +1,4 @@
 using QuizzingApp341.Models;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -46,7 +45,7 @@ namespace QuizzingApp341.Views {
                 }
             }
         }
-        
+
         private async void OnUpdatePasswordClicked(object sender, EventArgs e) {
             // Check to see if the user is signed in
             if (IsSignedIn) {

@@ -1,7 +1,7 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 
 
@@ -36,7 +36,7 @@ namespace QuizzingApp341.Models {
                 OnPropertyChanged();
             }
         }
-        
+
 
         [Column("question_type")]
         public QuestionType QuestionType {

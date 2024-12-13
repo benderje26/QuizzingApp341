@@ -15,22 +15,34 @@ Statistics screen -->
                          Spacing="20">
 
                 <StackLayout Orientation="Vertical">
-                    <Label Text="Quiz 1"
+                    <Label Text="{Binding Quiz.Title}"
                            FontSize="20"/>
-                    <Label Text="Date: 10/24/2024"
+                    <Label Text="{Binding Date}"
                            FontSize="15"/>
                 </StackLayout>
 
+                <!-- Show user's score if just one user -->
+                <HorizontalStackLayout
+                    IsVisible="{Binding ShowQuizResponse}">
+                    <Label Text ="Score: "></Label>
+                    <Label Text="{Binding UserScore}"/>
+                    <Label Text ="/"></Label>
+                    <Label Text="{Binding TotalQuestions}"/>
+                </HorizontalStackLayout>
+                
+                <!-- SHOW BOX PLOT IF THE QUIZ HAS MULTIPLE PARTICIPANTS -->
                 <!-- Box plot chart -->
                 <GraphicsView 
-                    x:Name="Canvas"                 
+                    x:Name="Canvas"
                     HorizontalOptions="Fill"
                     Drawable="{Binding QuizStatsBoxplot}" 
                     HeightRequest="100"       
-                    Grid.Row="1"/>
+                    Grid.Row="1"
+                IsVisible="{Binding ShowBoxPlot}"/>
 
                 <!-- Stats section -->
-                <StackLayout Padding="10">
+                <StackLayout Padding="10"
+                    IsVisible="{Binding ShowBoxPlot}">
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Mean: "
                                FontAttributes="Bold"
@@ -78,8 +90,31 @@ Statistics screen -->
                         <Label Text="{Binding QuizStatistics.UpperQuartile}"
                             FontSize="15"/>
                     </StackLayout>
+                    
                 </StackLayout>
+                <ScrollView
+                    IsVisible="{Binding ShowQuizResponse}">
+                    <CollectionView ItemsSource="{Binding Answers}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Padding="10">
+                                    <Label Text="{Binding Question.QuestionText}"
+                                        FontAttributes="Bold"></Label>
+                                    <HorizontalStackLayout>
+                                        <Label Text ="Your Response: "></Label>
+                                        <Label Text="{Binding Response}"></Label>
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout>
+                                        <Label Text ="Correct Answer: "></Label>
+                                        <Label Text ="{Binding CorrectAnswer}"/>
+                                    </HorizontalStackLayout>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
             </StackLayout>
+
         </ScrollView>
 
         <!-- Button to view all participants in the second row -->
@@ -87,6 +122,7 @@ Statistics screen -->
                 Clicked="ViewAllParticipantsClicked"
                 Grid.Row="1"
                 HorizontalOptions="FillAndExpand"
-                VerticalOptions="End"/>
+                VerticalOptions="End"
+                IsVisible="{Binding ShowBoxPlot}"/>
     </Grid>
 </ContentPage>

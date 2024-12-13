@@ -1,5 +1,4 @@
 using QuizzingApp341.Models;
-using System.Collections.ObjectModel;
 
 namespace QuizzingApp341.Views;
 
@@ -51,7 +50,7 @@ public partial class FillBlank : ContentPage {
         if (nextQuestion == null) {
             return;
         }
-        
+
         // Get next question
         // Make it an active question
         ActiveQuestion activeQuestion = new(nextQuestion, activeQuizId);

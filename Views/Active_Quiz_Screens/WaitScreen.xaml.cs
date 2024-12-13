@@ -12,5 +12,5 @@ public partial class WaitScreen : ContentPage {
         return true;
     }
 
-    
+
 }

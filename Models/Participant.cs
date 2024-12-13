@@ -1,7 +1,7 @@
 ﻿using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
-namespace QuizzingApp341.Models; 
+namespace QuizzingApp341.Models;
 
 [Table("participants")]
 public class Participant : BaseModel {

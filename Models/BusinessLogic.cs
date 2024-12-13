@@ -1,5 +1,3 @@
-using QuizzingApp341.Views;
-using Supabase;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -385,7 +383,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
                     // See if the given answer is in the acceptable answers list
                     correct = acceptableAnswers.Contains(givenAnswer);
                 }
-                
+
                 if (correct) {
                     studentsScores[response.UserId] += 1;
                 }
@@ -406,6 +404,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         }
         //Return the set of all the scores
         return (usernameScores, totalQuestions);
+    }
+
+    public async Task<List<Response>> GetResponses(long activeQuizId) {
+        return await database.GetRepsonsesByActiveQuizId(activeQuizId);
     }
 
     // Retrieves all quizes from the database
@@ -550,6 +552,10 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     // retrieves active quizzes from its access code
     public async Task<ActiveQuiz?> GetActiveQuiz(string accessCode) {
         return await database.GetActiveQuiz(accessCode);
+    }
+
+    public async Task<ActiveQuiz?> GetActiveQuiz(long activeQuizId) {
+        return await database.GetActiveQuiz(activeQuizId);
     }
 
 
