@@ -11,7 +11,7 @@ public partial class FillBlank : ContentPage {
     public bool UserIsActivator { get; set; }
     public bool UserIsParticipant { get; set; }
     public bool CanSubmit => true;
-    public bool ShowSubmitAnswerButton => UserIsParticipant;
+    public bool ShowSubmitAnswerButton => UserIsParticipant && !UserIsActivator;
     public bool ShowNextButton => UserIsActivator && !LastQuestion;
     public bool ShowFinishButton => UserIsActivator && LastQuestion;
     public bool LastQuestion => MauiProgram.BusinessLogic.QuizManager?.CurrentQuestion?.QuestionNo == MauiProgram.BusinessLogic.QuizManager?.Questions.Count;
