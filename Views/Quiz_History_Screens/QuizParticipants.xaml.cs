@@ -10,7 +10,7 @@ namespace QuizzingApp341.Views;
 public partial class QuizParticipants : ContentPage {
     public List<Participant> Participants { get; set; }
 
-    private readonly IFileSaver filSaver;
+    private readonly IFileSaver fileSaver;
 
     CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
@@ -22,14 +22,14 @@ public partial class QuizParticipants : ContentPage {
             Participants.Add(new Participant(user.Key, user.Value));
         }
         BindingContext = this;
-        filSaver = fileSaver;
+        this.fileSaver = fileSaver;
     }
 
 
 
     private async void OnDownloadFileClicked(object sender, EventArgs e) {
         try {
-            if (Participants == null || !Participants.Any()) {
+            if (Participants == null || Participants.Count == 0) {
                 await DisplayAlert("No Data", "There are no participants to download.", "OK");
                 return;
             }
@@ -61,20 +61,15 @@ public partial class QuizParticipants : ContentPage {
 
 
             // Determine file name 
-            string fileName = fileType == ".txt" ? "Participants.txt" : "Participants.csv";
+            string fileName = "Participants" + fileType;
             Console.WriteLine($"File name determined: {fileName}");
 
             // Convert the content to a MemoryStream
             //using var stream = new MemoryStream(Encoding.Default.(fileContent.ToString()));
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(fileContent.ToString()));
 
-            // Get the directory where app can store data files. 
-            // Ex:C:\Users\User\AppData\Local\MyApp\Participants.txt
-            var filePath = Path.Combine(FileSystem.AppDataDirectory, fileName);
-            Console.WriteLine($"Saving file to path: {filePath}");
-
             // Save the file using the IFileSaver
-            var result = await filSaver.SaveAsync(fileName, stream, cancellationTokenSource.Token);
+            var result = await fileSaver.SaveAsync(fileName, stream, cancellationTokenSource.Token);
 
             if (result.IsSuccessful) {
                 await DisplayAlert("Success", $"File saved to: {result.FilePath}", "OK");
