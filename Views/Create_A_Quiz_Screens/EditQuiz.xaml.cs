@@ -101,7 +101,6 @@ public partial class EditQuiz : ContentPage {
             } else {
                 await Navigation.PushAsync(new FillBlank(activeQuestion, true, false));
             }
-            //await Navigation.PushAsync(new ActivatorQuiz());
         } else {
             await MauiProgram.BusinessLogic.DeactivateQuiz();
         }

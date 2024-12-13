@@ -47,7 +47,7 @@ public class QuizManager : INotifyPropertyChanged {
     public bool Active { get; set; }
 
     // Constructor for setting a quiz
-    public QuizManager(Quiz quiz) {
+    public QuizManager(Quiz? quiz) {
         Active  = false;
         Quiz = quiz;
         Questions = [];
@@ -86,17 +86,6 @@ public class QuizManager : INotifyPropertyChanged {
             return true;
         }
         return false;
-    }
-
-    //TODO
-    /// <summary>
-    /// This starts a quiz for a user, which needs an id
-    /// </summary>
-    /// <param name="accessCode"></param>
-    public void StartQuiz(string accessCode) {// Can either take a LiveQuiz Id or an Access code
-        // ActiveQuiz = BusinessLogic.GetActiveQuizFromAccessCode(accessCode);
-        // Get the Quiz with the quiz id
-        // Get the supabasequestions with the quiz id
     }
 
     /// <summary>

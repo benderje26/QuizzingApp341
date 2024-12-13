@@ -211,12 +211,12 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public QuizManager? QuizManager { get; set; }
 
     public async Task<bool> ChangeQuizVisibility(bool isPublic) {
-        bool originalVisibility = QuizManager.Quiz.IsPublic;
-        QuizManager.Quiz.IsPublic = isPublic;
+        bool originalVisibility = QuizManager.Quiz.Public;
+        QuizManager.Quiz.Public = isPublic;
         var result = await database.UpdateQuiz(QuizManager.Quiz);
 
         if (!result) {
-            QuizManager.Quiz.IsPublic = originalVisibility;
+            QuizManager.Quiz.Public = originalVisibility;
         }
         return result;
     }
@@ -224,7 +224,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     public async Task<long?> AddQuiz(Quiz quiz) {
         quiz.CreatorId = (Guid)UserInfo.Id;
         var result = await database.AddQuiz(quiz);
-        QuizManager.Quiz.Id = (long)result;
+        QuizManager.Quiz.Id = (long)result; // TODO what?
         UserInfo.CreatedQuizzes = await GetUserCreatedQuizzes();
         QuizManager = new QuizManager(UserInfo.CreatedQuizzes.FirstOrDefault(q => q.Id == (long)result));
         return result;
@@ -408,8 +408,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
 
     // Retrieves all quizes from the database
-    public async Task<ObservableCollection<Quiz>?> GetAllQuizzes() {
-        var result = await database.GetAllQuizzesAsync();
+    public async Task<ObservableCollection<Quiz>?> GetAllPublicQuizzes() {
+        var result = await database.GetAllPublicQuizzes();
         return result == null ? null : new ObservableCollection<Quiz>(result);
     }
 
@@ -471,7 +471,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
         return true;
     }
 
-    public async Task<bool> PrepareActiveQuiz() {
+    public async Task<bool> PrepareActiveQuiz(bool isLive) {
         if (QuizManager?.Quiz == null) {
             return false;
         }
@@ -479,7 +479,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
             ActiveQuiz? result = null;
             int maxRetries = 5;
             for (int i = 0; i < maxRetries && result == null; i++) {
-                result = await database.PrepareActiveQuiz(QuizManager.Quiz, GenerateRandomAccessCode(6));
+                string? code = isLive ? GenerateRandomAccessCode(6) : null;
+                result = await database.PrepareActiveQuiz(QuizManager.Quiz, code);
             }
 
             if (result == null) {
@@ -561,8 +562,8 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     }
 
     // Joins an active quiz using a handler for new questions
-    public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler) {
-        return await database.JoinActiveQuiz(quiz, handler);
+    public async Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler questionHandler, QuizEndedHandler endedHandler) {
+        return await database.JoinActiveQuiz(quiz, questionHandler, endedHandler);
     }
 
     public void LeaveActiveQuiz() {
