@@ -56,6 +56,15 @@
                 </StackLayout>
             </ListView.Footer>
         </ListView>
+
+                            <!-- Download File Button -->
+                            <Button Text="Download File"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="End"
+                                    BackgroundColor="#007ACC"
+                                    TextColor="White"
+                                    Padding="10"
+                                    Clicked="OnDownloadFileClicked" />
     </StackLayout>
 
 </ContentPage>

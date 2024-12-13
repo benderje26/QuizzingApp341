@@ -1,4 +1,5 @@
 using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Storage;
 using Microsoft.Extensions.Logging;
 using QuizzingApp341.Models;
 
@@ -17,6 +18,8 @@ public static class MauiProgram {
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
+        builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
+        builder.Services.AddTransient<Participant>();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
