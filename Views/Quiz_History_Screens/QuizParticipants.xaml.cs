@@ -3,18 +3,12 @@ namespace QuizzingApp341.Views;
 public partial class QuizParticipants : ContentPage {
     public List<Participant> Participants { get; set; }
 
-    public QuizParticipants() {
+    public QuizParticipants(Dictionary<string, int> quizStats) {
         InitializeComponent();
-
-        Participants = new List<Participant>
-        {
-            new Participant("Pachia", 10),
-            new Participant("Jason", 10),
-            new Participant("Zafeer", 10),
-            new Participant("Peter", 10),
-            new Participant("Jerimiah", 10)
-        };
-
+        Participants = new List<Participant>();
+        foreach (KeyValuePair<string, int> user in quizStats) {
+            Participants.Add(new Participant(user.Key, user.Value));
+        }
         BindingContext = this;
     }
 }

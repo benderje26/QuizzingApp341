@@ -342,7 +342,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
     /// </summary>
     /// <param name="activeQuizId">Current active quiz</param>
     /// <returns>List of all of the current scores for the active quiz</returns>
-    public async Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId) {
+    public async Task<Dictionary<string, int>?> GetQuizScoresForActiveQuizId(long activeQuizId) {
         var questions = await database.GetQuizQuestionsByActiveQuizId(activeQuizId);
         var responses = await database.GetRepsonsesByActiveQuizId(activeQuizId);
 
@@ -390,8 +390,21 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
                 }
             }
         }
+        Dictionary<string, int> usernameScores = new Dictionary<string, int>();
+        foreach (Guid id in studentsScores.Keys) {
+            UserData user = await GetUserData(id);
+            if (user == null) {
+                if (studentsScores.TryGetValue(id, out int score)) {
+                    usernameScores.Add("Guest", score);
+                }
+            } else {
+                if (studentsScores.TryGetValue(id, out int score)) {
+                    usernameScores.Add(user.Username, score);
+                }
+            }
+        }
         //Return the set of all the scores
-        return [.. studentsScores.Values];
+        return usernameScores;
     }
 
     // Retrieves all quizes from the database

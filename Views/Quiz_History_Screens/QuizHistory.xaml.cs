@@ -65,7 +65,12 @@ public partial class QuizHistory : ContentPage {
 
             if (quiz != null) {
                 // Create a new StatisticsScreen instance and push it on the stack
-                await Navigation.PushAsync(new StatisticsScreen(quiz.Id));
+                var quizStats = await MauiProgram.BusinessLogic.GetQuizScoresForActiveQuizId(quiz.Id);
+                if (quizStats != null && quizStats.Count > 0) {
+                    await Navigation.PushAsync(new StatisticsScreen(quizStats));
+                } else {
+                    await DisplayAlert("Oh No", "No responses were found for the quiz.", "OK");
+                }
             }
         }
     }
