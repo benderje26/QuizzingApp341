@@ -6,6 +6,8 @@ Name: Pachia
 namespace QuizzingApp341.Views;
 
 using Microsoft.IdentityModel.Tokens;
+
+using CommunityToolkit.Maui.Storage;
 using Microsoft.Maui.Graphics;
 using QuizzingApp341.Models;
 using System;
@@ -64,7 +66,8 @@ public partial class StatisticsScreen : ContentPage {
     // Event handler for button click
     private void ViewAllParticipantsClicked(object sender, EventArgs e) {
         // Get the participants and show the participants screen
-        Navigation.PushAsync(new QuizParticipants(UserStats));
+        var fileSaver = FileSaver.Default; // Initialize the IFileSaver
+        Navigation.PushAsync(new QuizParticipants(UserStats, fileSaver));
     }
 }
 

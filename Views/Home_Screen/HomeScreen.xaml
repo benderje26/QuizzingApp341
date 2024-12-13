@@ -4,12 +4,12 @@
              x:Class="QuizzingApp341.Views.HomeScreen"
              Title="Home">
 
-    <Grid Padding="20">
+    <Grid Padding="20,20,20,80">
         <Grid.RowDefinitions>
+            <!-- Search Quiz widget -->
             <RowDefinition Height="Auto"/>
-            <!-- Row for QR code and Search Quiz widget -->
-            <RowDefinition Height="*"/>
             <!-- Row for Entering Quiz ID -->
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -21,11 +21,11 @@
         <Button ImageSource="search.png"
                 Grid.Row="0"
                 Grid.Column="1"
-                WidthRequest="40"
-                HeightRequest="40"
-                HorizontalOptions="End"
-                VerticalOptions="FillAndExpand"
-                Margin="2"
+                WidthRequest="100"
+                HeightRequest="50"
+                HorizontalOptions="Start"
+                VerticalOptions="End"
+                Margin="0,0,-20,0"
                 BackgroundColor="Transparent"
                 Clicked="OnSearchClicked"/>
 
@@ -33,12 +33,18 @@
         <VerticalStackLayout Grid.Row="1"
                              Grid.ColumnSpan="2"
                              HorizontalOptions="FillAndExpand"
-                             VerticalOptions="FillAndExpand"
+                             VerticalOptions="Center"
                              Margin="5"
-                             BackgroundColor="#F5F5F5">
+                             BackgroundColor="Transparent">
             <Label
                 Padding="10"
-                Text="Please enter a Quiz ID to start participating in a live Quiz:"/>
+                Text="Start Live Quiz"
+                VerticalTextAlignment="Center"
+                HorizontalTextAlignment="Center"
+                TextColor="Black"
+                Margin="0,0,0,0"
+                FontSize="30"
+                />
 
             <!-- Entry for entering quiz ID-->
             <VerticalStackLayout
@@ -55,6 +61,9 @@
                     <Entry
                     x:Name="quizIdEntry"
                     Placeholder="Enter Quiz ID"
+                    FontSize="20"
+                    VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Center"
                     TextTransform="Uppercase"
                     WidthRequest="250"
                     HorizontalOptions="Center" 
@@ -65,6 +74,8 @@
                     Padding="30,10"
                     Text="Start"
                     FontSize="30"
+                    HeightRequest="80"
+                    WidthRequest="200"
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
                     Margin="10,10,10,0"
