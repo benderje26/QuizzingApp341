@@ -24,22 +24,22 @@ public class Quiz : BaseModel, INotifyPropertyChanged {
     }
 
     [Column("created_at", ignoreOnInsert: true)]
-    public DateTime DateCreated { 
+    public DateTime DateCreated {
         get => dateCreated;
         set {
             dateCreated = value;
             OnPropertyChanged();
         }
-     }
+    }
 
     [Column("creator_id")]
-    public Guid CreatorId { 
+    public Guid CreatorId {
         get => creatorId;
         set {
             creatorId = value;
             OnPropertyChanged();
         }
-     }
+    }
 
     [Column("title")]
     public string Title {

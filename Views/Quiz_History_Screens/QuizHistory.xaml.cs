@@ -1,7 +1,5 @@
 namespace QuizzingApp341.Views;
 using QuizzingApp341.Models;
-using System.Linq;
-using System.Threading.Tasks;
 
 public partial class QuizHistory : ContentPage {
     private readonly IBusinessLogic _businessLogic;
@@ -80,7 +78,7 @@ public partial class QuizHistory : ContentPage {
             if (quiz != null) {
                 // Double check they want to delete it
                 bool shouldDelete = await DisplayAlert("Are you sure?", "Are you sure you want to delete this quiz record? This cannot be undone.", "YES", "NO");
-                
+
                 if (shouldDelete) {
                     // Attempt to delete it
                     bool quizDeleted = await MauiProgram.BusinessLogic.DeleteQuizFromActivationHistory(quiz.Id);

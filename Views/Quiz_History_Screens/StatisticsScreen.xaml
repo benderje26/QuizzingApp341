@@ -33,7 +33,7 @@ Statistics screen -->
                 <!-- SHOW BOX PLOT IF THE QUIZ HAS MULTIPLE PARTICIPANTS -->
                 <!-- Box plot chart -->
                 <GraphicsView 
-                    x:Name="Canvas"                 
+                    x:Name="Canvas"
                     HorizontalOptions="Fill"
                     Drawable="{Binding QuizStatsBoxplot}" 
                     HeightRequest="100"       

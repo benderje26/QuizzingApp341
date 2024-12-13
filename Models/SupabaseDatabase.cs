@@ -1,6 +1,5 @@
 namespace QuizzingApp341.Models;
 
-using QuizzingApp341.Views;
 using Supabase;
 using Supabase.Gotrue;
 using Supabase.Gotrue.Exceptions;
@@ -352,7 +351,7 @@ public class SupabaseDatabase : IDatabase {
             return null; // failed
         }
     }
-  
+
     public async Task<bool> DeleteQuiz(long quizId) {
         try {
             await Client
@@ -493,7 +492,7 @@ public class SupabaseDatabase : IDatabase {
     public async Task<bool> EditQuestion(Question question) {
         try {
             await Client
-            .From<Question>() 
+            .From<Question>()
             .Upsert(question);     //add new question to supabase
         } catch {
             return false;
@@ -591,7 +590,7 @@ public class SupabaseDatabase : IDatabase {
             var result = await Client
                 .From<ActiveQuestion>()
                 .Insert(question);
-        } catch (Exception e){
+        } catch (Exception e) {
             Console.WriteLine("Error: " + e.Message);
             return false;
         }
@@ -803,7 +802,7 @@ public class SupabaseDatabase : IDatabase {
             //Get the questions for the quiz
             var questions = await Client.From<Question>().Where(x => x.QuizId == activeQuiz.QuizId).Get();
             //Return the questions
-            return questions.Models; 
+            return questions.Models;
         } catch (Exception e) {
             //Write out the error if if occurred and return an empty collection
             Console.WriteLine("Error: " + e.Message);
@@ -904,7 +903,7 @@ public class SupabaseDatabase : IDatabase {
                 //Get all of the quiz information for the favorited quiz
                 Quiz? q = await GetQuizById(favQuiz.QuizId);
                 //Make sure that the quiz returned is valid
-                if (q != null) { 
+                if (q != null) {
                     //Add it to the array to be returned
                     quizzes.Add(q);
                 }

@@ -5,9 +5,8 @@ Name: Pachia
 */
 namespace QuizzingApp341.Views;
 
-using Microsoft.IdentityModel.Tokens;
-
 using CommunityToolkit.Maui.Storage;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Maui.Graphics;
 using QuizzingApp341.Models;
 using System;
@@ -34,7 +33,7 @@ public partial class StatisticsScreen : ContentPage {
 
     public List<Answer>? Answers { get; set; } = [];
 
-    public bool ShowQuizResponse {get; set;}
+    public bool ShowQuizResponse { get; set; }
 
     public StatisticsScreen(Dictionary<string, int> userStats, int totalQuestions, Quiz quiz, List<Response> responses, ObservableCollection<Question> questions, DateTime? date) {
         InitializeComponent();
@@ -47,7 +46,7 @@ public partial class StatisticsScreen : ContentPage {
         List<Response> userResponse = responses.Where(r => r.UserId == MauiProgram.BusinessLogic.UserInfo?.Id).ToList();
         ShowQuizResponse = !userResponse.IsNullOrEmpty();
         ShowBoxPlot = !IsStudying;
-        if (IsStudying) {
+        if (IsStudying && userStats.Count != 0) {
             UserScore = userStats[userStats.Keys.ToList()[0]];
         }
         EditResponses(userResponse);
@@ -57,7 +56,7 @@ public partial class StatisticsScreen : ContentPage {
     }
 
     private void EditResponses(List<Response> responses) {
-        for (int i = 0; i < Questions.Count; i++) {
+        for (int i = 0; i < Questions.Count && i < responses.Count; i++) {
             Answer answer = new Answer(responses[i], Questions[i]);
             Answers.Add(answer);
         }
@@ -106,9 +105,9 @@ public class Answer(Response response, Question question) {
     public string Response {
         get {
             if (Question.QuestionType == QuestionType.MultipleChoice) {
-                return string.Join(", ", Question.MultipleChoiceOptions[response.MultipleChoiceResponse[0]]);
+                return GetSelectedAnswersAsString(response.MultipleChoiceResponse ?? [], Question.MultipleChoiceOptions ?? []);
             } else {
-                return response.FillBlankResponse;
+                return response.FillBlankResponse ?? string.Empty;
             }
         }
     }
@@ -117,11 +116,21 @@ public class Answer(Response response, Question question) {
     public string CorrectAnswer {
         get {
             if (Question.QuestionType == QuestionType.MultipleChoice) {
-                return string.Join(", ", Question.MultipleChoiceOptions[Question.MultipleChoiceCorrectAnswers[0]]);
+                return GetSelectedAnswersAsString(Question.MultipleChoiceCorrectAnswers ?? [], Question.MultipleChoiceOptions ?? []);
             } else {
-                return string.Join(", ", Question.AcceptableAnswers);
+                return string.Join(", ", Question.AcceptableAnswers ?? []);
             }
         }
+    }
+
+    private static string GetSelectedAnswersAsString(int[] selectedIndices, string[] options) {
+        List<string> correctOptions = [];
+        foreach (int testtesttest in selectedIndices) {
+            if (testtesttest < options.Length && testtesttest >= 0) {
+                correctOptions.Add(options[testtesttest]);
+            }
+        }
+        return string.Join(", ", correctOptions);
     }
 }
 

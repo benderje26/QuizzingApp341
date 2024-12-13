@@ -1,8 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Supabase.Postgrest.Attributes;
-using Supabase.Postgrest.Models;
 
 
 namespace QuizzingApp341.Models;
@@ -38,7 +36,7 @@ public class UserInfo(Guid id, string email, string username, bool isSignedIn) :
             OnPropertyChanged();
         }
     }
-    
+
     public ObservableCollection<Participant> ParticipatedQuizzes {
         get => participatedQuizzes ?? [];
         set {

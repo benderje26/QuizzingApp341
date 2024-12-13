@@ -1,5 +1,3 @@
-using QuizzingApp341.Views;
-using Supabase;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -385,7 +383,7 @@ public class BusinessLogic(IDatabase database) : IBusinessLogic {
                     // See if the given answer is in the acceptable answers list
                     correct = acceptableAnswers.Contains(givenAnswer);
                 }
-                
+
                 if (correct) {
                     studentsScores[response.UserId] += 1;
                 }

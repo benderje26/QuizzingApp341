@@ -34,8 +34,8 @@ public partial class MultipleChoice : ContentPage {
         UserIsActivator = isUserActivator;
         UserIsParticipant = isUserParticipant;
         currentQuestion = activeQuestion;
-        BindingContext = this; 
-        InitializeComponent(); 
+        BindingContext = this;
+        InitializeComponent();
     }
 
     /*
@@ -90,7 +90,7 @@ public partial class MultipleChoice : ContentPage {
     private void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e) {
         if (sender is CheckBox checkBox && checkBox.BindingContext is IndexValuePair value) {
             if (e.Value) {
-                 SelectedIndices = [.. SelectedIndices, value.Index];
+                SelectedIndices = [.. SelectedIndices, value.Index];
             } else {
                 SelectedIndices = SelectedIndices.Where(index => index != value.Index).ToArray();
             }

@@ -1,7 +1,7 @@
 namespace QuizzingApp341.Views;
+using CommunityToolkit.Maui.Views;
 using QuizzingApp341.Models;
 using System.Windows.Input;
-using CommunityToolkit.Maui.Views;
 
 public partial class EditQuiz : ContentPage {
     public ICommand QuestionClickedCommand { get; set; }
@@ -63,8 +63,8 @@ public partial class EditQuiz : ContentPage {
         if (manager == null) {
             return;
         }
-        bool deleteQuestion = await DisplayAlert("Are you sure you want to delete this quiz?", manager.Quiz?.Title , "Yes", "No");
-        
+        bool deleteQuestion = await DisplayAlert("Are you sure you want to delete this quiz?", manager.Quiz?.Title, "Yes", "No");
+
         if (deleteQuestion) {
             if (manager.Active) {
                 await DisplayAlert("Could not delete the following quiz because it is still active", manager.Quiz?.Title, "Ok");

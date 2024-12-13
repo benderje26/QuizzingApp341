@@ -1,7 +1,4 @@
 // Statistics is a model class that calculates the statistics of the scores from a live quiz
-using QuizzingApp341;
-using Supabase.Gotrue;
-
 public class Statistics(List<int> scores) {
 
     public List<int>? Scores { get { return scores; } }

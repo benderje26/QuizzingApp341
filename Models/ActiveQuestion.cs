@@ -31,7 +31,7 @@ public class ActiveQuestion : BaseModel {
     [Column(ignoreOnInsert: true)]
     public bool IsStudying { get; set; }
 
-    public ActiveQuestion() {}
+    public ActiveQuestion() { }
     public ActiveQuestion(Question question, long activeQuizId) {
         ActiveQuizId = activeQuizId;
         QuestionId = question.Id;

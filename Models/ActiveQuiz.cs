@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 [Table("active_quizzes")]
-public class ActiveQuiz : BaseModel, INotifyPropertyChanged{
+public class ActiveQuiz : BaseModel, INotifyPropertyChanged {
     [PrimaryKey("id")]
     public long Id { get; set; }
 
@@ -13,7 +13,7 @@ public class ActiveQuiz : BaseModel, INotifyPropertyChanged{
     public long QuizId { get; set; }
 
     [Column("quiz_title")]
-    public string? QuizTitle { get; set; } 
+    public string? QuizTitle { get; set; }
 
     [Column("access_code")]
     public string? AccessCode { get; set; }
@@ -24,7 +24,6 @@ public class ActiveQuiz : BaseModel, INotifyPropertyChanged{
     private int? currentQuestionNo;
 
     [Column("current_question_no")]
-    // public int? CurrentQuestionNo { get; set; }
     public int? CurrentQuestionNo {
         get => currentQuestionNo;
         set {

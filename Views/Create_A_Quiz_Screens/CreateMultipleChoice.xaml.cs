@@ -1,10 +1,9 @@
 namespace QuizzingApp341.Views;
+using Microsoft.Maui.Controls;
+using QuizzingApp341.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Reactive.Linq;
-using Microsoft.Maui.Animations;
-using Microsoft.Maui.Controls;
-using QuizzingApp341.Models;
 
 public partial class CreateMultipleChoice : ContentPage {
     public string ScreenTitle => IsNewQuestion ? "Create Question" : "Edit Question";
