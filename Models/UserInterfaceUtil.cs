@@ -36,8 +36,10 @@ public class UserInterfaceUtil {
     public static async Task ShowQuizResults(long activeQuizId, Page page, bool shouldRemoveCurrentPage = false) {
         // Create a new StatisticsScreen instance and push it on the stack
         var quizStats = await MauiProgram.BusinessLogic.GetQuizScoresForActiveQuizId(activeQuizId);
-        if (quizStats != null && quizStats.Count > 0) {
-            await page.Navigation.PushAsync(new StatisticsScreen(quizStats));
+        var scores = quizStats.Item1;
+        var totalQuestions = quizStats.Item2;
+        if (scores != null && scores.Count > 0) {
+            await page.Navigation.PushAsync(new StatisticsScreen(scores, totalQuestions));
         } else {
             _ = page.DisplayAlert("Oh No", "No responses were found for the quiz.", "OK");
         }
