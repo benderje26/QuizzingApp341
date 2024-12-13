@@ -20,4 +20,17 @@ public class UserInterfaceUtil {
             await page.DisplayAlert("Error", "Something went wrong :(", "OK");
         }
     }
+
+    public static async Task ProcessNextResult(ActiveQuestion? question, Page page, bool isUserActivator, bool isUserParticipant) {
+        if (question != null) {
+            if (question.QuestionType == QuestionType.MultipleChoice) {
+                await page.Navigation.PushAsync(new MultipleChoice(question, isUserActivator, isUserParticipant));
+            } else {
+                await page.Navigation.PushAsync(new FillBlank(question, isUserActivator, isUserParticipant));
+            }
+            page.Navigation.RemovePage(page);
+        } else {
+            await page.DisplayAlert("Error", "Something went wrong :(", "OK");
+        }
+    }
 }
