@@ -6,12 +6,12 @@ using CommunityToolkit.Maui.Views;
 public partial class EditQuiz : ContentPage {
     public ICommand QuestionClickedCommand { get; set; }
     public bool IsNewQuiz { get; set; }
-    public double ScreenWidth {get; set;}
-    private readonly QuizManager manager;
-    public EditQuiz(QuizManager quizManager) {
+    public double ScreenWidth { get; set; }
+    private readonly QuizManager? manager;
+    public EditQuiz() {
         InitializeComponent();
-        manager = quizManager;
-        ScreenWidth = DeviceDisplay.MainDisplayInfo.Width;;
+        manager = MauiProgram.BusinessLogic.QuizManager;
+        ScreenWidth = DeviceDisplay.MainDisplayInfo.Width;
         QuestionClickedCommand = new Command<Question>(QuestionClicked);
         BindingContext = MauiProgram.BusinessLogic;
     }
@@ -35,7 +35,7 @@ public partial class EditQuiz : ContentPage {
 
         // Make a new question with this current quiz Id
         Question question = new Question();
-        if (manager.Quiz == null) {
+        if (manager?.Quiz == null) {
             return;
         }
 
@@ -60,6 +60,9 @@ public partial class EditQuiz : ContentPage {
     }
 
     public async void OnDeleteQuiz(object sender, EventArgs e) {
+        if (manager == null) {
+            return;
+        }
         bool deleteQuestion = await DisplayAlert("Are you sure you want to delete this quiz?", manager.Quiz?.Title , "Yes", "No");
         
         if (deleteQuestion) {
@@ -74,10 +77,38 @@ public partial class EditQuiz : ContentPage {
         }
     }
 
-    public async void OnPublicToggled(object sender, ToggledEventArgs e)
-    {
-        try
-        {
+    public async void OnActivateQuiz(object sender, EventArgs e) {
+        // Prepare the quiz
+        await MauiProgram.BusinessLogic.PrepareActiveQuiz();
+
+        if (manager?.ActiveQuiz?.AccessCode == null) {
+            return;
+        }
+
+        // Display the access code
+        string accessCode = manager.ActiveQuiz.AccessCode;
+
+        // Use this to start the quiz
+        bool startQuiz = await DisplayAlert("Access Code:", accessCode, "Start Quiz", "Cancel");
+
+        if (startQuiz) {
+            await MauiProgram.BusinessLogic.ActivateActiveQuiz();
+            // Display the page to start the quiz
+            // Make the current question an active question
+            ActiveQuestion activeQuestion = new ActiveQuestion(MauiProgram.BusinessLogic.QuizManager.CurrentQuestion, MauiProgram.BusinessLogic.QuizManager.ActiveQuiz.Id);
+            if (MauiProgram.BusinessLogic.QuizManager.CurrentQuestion.QuestionType == QuestionType.MultipleChoice) {
+                await Navigation.PushAsync(new MultipleChoice(activeQuestion, true, false));
+            } else {
+                await Navigation.PushAsync(new FillBlank(activeQuestion, true, false));
+            }
+            //await Navigation.PushAsync(new ActivatorQuiz());
+        } else {
+            await MauiProgram.BusinessLogic.DeactivateQuiz();
+        }
+    }
+
+    public async void OnPublicToggled(object sender, ToggledEventArgs e) {
+        try {
             // Optionally: Check the new toggle state (e.Value)
             bool newState = e.Value;
 
@@ -86,12 +117,10 @@ public partial class EditQuiz : ContentPage {
 
             // Log or handle the result if needed
             Console.WriteLine($"Quiz visibility changed to: {newState}");
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             // Handle any errors gracefully
             Console.WriteLine($"Error changing quiz visibility: {ex.Message}");
         }
     }
 
-} 
+}

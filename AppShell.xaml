@@ -32,12 +32,8 @@
                           Route="MyQuiz" />
         </Tab>
 
-        <Tab Title="Favorites" Icon="heart.png">
-            <ShellContent Title="Favorite Quizzes"
-                          ContentTemplate="{DataTemplate local:FavoriteQuizzes}" 
-                          Route="FavoriteQuizzesPage" />
-        </Tab>
-
+        
+        
         <Tab Title="History" Icon="clock.png">
             <ShellContent Title="Quiz History"
                           ContentTemplate="{DataTemplate local:QuizHistory}" 

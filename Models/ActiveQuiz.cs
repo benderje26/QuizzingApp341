@@ -1,9 +1,11 @@
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 namespace QuizzingApp341.Models;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 [Table("active_quizzes")]
-public class ActiveQuiz : BaseModel {
+public class ActiveQuiz : BaseModel, INotifyPropertyChanged{
     [PrimaryKey("id")]
     public long Id { get; set; }
 
@@ -19,8 +21,17 @@ public class ActiveQuiz : BaseModel {
     [Column("is_active")]
     public bool? IsActive { get; set; }
 
+    private int? currentQuestionNo;
+
     [Column("current_question_no")]
-    public int? CurrentQuestionNo { get; set; }
+    // public int? CurrentQuestionNo { get; set; }
+    public int? CurrentQuestionNo {
+        get => currentQuestionNo;
+        set {
+            currentQuestionNo = value;
+            OnPropertyChanged();
+        }
+    }
 
     [Column("activator")]
     public Guid Activator { get; set; }
@@ -30,4 +41,9 @@ public class ActiveQuiz : BaseModel {
 
     [Column("end_time")]
     public DateTime? EndTime { get; set; }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

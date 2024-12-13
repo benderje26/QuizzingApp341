@@ -26,9 +26,23 @@ public class QuizManager : INotifyPropertyChanged {
         }
     }
 
-    public ActiveQuiz? ActiveQuiz { get; set; }
+    private Question? currentQuestion;
 
-    static int CurrentQuestion { get; set; } = 0;
+    public Question? CurrentQuestion
+    {
+        get => currentQuestion;
+        set
+        {
+            if (currentQuestion != value)
+            {
+                currentQuestion = value;
+                OnPropertyChanged(nameof(CurrentQuestion));
+            }
+        }
+    }
+
+
+    public ActiveQuiz? ActiveQuiz { get; set; }
 
     public bool Active { get; set; }
 
@@ -56,6 +70,7 @@ public class QuizManager : INotifyPropertyChanged {
         Quiz = quiz;
         Questions = questions;
     }
+
 
     /// <summary>
     /// Sets the Quiz and questions from an activated quiz
@@ -165,23 +180,5 @@ public class QuizManager : INotifyPropertyChanged {
 
         }
         return false;
-    }
-
-    public async Task<bool> NextQuestion() {
-        // TODO
-        // Change the current question in DB
-        CurrentQuestion++;
-
-        // Return true if successful
-        return true;
-    }
-
-    public async Task<bool> PreviousQuestion() {
-        // TODO
-        // Change the current question in DB
-        CurrentQuestion--;
-
-        // Return true if successful
-        return true;
     }
 }

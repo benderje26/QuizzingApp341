@@ -28,13 +28,22 @@ public partial class Search : ContentPage {
             if (quizzes != null) {
                 _allQuizzes.Clear();
                 foreach (var quiz in quizzes) {
-                    var favQuizzes = _businessLogic.UserInfo?.FavoriteQuizzes ?? [];
-                    if (favQuizzes.Any(f => f.Id == quiz.Id)) {
-                        _allQuizzes.Add(new QuizSearch(quiz.Id, quiz.Title, $"Created by {quiz.CreatorId}", true));
-                    } else {
-                        _allQuizzes.Add(new QuizSearch(quiz.Id, quiz.Title, $"Created by {quiz.CreatorId}", false));
+                    var favQuizzes = _businessLogic.UserInfo.FavoriteQuizzes;
+                    var creatorName = "Unknown";
+                    var userData = await _businessLogic.GetUserData(quiz.CreatorId);
+                    if (userData != null && !string.IsNullOrWhiteSpace(userData.Username)) {
+                        creatorName = userData.Username;
                     }
+                    bool isFavorite = favQuizzes.Any(f => f.Id == quiz.Id);
+                    _allQuizzes.Add(new QuizSearch(quiz.Id, quiz.Title, $"Created by {creatorName}", isFavorite));
                 }
+
+                // Sort quizzes so favorites are first
+                var sortedQuizzes = new ObservableCollection<QuizSearch>(
+                    _allQuizzes.OrderByDescending(q => q.Favorite)
+                );
+
+                _allQuizzes = sortedQuizzes; // Update the internal list
                 FilterQuizzes(string.Empty); // Load all initially
             }
         } catch (Exception ex) {
