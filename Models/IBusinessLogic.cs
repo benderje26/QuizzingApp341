@@ -136,15 +136,19 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="activeQuizIds">List of active quiz IDs</param>
     /// <returns>List of quiz IDs if found, otherwise null</returns>
     Task<List<ActiveQuiz>> GetActiveQuizzesByActiveQuizIds(List<long> activeQuizIds);
+    Task<bool> DeactivateQuiz();
+    Task<bool> PrepareActiveQuiz(bool isLive = true);
+    Task<bool> ActivateActiveQuiz();
+    Task<bool> IncrementCurrentQuestion();
 
     /// <summary>
     /// Gets the current scores of the given active quiz
     /// </summary>
     /// <param name="activeQuizId">Current active quiz</param>
-    /// <returns>List of all of the current scores for the active quiz</returns>
-    Task<List<int>?> GetQuizScoresForActiveQuizId(long activeQuizId);
+    /// <returns>List of all of the current scores for the active quiz and the total number of questions</returns>
+    Task<(Dictionary<string, int>?, int)> GetQuizScoresForActiveQuizId(long activeQuizId);
 
-    Task<ObservableCollection<Quiz>?> GetAllQuizzes();
+    Task<ObservableCollection<Quiz>?> GetAllPublicQuizzes();
 
     /// <summary>
     /// Adds a favorite quiz to the questions table 
@@ -193,7 +197,12 @@ public interface IBusinessLogic : INotifyPropertyChanged {
     /// <param name="quiz">The quiz the student is joining</param>
     /// <param name="handler">The handler for when a new active question comes in</param>
     /// <returns></returns>
-    Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
+    Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler questionHandler, QuizEndedHandler endedHandler);
+
+    /// <summary>
+    /// Stops listening for new questions for all active quizzes.
+    /// </summary>
+    void LeaveActiveQuiz();
 
     /// <summary>
     /// This makes sure that an access code given by the user is a valid access code by checking the db
@@ -216,3 +225,5 @@ public interface IBusinessLogic : INotifyPropertyChanged {
 }
 
 public delegate void NewActiveQuestionHandler(ActiveQuestion newQuestion);
+
+public delegate void QuizEndedHandler();

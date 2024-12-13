@@ -12,7 +12,7 @@ public partial class HomeScreen : ContentPage {
     }
 
     private async void OnStartClicked(object sender, EventArgs e) {
-        string accessCode = quizIdEntry.Text;
+        string accessCode = (quizIdEntry.Text ?? string.Empty).ToUpper().Trim();
 
         // If the accessCode is a valid access code
         bool valid = await MauiProgram.BusinessLogic.ValidateAccessCode(accessCode);
@@ -41,7 +41,9 @@ public partial class HomeScreen : ContentPage {
                 } else {
                     await MainThread.InvokeOnMainThreadAsync(async () => await Navigation.PushAsync(new FillBlank(activeQuestion, false, true), false));
                 }
-            });
+            }, () => MainThread.BeginInvokeOnMainThread(async () => {
+                await UserInterfaceUtil.ProcessActiveQuizEnded(Navigation);
+            }));
         } else {
             await DisplayAlert("Error", "Invalid access code.", "OK");
         }

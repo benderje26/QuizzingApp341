@@ -5,43 +5,44 @@
              xmlns:local="clr-namespace:QuizzingApp341.Views"
              x:DataType="local:FillBlank"
              x:Class="QuizzingApp341.Views.FillBlank">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="3*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="8*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <ScrollView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <VerticalStackLayout Grid.Row="1"
-                Grid.Column="1">
-            <Grid RowDefinitions="*,2*,*"
-                    ColumnDefinitions="*,*,*">
-                <Label Grid.Row="0"
-                        Grid.ColumnSpan="3"
-                        Text="{Binding QuestionText}"
-                        HorizontalOptions="Center"
-                        FontSize="32"
-                        Margin="0,40,0,0"/>
-                <Entry x:Name="textEntry"
-                        Grid.Row="1"
-                        Grid.ColumnSpan="3"
-                        Placeholder="Type Answer Here"
-                        WidthRequest="250"
-                        HorizontalOptions="Center"
-                        FontSize="24"
-                        Margin="0,30,0,0"/>
-                <!-- TODO talk about if we should include previous button for activator -->
-                <!-- <Button Grid.Row="2" Grid.Column="0" x:Name="previous" Text="Previous" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnPreviousClicked" IsVisible="{Binding CurrentQuestion.NotFirst}"/> -->
-                <Button Grid.Row="2" Grid.Column="1" Text="Submit Answer" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnSubmitAnswerClicked" IsVisible="{Binding ShowSubmitAnswerButton}" IsEnabled="{Binding CanSubmit}"/>
-                <Button Grid.Row="2" Grid.Column="2" Text="Next" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding ShowNextButton}"/>
-                <Button Grid.Row="2" Grid.Column="2" Text="Finish" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnFinishClicked" IsVisible="{Binding ShowFinishButton}"/>
-            </Grid>
-        </VerticalStackLayout>
+            <VerticalStackLayout Grid.Row="1"
+                    Grid.Column="1">
+                <Grid RowDefinitions="*,2*,*"
+                        ColumnDefinitions="*,*,*">
+                    <Label Grid.Row="0"
+                           Grid.ColumnSpan="3"
+                           Text="{Binding QuestionText}"
+                           HorizontalOptions="Center"
+                           FontSize="32"
+                           Margin="0,40,0,0"/>
+                    <Entry x:Name="textEntry"
+                           Grid.Row="1"
+                           Grid.ColumnSpan="3"
+                           IsEnabled="{Binding UserIsParticipant}"
+                           Placeholder="Type Answer Here"
+                           WidthRequest="250"
+                           HorizontalOptions="Center"
+                           FontSize="24"
+                           Margin="0,30,0,0"/>
+                    <Button Grid.Row="2" Grid.Column="1" Text="Submit" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnSubmitAnswerClicked" IsVisible="{Binding ShowSubmitAnswerButton}" IsEnabled="{Binding CanSubmit}"/>
+                    <Button Grid.Row="2" Grid.Column="2" Text="Next" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnNextClicked" IsVisible="{Binding ShowNextButton}"/>
+                    <Button Grid.Row="2" Grid.Column="2" Text="Finish" MaximumWidthRequest="150" FontSize="20" Margin="0,30,0,0" Clicked="OnFinishClicked" IsVisible="{Binding ShowFinishButton}"/>
+                </Grid>
+            </VerticalStackLayout>
 
-    </Grid>
+        </Grid>
+    </ScrollView>
 </ContentPage>

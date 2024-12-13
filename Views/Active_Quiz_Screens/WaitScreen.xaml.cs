@@ -6,4 +6,11 @@ public partial class WaitScreen : ContentPage {
         BindingContext = this;
         InitializeComponent();
     }
+
+    protected override bool OnBackButtonPressed() {
+        _ = UserInterfaceUtil.ProcessActiveQuizEnded(Navigation);
+        return true;
+    }
+
+    
 }

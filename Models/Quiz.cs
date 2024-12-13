@@ -10,7 +10,7 @@ public class Quiz : BaseModel, INotifyPropertyChanged {
     private Guid creatorId;
     private string title = string.Empty;
 
-    private bool isPublic;
+    private bool @public;
 
     private DateTime dateCreated;
 
@@ -51,10 +51,10 @@ public class Quiz : BaseModel, INotifyPropertyChanged {
     }
 
     [Column("public")]
-    public bool IsPublic {
-        get => isPublic;
+    public bool Public {
+        get => @public;
         set {
-            isPublic = value;
+            @public = value;
             OnPropertyChanged();
         }
     }

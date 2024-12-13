@@ -17,7 +17,7 @@ public partial class QuizHistory : ContentPage {
             }
         }
     }
-    private bool takenSelected;
+    private bool takenSelected = true;
     public bool ActivatedSelected {
         get => !TakenSelected;
         set => TakenSelected = !value;
@@ -47,7 +47,7 @@ public partial class QuizHistory : ContentPage {
             }
 
             if (quiz != null) {
-                // Navigate to study page
+                await UserInterfaceUtil.StudyQuiz(quiz.QuizId, Navigation);
             }
         }
     }
@@ -62,8 +62,7 @@ public partial class QuizHistory : ContentPage {
             }
 
             if (quiz != null) {
-                // Create a new StatisticsScreen instance and push it on the stack
-                await Navigation.PushAsync(new StatisticsScreen(quiz.Id));
+                await UserInterfaceUtil.ShowQuizResults(quiz.Id, this);
             }
         }
     }

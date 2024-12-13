@@ -64,20 +64,21 @@
                     FontSize="20"
                     VerticalTextAlignment="Center"
                     HorizontalTextAlignment="Center"
+                    TextTransform="Uppercase"
                     WidthRequest="250"
                     HorizontalOptions="Center" 
                     VerticalOptions="Center"/>
                 </Frame>
 
                 <Button
-                    Padding="10"
+                    Padding="30,10"
                     Text="Start"
                     FontSize="30"
                     HeightRequest="80"
                     WidthRequest="200"
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
-                    Margin="10,10,0,0"
+                    Margin="10,10,10,0"
                     Clicked="OnStartClicked"
                     BackgroundColor="#11017a"/>
             </VerticalStackLayout>

@@ -17,9 +17,10 @@ public partial class MultipleChoice : ContentPage {
     public bool Multiselect { get; set; }
     public bool NotMultiselect => !Multiselect;
     public int[] SelectedIndices { get; set; }
-    public bool ShowSubmitAnswerButton => UserIsParticipant;
-    public bool ShowNextButton => UserIsActivator; // TODO: also needs to not be final question
-    public bool ShowFinishButton => UserIsActivator; // TODO: also needs to be final question
+    public bool ShowSubmitAnswerButton => UserIsParticipant && !UserIsActivator;
+    public bool ShowNextButton => UserIsActivator && !LastQuestion;
+    public bool ShowFinishButton => UserIsActivator && LastQuestion;
+    public bool LastQuestion => MauiProgram.BusinessLogic.QuizManager?.CurrentQuestion?.QuestionNo == MauiProgram.BusinessLogic.QuizManager?.Questions.Count;
 
     private readonly ActiveQuestion currentQuestion;
 
@@ -39,47 +40,51 @@ public partial class MultipleChoice : ContentPage {
 
     /*
     * Next button clicked so move to the next question in the quiz 
+
     */
-    private void OnNextClicked(object sender, EventArgs e) {
-        // int? selected = selectedIndex;
-        // if (selected == null) {
-        //     return;
-        // }
-        // MauiProgram.BusinessLogic.SetCurrentMultipleChoiceAnswer(selected.Value);
-        // bool success = MauiProgram.BusinessLogic.NextQuestion() != null;
-        // if (success) {
-        //     bool multipleChoice = MauiProgram.BusinessLogic.CurrentQuestion?.Type == QuestionType.MultipleChoice;
-        //     if (multipleChoice) {
-        //         Navigation.PushModalAsync(new MultipleChoice());
-        //     } else {
-        //         Navigation.PushModalAsync(new FillBlank());
-        //     }
-        // }
-        //TODO
+    private async void OnNextClicked(object sender, EventArgs e) {
+        if (MauiProgram.BusinessLogic.QuizManager?.ActiveQuiz == null) {
+            return;
+        }
+
+        if (UserIsParticipant) {
+            bool result = await SubmitAnswer();
+            if (!result) {
+                return;
+            }
+        }
+
+        // Increment the current question number
+        long activeQuizId = MauiProgram.BusinessLogic.QuizManager.ActiveQuiz.Id;
+        await MauiProgram.BusinessLogic.IncrementCurrentQuestion();
+
+        Question? nextQuestion = MauiProgram.BusinessLogic.QuizManager.CurrentQuestion;
+
+        if (nextQuestion == null) {
+            return;
+        }
+
+        // Get next question
+        // Make it an active question
+        ActiveQuestion activeQuestion = new(nextQuestion, activeQuizId);
+
+        // call ProcessNextResult()
+        await UserInterfaceUtil.ProcessNextResult(activeQuestion, this, UserIsActivator, UserIsParticipant);
     }
 
-    /*
-    * Previous button clicked so move to the previous question in the quiz 
-    */
-    private void OnPreviousClicked(object sender, EventArgs e) {
-        // int? selected = selectedIndex;
-        // if (selected == null) {
-        //     return;
-        // }
-        // MauiProgram.BusinessLogic.SetCurrentMultipleChoiceAnswer(selected.Value);
-        // bool success = MauiProgram.BusinessLogic.PreviousQuestion() != null;
-        // if (success) {
-        //     bool multipleChoice = MauiProgram.BusinessLogic.CurrentQuestion?.Type == QuestionType.MultipleChoice;
-        //     if (multipleChoice) {
-        //         Navigation.PushModalAsync(new MultipleChoice());
-        //     } else {
-        //         Navigation.PushModalAsync(new FillBlank());
-        //     }
-        // }
-        //TODO
-    }
-    private void OnFinishClicked(object sender, EventArgs e) {
-        // Finish button hit so close the quiz by going to the homescreen
+    private async void OnFinishClicked(object sender, EventArgs e) {
+        if (UserIsParticipant) {
+            bool result = await SubmitAnswer();
+            if (!result) {
+                return;
+            }
+        }
+
+        if (MauiProgram.BusinessLogic.QuizManager?.ActiveQuiz is ActiveQuiz aq) {
+            await UserInterfaceUtil.ShowQuizResults(aq.Id, this, true);
+        }
+
+        await MauiProgram.BusinessLogic.DeactivateQuiz();
     }
 
     private void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e) {
@@ -113,14 +118,24 @@ public partial class MultipleChoice : ContentPage {
         }
 
         try {
-            bool success = await MauiProgram.BusinessLogic.GiveMultipleChoiceQuestionAnswer(
-                currentQuestion,
-                SelectedIndices
-            );
+            bool success = await SubmitAnswer();
             await UserInterfaceUtil.ProcessResponseResult(success, this);
         } catch (Exception ex) {
             System.Diagnostics.Debug.WriteLine($"Error submitting answer: {ex.Message}");
         }
+    }
+
+    private async Task<bool> SubmitAnswer() {
+        return await MauiProgram.BusinessLogic.GiveMultipleChoiceQuestionAnswer(
+            currentQuestion,
+            SelectedIndices
+        );
+    }
+
+    protected override bool OnBackButtonPressed() {
+        _ = UserInterfaceUtil.ProcessActiveQuizEnded(Navigation);
+
+        return true;
     }
 }
 

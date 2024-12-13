@@ -26,14 +26,28 @@ public class QuizManager : INotifyPropertyChanged {
         }
     }
 
-    public ActiveQuiz? ActiveQuiz { get; set; }
+    private Question? currentQuestion;
 
-    static int CurrentQuestion { get; set; } = 0;
+    public Question? CurrentQuestion
+    {
+        get => currentQuestion;
+        set
+        {
+            if (currentQuestion != value)
+            {
+                currentQuestion = value;
+                OnPropertyChanged(nameof(CurrentQuestion));
+            }
+        }
+    }
+
+
+    public ActiveQuiz? ActiveQuiz { get; set; }
 
     public bool Active { get; set; }
 
     // Constructor for setting a quiz
-    public QuizManager(Quiz quiz) {
+    public QuizManager(Quiz? quiz) {
         Active  = false;
         Quiz = quiz;
         Questions = [];
@@ -57,6 +71,7 @@ public class QuizManager : INotifyPropertyChanged {
         Questions = questions;
     }
 
+
     /// <summary>
     /// Sets the Quiz and questions from an activated quiz
     /// Should be called after the Quiz is activated passing in the active quiz to the constructor
@@ -71,17 +86,6 @@ public class QuizManager : INotifyPropertyChanged {
             return true;
         }
         return false;
-    }
-
-    //TODO
-    /// <summary>
-    /// This starts a quiz for a user, which needs an id
-    /// </summary>
-    /// <param name="accessCode"></param>
-    public void StartQuiz(string accessCode) {// Can either take a LiveQuiz Id or an Access code
-        // ActiveQuiz = BusinessLogic.GetActiveQuizFromAccessCode(accessCode);
-        // Get the Quiz with the quiz id
-        // Get the supabasequestions with the quiz id
     }
 
     /// <summary>
@@ -165,23 +169,5 @@ public class QuizManager : INotifyPropertyChanged {
 
         }
         return false;
-    }
-
-    public async Task<bool> NextQuestion() {
-        // TODO
-        // Change the current question in DB
-        CurrentQuestion++;
-
-        // Return true if successful
-        return true;
-    }
-
-    public async Task<bool> PreviousQuestion() {
-        // TODO
-        // Change the current question in DB
-        CurrentQuestion--;
-
-        // Return true if successful
-        return true;
     }
 }

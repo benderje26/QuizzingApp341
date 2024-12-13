@@ -122,7 +122,7 @@ public interface IDatabase {
     /// Gets all the public quizzes from the database and the user's quizzes.
     /// </summary>
     /// <returns>All public and user's quizzes</returns>
-    Task<List<Quiz>?> GetAllQuizzesAsync();
+    Task<List<Quiz>?> GetAllPublicQuizzes();
     Task<long?> AddQuiz(Quiz quiz);
     Task<bool> DeleteQuiz(long quizId);
 
@@ -132,6 +132,11 @@ public interface IDatabase {
     /// </summary>
     /// <returns>The user's info, or null if there is no logged in user</returns>
     UserInfo? GetUserInfo();
+
+    Task<bool> DeactivateQuestions(long id);
+    Task<ActiveQuiz?> PrepareActiveQuiz(Quiz quiz, string? accessCode);
+    Task<ActiveQuiz?> UpdateActiveQuiz(ActiveQuiz activeQuiz);
+    Task<bool> ActivateQuestion(ActiveQuestion questions);
 
     /// <summary>
     /// Gets a list of the current user's active quizzes by their IDs.
@@ -209,7 +214,12 @@ public interface IDatabase {
     /// <param name="quiz">The quiz the student is joining</param>
     /// <param name="handler">The handler for when a new active question comes in</param>
     /// <returns></returns>
-    Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler handler);
+    Task<bool> JoinActiveQuiz(ActiveQuiz quiz, NewActiveQuestionHandler questionHandler, QuizEndedHandler endedHandler);
+
+    /// <summary>
+    /// Stops listening for new questions for all active quizzes.
+    /// </summary>
+    void LeaveActiveQuiz();
 
     /// <summary>
     /// Validates that an access code is currently active.
